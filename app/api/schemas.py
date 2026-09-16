@@ -23,9 +23,12 @@ class InteractionResult(BaseModel):
     rxcui_a: str | None = None
     rxcui_b: str | None = None
     severity: str
-    source: Literal["ddinter", "openfda"]
-    description: str
-    management: str
+    source: Literal["ddinter", "openfda", "recetalia"]
+    # Pueden faltar: DDInter aporta el par y el nivel, no texto. Antes se
+    # rellenaban con una plantilla que sólo repetía los dos nombres, y eso se
+    # lee como evidencia sin serlo.
+    description: str | None = None
+    management: str | None = None
     uncertain: bool = False
 
 

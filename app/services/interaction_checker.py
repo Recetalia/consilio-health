@@ -18,7 +18,6 @@ from app.nlp import severity_classifier
 
 logger = logging.getLogger(__name__)
 
-_MANAGEMENT = "Consult a healthcare professional for guidance."
 _EMPTY_COVERAGE = {"recetalia": 0, "ddinter": 0, "openfda": 0, "unknown": 0}
 
 
@@ -115,16 +114,11 @@ def _format_local(
     source = hit["source"]
     _audit_severity(drug_a, drug_b, severity, hit["uncertain"], source, "recetalia_db")
 
-    if hit.get("evidence"):
-        # openFDA: la oración del prospecto es la descripción, no una plantilla
-        description = hit["evidence"]
-    elif hit.get("mechanism"):
-        description = hit["mechanism"]
-    else:
-        description = (
-            f"Interaction reported in DDInter 2.0 for "
-            f"{hit.get('drug_a_name', drug_a)} + {hit.get('drug_b_name', drug_b)}."
-        )
+    # Sin texto real no se inventa uno. La plantilla anterior
+    # ("Interaction reported in DDInter 2.0 for X + Y") sólo repetía los dos
+    # nombres que el médico ya tiene delante, y ocupaba el lugar de la
+    # evidencia sin serlo. Es mejor que la interfaz diga que no hay descripción.
+    description = hit.get("evidence") or hit.get("mechanism") or None
 
     return {
         "drug_a": drug_a,
@@ -134,34 +128,11 @@ def _format_local(
         "severity": severity,
         "source": source,
         "description": description,
-        "management": hit.get("management") or _MANAGEMENT,
+        # El disclaimer del pie ya dice que esto no sustituye al criterio
+        # clínico; repetirlo en cada tarjeta es ruido.
+        "management": hit.get("management"),
         # openFDA sale de texto libre: el médico tiene que poder distinguirlo
         "uncertain": hit["uncertain"],
-    }
-
-
-def _format_ddinter(
-    drug_a: str,
-    drug_b: str,
-    rxcui_a: str | None,
-    rxcui_b: str | None,
-    hit: dict[str, Any],
-) -> dict[str, Any]:
-    severity = hit.get("severity") or "unknown"
-    _audit_severity(drug_a, drug_b, severity, False, "ddinter", "ddinter_sqlite")
-    return {
-        "drug_a": drug_a,
-        "drug_b": drug_b,
-        "rxcui_a": rxcui_a,
-        "rxcui_b": rxcui_b,
-        "severity": severity,
-        "source": "ddinter",
-        "description": (
-            f"Interaction reported in DDInter 2.0 for "
-            f"{hit.get('drug_a_name', drug_a)} + {hit.get('drug_b_name', drug_b)}."
-        ),
-        "management": _MANAGEMENT,
-        "uncertain": False,
     }
 
 
@@ -194,8 +165,8 @@ async def _format_openfda(
         "rxcui_b": rxcui_b,
         "severity": severity,
         "source": "openfda",
-        "description": description or "Interaction reported in FDA labeling.",
-        "management": _MANAGEMENT,
+        "description": description or None,
+        "management": None,
         "uncertain": uncertain,
     }
 

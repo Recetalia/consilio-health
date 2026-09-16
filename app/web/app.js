@@ -23,9 +23,9 @@ const SEV = {
 };
 
 const FUENTE = {
-  ddinter:   "Base curada de interacciones",
-  openfda:   "Prospecto FDA",
-  recetalia: "Revisión propia",
+  ddinter:   "DDInter 2.0 — base curada de interacciones",
+  openfda:   "openFDA — prospecto oficial de la FDA",
+  recetalia: "Revisión propia de Consilio",
 };
 
 function toast(msg, ms = 4000) {
@@ -108,8 +108,18 @@ const hideSuggestions = () => { $("suggestions").hidden = true; };
 
 /* ---------------- selección ---------------- */
 
+function invalidateResults() {
+  const box = $("results");
+  if (!box.hidden) {
+    box.hidden = true;
+    box.innerHTML = "";
+    $("sources").textContent = "";
+  }
+}
+
 function addDrug(id, name) {
   if (!selected.some((s) => s.drug_id === id)) selected.push({ drug_id: id, name });
+  invalidateResults();
   $("q").value = "";
   hideSuggestions();
   renderChips();
@@ -119,6 +129,7 @@ function addDrug(id, name) {
 function removeDrug(id) {
   const i = selected.findIndex((s) => s.drug_id === id);
   if (i >= 0) selected.splice(i, 1);
+  invalidateResults();
   renderChips();
 }
 
@@ -195,13 +206,16 @@ function render(data) {
   box.hidden = false;
 
   const cov = data.coverage_summary || {};
-  const partes = Object.entries(cov).filter(([, n]) => n > 0)
-    .map(([k, n]) => `${n} ${FUENTE[k] || k}`);
+  const partes = Object.entries(cov).filter(([, n]) => n > 0 && k_ok(k))
+    .map(([k, n]) => `${n} de ${FUENTE[k] || k}`);
   $("sources").textContent = partes.length
-    ? `Origen de los resultados: ${partes.join(" · ")}.`
+    ? `Fuentes consultadas: ${partes.join(" · ")}.`
     : "";
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
+
+// 'unknown' no es una fuente: es el bucket de lo que no resolvió.
+const k_ok = (k) => k !== "unknown";
 
 function card(i) {
   const sev = SEV[i.severity] ? i.severity : "unknown";
@@ -212,7 +226,10 @@ function card(i) {
         <span class="badge ${sev}">${SEV[sev].label}</span>
         ${i.uncertain ? '<span class="tag-uncertain">inferida de texto</span>' : ""}
       </div>
-      ${i.description ? `<p class="evidence">${escapeHtml(i.description)}</p>` : ""}
+      ${i.description
+        ? `<p class="evidence">${escapeHtml(i.description)}</p>`
+        : `<p class="evidence sin-texto">La fuente registra el par y su gravedad,
+             pero no aporta descripción del mecanismo.</p>`}
       <p class="meta">${FUENTE[i.source] || i.source}${
         i.management ? `<span class="dot">·</span>${escapeHtml(i.management)}` : ""}</p>
     </article>`;
