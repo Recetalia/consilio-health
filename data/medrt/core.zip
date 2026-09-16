@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en" data-beasties-container>
+<head>
+  <meta charset="utf-8">
+  <title>EVS FTP Downloads | NCI Enterprise Vocabulary Services</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="NCI Enterprise Vocabulary Services FTP file browser for downloading NCI terminology files.">
+  <base href="/">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <!-- Font Awesome 5 CDN to replace problematic local all.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>:root{--blue:#007bff;--indigo:#6610f2;--purple:#6f42c1;--pink:#e83e8c;--red:#dc3545;--orange:#fd7e14;--yellow:#ffc107;--green:#28a745;--teal:#20c997;--cyan:#17a2b8;--white:#fff;--gray:#6c757d;--gray-dark:#343a40;--primary:#007bff;--secondary:#6c757d;--success:#28a745;--info:#17a2b8;--warning:#ffc107;--danger:#dc3545;--light:#f8f9fa;--dark:#343a40;--breakpoint-xs:0;--breakpoint-sm:576px;--breakpoint-md:768px;--breakpoint-lg:992px;--breakpoint-xl:1200px;--font-family-sans-serif:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";--font-family-monospace:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}*,:after,:before{box-sizing:border-box}html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";font-size:1rem;font-weight:400;line-height:1.5;color:#212529;text-align:left;background-color:#fff}@media print{*,:after,:before{text-shadow:none!important;box-shadow:none!important}@page{size:a3}body{min-width:992px!important}}:root{--bb-primary-dark:#0c63e3;--bb-primary-text:#212529;--bb-secondary-dark:#5a6168;--bb-h1-color:#212529;--bb-h2-color:#212529;--bb-h3-color:#212529}body{color:#3b3b3b;background:#292929}</style><link rel="stylesheet" href="styles.7f12de33bfd74161.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles.7f12de33bfd74161.css"></noscript></head>
+<body class="layout-one-sidebar layout-sidebar-first page-node-160 path-node node--type-page">
+  <app-root></app-root>
+<script src="runtime.ea93d314fe837bc1.js" type="module"></script><script src="polyfills.576e57052913801c.js" type="module"></script><script src="scripts.6956755d3383d022.js" defer></script><script src="main.9c316478d4e22458.js" type="module"></script></body>
+</html>

@@ -89,6 +89,43 @@ CREATE TABLE IF NOT EXISTS dnma_substance_map (
 );
 CREATE INDEX IF NOT EXISTS idx_dnma_drug ON dnma_substance_map(drug_id);
 
+-- Una patología. Guardamos el código en el sistema en que vino; el puente entre
+-- sistemas vive en condition_xref, no acá, porque un mismo cuadro tiene código
+-- distinto en MeSH, CIE-10 y CIE-10-CM y ninguno es "el verdadero".
+CREATE TABLE IF NOT EXISTS condition (
+    condition_id INTEGER PRIMARY KEY,
+    code_system  TEXT NOT NULL CHECK (code_system IN ('mesh','icd10','icd10cm','icd10gm','snomed')),
+    code         TEXT NOT NULL,
+    name         TEXT NOT NULL,
+    source       TEXT NOT NULL,
+    UNIQUE (code_system, code)
+);
+
+CREATE TABLE IF NOT EXISTS condition_xref (
+    from_id  INTEGER NOT NULL REFERENCES condition(condition_id) ON DELETE CASCADE,
+    to_id    INTEGER NOT NULL REFERENCES condition(condition_id) ON DELETE CASCADE,
+    method   TEXT    NOT NULL,          -- umls | mondo | manual | truncation
+    source   TEXT    NOT NULL,
+    PRIMARY KEY (from_id, to_id, method)
+);
+
+-- Alerta fármaco-paciente. Mismo criterio de procedencia que `interaction`:
+-- un re-fetch de MED-RT borra sólo lo suyo.
+CREATE TABLE IF NOT EXISTS drug_condition_alert (
+    drug_id      INTEGER NOT NULL REFERENCES drug(drug_id),
+    condition_id INTEGER NOT NULL REFERENCES condition(condition_id),
+    kind         TEXT    NOT NULL CHECK (kind IN ('contraindication','precaution')),
+    rela         TEXT,                  -- ci_with | ci_chemclass | ci_moa | ci_pe
+    detail       TEXT,
+    source       TEXT    NOT NULL CHECK (source IN ('medrt','interpolar','openfda','recetalia')),
+    reviewed_by  TEXT,
+    reviewed_at  TEXT,
+    note         TEXT,
+    PRIMARY KEY (drug_id, condition_id, kind, source)
+);
+CREATE INDEX IF NOT EXISTS idx_dca_drug ON drug_condition_alert(drug_id);
+CREATE INDEX IF NOT EXISTS idx_dca_cond ON drug_condition_alert(condition_id);
+
 CREATE TABLE IF NOT EXISTS meta (
     key   TEXT PRIMARY KEY,
     value TEXT NOT NULL
