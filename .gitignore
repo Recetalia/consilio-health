@@ -14,6 +14,11 @@ data/ddinter.db
 data/ddinter_manifest.json
 data/rxnorm_crosswalk.json
 data/rxnorm_unmapped.json
+data/ddinter_crosswalk.json
+data/ddinter_unmapped.json
+data/recetalia_interactions.db
+data/*.db-wal
+data/*.db-shm
 models/
 *.pt
 *.bin
