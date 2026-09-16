@@ -42,55 +42,6 @@ def client(mock_ddinter, mock_severity):
     return TestClient(app)
 
 
-class TestAnalyzeValidation:
-    def test_analyze_rejects_oversized_text(self, client):
-        """Text over 5000 chars must be rejected with 422."""
-        resp = client.post(
-            "/analyze",
-            json={"text": "Metformin 500mg " * 500},
-            headers={"X-API-Key": "test-key"},
-        )
-        assert resp.status_code == 422
-
-    def test_analyze_strips_html_from_raw_text(self, client):
-        """HTML tags must be stripped from raw_text to prevent XSS."""
-        with patch("app.services.drug_analyzer.analyze", new=AsyncMock(return_value=[])):
-            resp = client.post(
-                "/analyze",
-                json={"text": '<script>alert(1)</script>Metformin 500mg'},
-                headers={"X-API-Key": "test-key"},
-            )
-        assert resp.status_code == 200
-        data = resp.json()
-        assert "<script>" not in data["raw_text"]
-        assert "alert(1)" in data["raw_text"]
-
-    def test_analyze_non_latin_text_returns_note(self, client):
-        """Non-Latin text should return empty drugs with explanatory note."""
-        resp = client.post(
-            "/analyze",
-            json={"text": "阿莫西林胶囊 500mg"},
-            headers={"X-API-Key": "test-key"},
-        )
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["drugs"] == []
-        assert "note" in data
-        assert "Latin" in data["note"]
-
-    def test_analyze_mixed_script_processes_normally(self, client):
-        """Text with mostly Latin chars should process normally even with some non-Latin."""
-        with patch("app.api.analyze.drug_analyzer.analyze", new=AsyncMock(return_value=[])):
-            resp = client.post(
-                "/analyze",
-                json={"text": "Metformin 500mg (メトホルミン)"},
-                headers={"X-API-Key": "test-key"},
-            )
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data.get("note") is None or "Non-Latin" not in data.get("note", "")
-
-
 class TestInteractionsValidation:
     def test_interactions_rejects_empty_string_drug(self, client):
         """Empty strings in drugs list must be rejected with 422."""

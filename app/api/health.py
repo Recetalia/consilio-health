@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 from app.clients import ddinter_db
-from app.nlp import ner_model
+from app.nlp import severity_classifier
 
 router = APIRouter()
 
@@ -13,7 +13,7 @@ async def health_check():
     return {
         "status": "ok",
         "version": "0.1.0",
-        "ner_model_loaded": ner_model.is_loaded(),
+        "severity_classifier_loaded": severity_classifier.is_loaded(),
     }
 
 

@@ -72,19 +72,6 @@ DATA_HEALTH=$(curl -sf "$BASE_URL/health/data")
 assert_eq "status" "$(echo "$DATA_HEALTH" | jq -r '.status')" "ready"
 assert_eq "ddinter" "$(echo "$DATA_HEALTH" | jq -r '.ddinter')" "connected"
 
-# --- Test 2: POST /analyze ---
-
-echo ""
-echo "=== POST /analyze ==="
-ANALYZE=$(curl -sf -X POST "$BASE_URL/analyze" \
-    -H "Content-Type: application/json" \
-    -d '{"text": "Ibuprofen 400 mg tablets"}')
-
-assert_eq "drugs[0].name" "$(echo "$ANALYZE" | jq -r '.drugs[0].name')" "Ibuprofen"
-assert_eq "drugs[0].rxcui" "$(echo "$ANALYZE" | jq -r '.drugs[0].rxcui')" "5640"
-assert_eq "drugs[0].source" "$(echo "$ANALYZE" | jq -r '.drugs[0].source')" "ner"
-assert_not_empty "drugs[0].dosage" "$(echo "$ANALYZE" | jq -r '.drugs[0].dosage')"
-
 # --- Test 3: POST /interactions ---
 
 echo ""

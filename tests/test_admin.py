@@ -20,7 +20,6 @@ def client():
         patch.dict(os.environ, {"API_KEY": "test-key"}),
         patch("app.main.ddinter_db.client", mock_ddinter),
         patch("app.main.severity_classifier", mock_severity),
-        patch("app.main.ner_model"),
         patch("app.api.health.ddinter_db.client", mock_ddinter),
         patch("app.services.interaction_checker.ddinter_db.client", mock_ddinter),
         patch("app.services.interaction_checker.severity_classifier", mock_severity),

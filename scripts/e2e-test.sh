@@ -61,54 +61,12 @@ echo "=== GET /health ==="
 HEALTH=$(curl -sf "$BASE_URL/health")
 assert_eq "status" "$(echo "$HEALTH" | jq -r '.status')" "ok"
 assert_not_empty "version" "$(echo "$HEALTH" | jq -r '.version')"
-assert_eq "ner_model_loaded" "$(echo "$HEALTH" | jq -r '.ner_model_loaded')" "true"
 
 echo ""
 echo "=== GET /health/data ==="
 DATA_HEALTH=$(curl -sf "$BASE_URL/health/data")
 assert_eq "status" "$(echo "$DATA_HEALTH" | jq -r '.status')" "ready"
 assert_eq "ddinter" "$(echo "$DATA_HEALTH" | jq -r '.ddinter')" "connected"
-
-# ============================================
-# 2. POST /analyze — contract validation
-# ============================================
-
-echo ""
-echo "=== POST /analyze (valid drug text) ==="
-ANALYZE=$(curl -sf -X POST "$BASE_URL/analyze" \
-    -H "Content-Type: application/json" \
-    ${AUTH_ARGS[@]+"${AUTH_ARGS[@]}"} \
-    -d '{"text": "Ibuprofen 400 mg tablets"}')
-
-# Verify all DrugResult fields exist (iOS DrugResult.swift expects these)
-assert_eq "drugs[0].name" "$(echo "$ANALYZE" | jq -r '.drugs[0].name')" "Ibuprofen"
-assert_not_empty "drugs[0].rxcui" "$(echo "$ANALYZE" | jq -r '.drugs[0].rxcui')"
-assert_not_empty "drugs[0].source" "$(echo "$ANALYZE" | jq -r '.drugs[0].source')"
-assert_not_empty "drugs[0].confidence" "$(echo "$ANALYZE" | jq -r '.drugs[0].confidence')"
-# dosage and form can be null, but keys must exist
-assert_eq "drugs[0] has dosage key" "$(echo "$ANALYZE" | jq 'has("drugs") and (.drugs[0] | has("dosage"))')" "true"
-assert_eq "drugs[0] has form key" "$(echo "$ANALYZE" | jq 'has("drugs") and (.drugs[0] | has("form"))')" "true"
-# raw_text must exist (iOS AnalyzeResponse uses CodingKey "raw_text")
-assert_not_empty "raw_text" "$(echo "$ANALYZE" | jq -r '.raw_text')"
-
-echo ""
-echo "=== POST /analyze (no drugs found) ==="
-# Requires score-filtering fix: common words like 'hello'/'world' matched
-# RxNorm brand names at score ~3.98, well below the 6.0 threshold.
-ANALYZE_EMPTY=$(curl -sf -X POST "$BASE_URL/analyze" \
-    -H "Content-Type: application/json" \
-    ${AUTH_ARGS[@]+"${AUTH_ARGS[@]}"} \
-    -d '{"text": "hello world"}')
-assert_eq "empty drugs array" "$(echo "$ANALYZE_EMPTY" | jq '.drugs | length')" "0"
-assert_not_empty "raw_text present" "$(echo "$ANALYZE_EMPTY" | jq -r '.raw_text')"
-
-echo ""
-echo "=== POST /analyze (empty text → 422) ==="
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$BASE_URL/analyze" \
-    -H "Content-Type: application/json" \
-    ${AUTH_ARGS[@]+"${AUTH_ARGS[@]}"} \
-    -d '{"text": ""}')
-assert_status "empty text rejected" "$STATUS" "422"
 
 # ============================================
 # 3. POST /interactions — contract validation
@@ -158,17 +116,17 @@ assert_status "single drug rejected" "$STATUS" "422"
 if [ -n "$API_KEY" ]; then
     echo ""
     echo "=== Auth: no key → 401 ==="
-    STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$BASE_URL/analyze" \
+    STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$BASE_URL/interactions" \
         -H "Content-Type: application/json" \
-        -d '{"text": "test"}')
+        -d '{"drugs": ["warfarin", "ibuprofen"]}')
     assert_status "no key rejected" "$STATUS" "401"
 
     echo ""
     echo "=== Auth: wrong key → 401 ==="
-    STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$BASE_URL/analyze" \
+    STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$BASE_URL/interactions" \
         -H "Content-Type: application/json" \
         -H "X-API-Key: wrong-key-12345" \
-        -d '{"text": "test"}')
+        -d '{"drugs": ["warfarin", "ibuprofen"]}')
     assert_status "wrong key rejected" "$STATUS" "401"
 
     echo ""

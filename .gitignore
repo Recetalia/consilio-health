@@ -36,3 +36,6 @@ benchmark-results/
 candidates.json
 CLAUDE.md
 article.md
+
+# Local venv created by `uv run`
+.venv/

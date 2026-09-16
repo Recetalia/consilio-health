@@ -5,33 +5,6 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, StringConstraints
 
 
-# --- POST /analyze ---
-
-class AnalyzeRequest(BaseModel):
-    text: str = Field(..., min_length=1, max_length=5000, examples=["BRUFEN Ibuprofen 400 mg Film-Coated Tablets"])
-
-
-class DrugResult(BaseModel):
-    rxcui: str | None
-    name: str
-    dosage: str | None
-    form: str | None
-    source: str  # "ner" or "rxnorm_fallback"
-    confidence: float
-    needs_confirmation: bool = False
-
-
-class AnalyzeDataSources(BaseModel):
-    ner_model: str
-
-
-class AnalyzeResponse(BaseModel):
-    drugs: list[DrugResult]
-    raw_text: str
-    data_sources: AnalyzeDataSources | None = None
-    note: str | None = None
-
-
 # --- POST /interactions ---
 
 class InteractionsRequest(BaseModel):

@@ -10,8 +10,6 @@ interactions default to "major" with uncertain=True.
 import logging
 import re
 
-from transformers import pipeline as hf_pipeline
-
 logger = logging.getLogger(__name__)
 
 MODEL_ID = "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
@@ -41,9 +39,17 @@ _RX_WARNING = re.compile(
 
 
 def load_model() -> None:
-    """Load the zero-shot classification pipeline. Call once at app startup."""
+    """Load the zero-shot classification pipeline. Call once at app startup.
+
+    `transformers` (and therefore torch) is imported here rather than at module
+    scope so the package stays importable where torch has no wheel — notably
+    macOS x86_64, where PyTorch stopped publishing builds. Without the model the
+    module still works through the regex fallback in `classify`.
+    """
     global _classifier
     try:
+        from transformers import pipeline as hf_pipeline
+
         _classifier = hf_pipeline(
             "zero-shot-classification",
             model=MODEL_ID,

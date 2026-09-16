@@ -18,22 +18,18 @@ def _get_real_client_ip(request: Request) -> str:
 limiter = Limiter(key_func=_get_real_client_ip)
 
 from app.api.admin import router as admin_router
-from app.api.analyze import router as analyze_router
 from app.api.health import router as health_router
 from app.api.interactions import router as interactions_router
 from app.clients import ddinter_db
 from app.middleware.api_key import APIKeyMiddleware
 from app.middleware.audit_log import AuditLogMiddleware
-from app.nlp import ner_model, severity_classifier
+from app.nlp import severity_classifier
 
 logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Loading NER model...")
-    ner_model.load_model()
-    logger.info("NER model loaded.")
     logger.info("Loading severity classifier...")
     severity_classifier.load_model()
     logger.info("Severity classifier loaded: %s", severity_classifier.is_loaded())
@@ -73,6 +69,5 @@ app.add_middleware(APIKeyMiddleware)
 app.add_middleware(AuditLogMiddleware)
 
 app.include_router(health_router)
-app.include_router(analyze_router)
 app.include_router(interactions_router)
 app.include_router(admin_router)

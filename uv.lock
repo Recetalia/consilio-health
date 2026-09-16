@@ -353,10 +353,14 @@ dependencies = [
     { name = "pydantic" },
     { name = "slowapi" },
     { name = "starlette" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.optional-dependencies]
+ml = [
     { name = "torch", version = "2.13.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'darwin'" },
     { name = "torch", version = "2.13.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform != 'darwin'" },
     { name = "transformers" },
-    { name = "uvicorn", extra = ["standard"] },
 ]
 
 [package.dev-dependencies]
@@ -375,10 +379,11 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.10.0" },
     { name = "slowapi", specifier = ">=0.1.9" },
     { name = "starlette", specifier = "==1.3.1" },
-    { name = "torch", specifier = ">=2.13.0", index = "https://download.pytorch.org/whl/cpu" },
-    { name = "transformers", specifier = ">=5.14.0" },
+    { name = "torch", marker = "extra == 'ml'", specifier = ">=2.13.0", index = "https://download.pytorch.org/whl/cpu" },
+    { name = "transformers", marker = "extra == 'ml'", specifier = ">=5.14.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },
 ]
+provides-extras = ["ml"]
 
 [package.metadata.requires-dev]
 dev = [

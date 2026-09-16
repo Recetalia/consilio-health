@@ -7,12 +7,14 @@ WORKDIR /app
 # Copy dependency files first for layer caching
 COPY pyproject.toml uv.lock .python-version ./
 
-# Install dependencies only (locked, no project code yet)
-RUN uv sync --no-install-project --no-dev
+# Install dependencies only (locked, no project code yet).
+# --extra ml pulls torch + transformers: the image must carry the severity
+# classifier even though it is optional for local development.
+RUN uv sync --no-install-project --no-dev --extra ml
 
 # Copy application code and install the project
 COPY app/ app/
-RUN uv sync --no-dev
+RUN uv sync --no-dev --extra ml
 
 # --- DB downloader stage ---
 FROM python:3.12-slim AS db-downloader
@@ -54,11 +56,12 @@ ENV HF_HOME=/app/models
 ENV TRANSFORMERS_CACHE=/app/models
 ENV INTERACTION_DB_PATH=/app/data/ddinter.db
 
-# Pre-download NER model so the image is self-contained.
+# Pre-download the severity classifier so the image is self-contained.
 # Layer is cached until venv or model ID changes.
 # In local dev, docker-compose mounts a volume over /app/models.
+# The OpenMed NER model was dropped with /analyze (Recetalia fork): this service
+# only resolves interactions, it does not read prescription text.
 RUN python -c "from transformers import pipeline; \
-    pipeline('ner', model='OpenMed/OpenMed-NER-PharmaDetect-BioPatient-108M', aggregation_strategy='none'); \
     pipeline('zero-shot-classification', model='MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli')"
 
 # App code comes last — most frequently changing layer
@@ -72,20 +75,6 @@ RUN groupadd -r pillchecker && useradd -r -g pillchecker pillchecker && \
     chown -R pillchecker:pillchecker /app
 
 USER pillchecker
-
-# --- Benchmark runner stage ---
-FROM app-base AS benchmark-runner
-
-USER root
-
-COPY eval/ /app/eval/
-
-RUN chown -R pillchecker:pillchecker /app/eval
-
-USER pillchecker
-
-ENTRYPOINT ["python", "-m", "eval.run_benchmark"]
-CMD []
 
 # --- Runtime stage ---
 FROM app-base AS runtime
