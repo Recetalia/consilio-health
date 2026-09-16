@@ -69,6 +69,11 @@ def normalize(name: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 
+def _like(s: str) -> str:
+    """Escapa los comodines de LIKE para que un `%` tecleado no matchee todo."""
+    return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
 def _readonly_immutable_uri(db_path: str) -> str:
     absolute = Path(db_path).resolve()
     return f"file:{quote(str(absolute), safe='/')}?mode=ro&immutable=1"
@@ -159,6 +164,31 @@ class RecetaliaDatabase:
         ) as cur:
             row = await cur.fetchone()
         return row["drug_id"] if row else None
+
+    async def search_drugs(self, query: str, limit: int = 10) -> list[dict[str, Any]]:
+        """Busca fármacos por prefijo de alias, para el autocompletado.
+
+        Ordena por si el alias empieza con lo tecleado antes que por si sólo lo
+        contiene: quien escribe "war" espera warfarina primero, no
+        clorhidrato de algo-war.
+        """
+        q = normalize(query)
+        if len(q) < 2:
+            return []
+        conn = await self._c()
+        async with conn.execute(
+            """select distinct d.drug_id, d.canonical, d.rxcui
+               from drug_alias a
+               join drug d on d.drug_id = a.drug_id
+               where a.alias_norm like ? escape '\\'
+               order by case when a.alias_norm like ? escape '\\' then 0 else 1 end,
+                        length(d.canonical), d.canonical
+               limit ?""",
+            (f"%{_like(q)}%", f"{_like(q)}%", limit),
+        ) as cur:
+            rows = await cur.fetchall()
+        return [{"drug_id": r["drug_id"], "name": r["canonical"], "rxcui": r["rxcui"]}
+                for r in rows]
 
     async def drug_id_by_dnma(self, sustancia_id: str) -> int | None:
         conn = await self._c()

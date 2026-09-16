@@ -1,8 +1,11 @@
 import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
@@ -18,6 +21,7 @@ def _get_real_client_ip(request: Request) -> str:
 limiter = Limiter(key_func=_get_real_client_ip)
 
 from app.api.admin import router as admin_router
+from app.api.drugs import router as drugs_router
 from app.api.health import router as health_router
 from app.api.interactions import router as interactions_router
 from app.clients import recetalia_db
@@ -70,4 +74,15 @@ app.add_middleware(AuditLogMiddleware)
 
 app.include_router(health_router)
 app.include_router(interactions_router)
+app.include_router(drugs_router)
+
+# Interfaz de consulta. Se sirve desde el mismo proceso: Consilio es un producto
+# standalone, no una API a la que haya que construirle un frontend aparte.
+_WEB = Path(__file__).parent / "web"
+app.mount("/ui", StaticFiles(directory=_WEB), name="ui")
+
+
+@app.get("/", include_in_schema=False)
+async def index():
+    return FileResponse(_WEB / "index.html")
 app.include_router(admin_router)

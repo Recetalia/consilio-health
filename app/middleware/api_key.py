@@ -28,7 +28,10 @@ logger = logging.getLogger(__name__)
 
 # Rutas sin autenticación: las necesita el orquestador para saber si el
 # contenedor está vivo, y no exponen datos.
-PUBLIC_PATHS = {"/health", "/health/data", "/openapi.json", "/docs", "/redoc"}
+PUBLIC_PATHS = {"/health", "/health/data", "/openapi.json", "/docs", "/redoc", "/"}
+# Los estáticos de la interfaz no llevan key: son HTML, CSS y JS, no datos. La
+# key la exigen igual los endpoints que la interfaz consume.
+PUBLIC_PREFIXES = ("/ui/",)
 
 _warned = False
 
@@ -39,7 +42,7 @@ class APIKeyMiddleware(BaseHTTPMiddleware):
         api_key = os.environ.get("API_KEY", "")
         path = request.url.path
 
-        if path in PUBLIC_PATHS:
+        if path in PUBLIC_PATHS or path.startswith(PUBLIC_PREFIXES):
             return await call_next(request)
 
         if not api_key:
