@@ -20,7 +20,7 @@ limiter = Limiter(key_func=_get_real_client_ip)
 from app.api.admin import router as admin_router
 from app.api.health import router as health_router
 from app.api.interactions import router as interactions_router
-from app.clients import ddinter_db
+from app.clients import recetalia_db
 from app.middleware.api_key import APIKeyMiddleware
 from app.middleware.audit_log import AuditLogMiddleware
 from app.nlp import severity_classifier
@@ -33,13 +33,13 @@ async def lifespan(app: FastAPI):
     logger.info("Loading severity classifier...")
     severity_classifier.load_model()
     logger.info("Severity classifier loaded: %s", severity_classifier.is_loaded())
-    logger.info("Connecting to DDInter SQLite database...")
-    # The baked DDInter DB is required for production startup; missing file
-    # errors should fail the revision instead of silently degrading coverage.
-    await ddinter_db.client.connect()
-    logger.info("DDInter SQLite connected: %s", await ddinter_db.client.health_check())
+    logger.info("Conectando al SQLite de interacciones...")
+    # La base horneada es requisito de arranque: si falta, es mejor que la
+    # revisión no levante a que sirva con cobertura degradada en silencio.
+    await recetalia_db.client.connect()
+    logger.info("Base de interacciones conectada: %s", await recetalia_db.client.stats())
     yield
-    await ddinter_db.client.close()
+    await recetalia_db.client.close()
 
 
 app = FastAPI(

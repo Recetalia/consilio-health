@@ -53,5 +53,6 @@ class InteractionsResponse(BaseModel):
     safe: bool | None
     error: str | None = None
     data_sources: InteractionsDataSources | None = None
-    coverage_summary: dict[str, int] = Field(default_factory=lambda: {"ddinter": 0, "openfda": 0, "unknown": 0})
+    coverage_summary: dict[str, int] = Field(
+        default_factory=lambda: {"recetalia": 0, "ddinter": 0, "openfda": 0, "unknown": 0})
     limitations: list[str] = _INTERACTION_LIMITATIONS

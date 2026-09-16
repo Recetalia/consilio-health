@@ -11,16 +11,17 @@ from fastapi.testclient import TestClient
 
 @pytest.fixture
 def mock_ddinter():
-    """Mock DDInter client in every module that imports it."""
+    """Mockea el cliente de la base en todos los módulos que lo importan."""
     mock = MagicMock()
     mock.health_check = AsyncMock(return_value=True)
     mock.connect = AsyncMock()
     mock.close = AsyncMock()
+    mock.stats = AsyncMock(return_value={"drugs": 0, "interactions": 0})
     mock.lookup_by_rxcui = AsyncMock(return_value=None)
-    mock.lookup_by_name_fts = AsyncMock(return_value=None)
-    with patch("app.services.interaction_checker.ddinter_db.client", mock), \
-         patch("app.api.health.ddinter_db.client", mock), \
-         patch("app.main.ddinter_db.client", mock):
+    mock.lookup_by_name = AsyncMock(return_value=None)
+    with patch("app.services.interaction_checker.recetalia_db.client", mock), \
+         patch("app.api.health.recetalia_db.client", mock), \
+         patch("app.main.recetalia_db.client", mock):
         yield mock
 
 

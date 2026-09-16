@@ -1,4 +1,10 @@
-"""Interaction checker with DDInter SQLite primary and OpenFDA fallback."""
+"""Chequeo de interacciones contra la base de Recetalia.
+
+La base local es la fuente: trae los pares de DDInter, los derivados de openFDA
+y lo que haya curado un farmacéutico, cada uno con su procedencia. La llamada
+en vivo a openFDA quedó como último recurso para fármacos que la base no
+conoce — el 99% de los chequeos no toca la red.
+"""
 
 from __future__ import annotations
 
@@ -6,14 +12,14 @@ import asyncio
 import logging
 from typing import Any
 
-from app.clients import ddinter_db, openfda_client, rxnorm_client
+from app.clients import openfda_client, recetalia_db, rxnorm_client
 from app.middleware.audit_log import get_audit_context
 from app.nlp import severity_classifier
 
 logger = logging.getLogger(__name__)
 
 _MANAGEMENT = "Consult a healthcare professional for guidance."
-_EMPTY_COVERAGE = {"ddinter": 0, "openfda": 0, "unknown": 0}
+_EMPTY_COVERAGE = {"recetalia": 0, "ddinter": 0, "openfda": 0, "unknown": 0}
 
 
 async def check(drug_names: list[str]) -> dict[str, Any]:
@@ -70,28 +76,68 @@ async def _resolve_pair(
     rxcui_a = rxcui_by_name.get(drug_a)
     rxcui_b = rxcui_by_name.get(drug_b)
 
+    # 1) por RxCUI: el camino bueno, sin ambigüedad de nombre
     if rxcui_a and rxcui_b:
         try:
-            ddinter_hit = await ddinter_db.client.lookup_by_rxcui(rxcui_a, rxcui_b)
+            hit = await recetalia_db.client.lookup_by_rxcui(rxcui_a, rxcui_b)
         except Exception:
-            logger.warning("DDInter RxCUI lookup failed for %s + %s", drug_a, drug_b, exc_info=True)
+            logger.warning("Búsqueda por RxCUI falló para %s + %s", drug_a, drug_b, exc_info=True)
         else:
-            if ddinter_hit:
-                return _format_ddinter(drug_a, drug_b, rxcui_a, rxcui_b, ddinter_hit), "ddinter"
+            if hit:
+                return _format_local(drug_a, drug_b, rxcui_a, rxcui_b, hit), hit["source"]
 
+    # 2) por nombre normalizado contra drug_alias
     try:
-        ddinter_hit = await ddinter_db.client.lookup_by_name_fts(drug_a, drug_b)
+        hit = await recetalia_db.client.lookup_by_name(drug_a, drug_b)
     except Exception:
-        logger.warning("DDInter FTS lookup failed for %s + %s", drug_a, drug_b, exc_info=True)
+        logger.warning("Búsqueda por nombre falló para %s + %s", drug_a, drug_b, exc_info=True)
     else:
-        if ddinter_hit:
-            return _format_ddinter(drug_a, drug_b, rxcui_a, rxcui_b, ddinter_hit), "ddinter"
+        if hit:
+            return _format_local(drug_a, drug_b, rxcui_a, rxcui_b, hit), hit["source"]
 
+    # 3) openFDA en vivo: sólo para lo que la base no conoce
     fda_hit = await _openfda_pair(drug_a, drug_b)
     if fda_hit:
         return await _format_openfda(drug_a, drug_b, rxcui_a, rxcui_b, fda_hit), "openfda"
 
     return None, "unknown"
+
+
+def _format_local(
+    drug_a: str,
+    drug_b: str,
+    rxcui_a: str | None,
+    rxcui_b: str | None,
+    hit: dict[str, Any],
+) -> dict[str, Any]:
+    """Arma la respuesta desde una fila de la base, sea cual sea su procedencia."""
+    severity = hit.get("severity") or "unknown"
+    source = hit["source"]
+    _audit_severity(drug_a, drug_b, severity, hit["uncertain"], source, "recetalia_db")
+
+    if hit.get("evidence"):
+        # openFDA: la oración del prospecto es la descripción, no una plantilla
+        description = hit["evidence"]
+    elif hit.get("mechanism"):
+        description = hit["mechanism"]
+    else:
+        description = (
+            f"Interaction reported in DDInter 2.0 for "
+            f"{hit.get('drug_a_name', drug_a)} + {hit.get('drug_b_name', drug_b)}."
+        )
+
+    return {
+        "drug_a": drug_a,
+        "drug_b": drug_b,
+        "rxcui_a": rxcui_a,
+        "rxcui_b": rxcui_b,
+        "severity": severity,
+        "source": source,
+        "description": description,
+        "management": hit.get("management") or _MANAGEMENT,
+        # openFDA sale de texto libre: el médico tiene que poder distinguirlo
+        "uncertain": hit["uncertain"],
+    }
 
 
 def _format_ddinter(

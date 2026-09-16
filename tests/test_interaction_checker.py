@@ -1,4 +1,4 @@
-"""Tests for interaction_checker DDInter -> OpenFDA -> unknown routing."""
+"""Ruteo del checker: base local -> openFDA en vivo -> unknown."""
 
 from __future__ import annotations
 
@@ -16,8 +16,8 @@ def patch_clients(monkeypatch):
 
     ddc = AsyncMock(return_value=None)
     ddn = AsyncMock(return_value=None)
-    monkeypatch.setattr(interaction_checker.ddinter_db.client, "lookup_by_rxcui", ddc)
-    monkeypatch.setattr(interaction_checker.ddinter_db.client, "lookup_by_name_fts", ddn)
+    monkeypatch.setattr(interaction_checker.recetalia_db.client, "lookup_by_rxcui", ddc)
+    monkeypatch.setattr(interaction_checker.recetalia_db.client, "lookup_by_name", ddn)
 
     fda = AsyncMock(return_value=None)
     monkeypatch.setattr(interaction_checker.openfda_client, "check_pair", fda)
@@ -27,13 +27,11 @@ def patch_clients(monkeypatch):
 async def test_ddinter_hit_via_rxcui(patch_clients):
     patch_clients["rxnorm"].side_effect = ["11289", "1191"]
     patch_clients["ddinter_rxcui"].return_value = {
-        "drug_a_id": "DDInter1",
-        "drug_b_id": "DDInter2",
         "drug_a_name": "Warfarin",
         "drug_b_name": "Aspirin",
         "severity": "major",
         "source": "ddinter",
-        "atc_category": "B",
+        "uncertain": False,
     }
     result = await interaction_checker.check(["Warfarin", "Aspirin"])
     assert result["coverage_summary"]["ddinter"] == 1
@@ -46,13 +44,11 @@ async def test_ddinter_hit_via_rxcui(patch_clients):
 async def test_falls_back_to_fts_when_rxcui_misses(patch_clients):
     patch_clients["rxnorm"].side_effect = [None, None]
     patch_clients["ddinter_fts"].return_value = {
-        "drug_a_id": "DDInter1",
-        "drug_b_id": "DDInter2",
         "drug_a_name": "Warfarin",
         "drug_b_name": "Aspirin",
         "severity": "major",
         "source": "ddinter",
-        "atc_category": "B",
+        "uncertain": False,
     }
     result = await interaction_checker.check(["Warfarin", "Aspirin"])
     assert result["interactions"][0]["source"] == "ddinter"
@@ -72,7 +68,7 @@ async def test_openfda_fallback_when_ddinter_misses(patch_clients):
 async def test_unknown_when_all_paths_miss(patch_clients):
     patch_clients["rxnorm"].side_effect = ["1", "2"]
     result = await interaction_checker.check(["A", "B"])
-    assert result["coverage_summary"] == {"ddinter": 0, "openfda": 0, "unknown": 1}
+    assert result["coverage_summary"] == {"recetalia": 0, "ddinter": 0, "openfda": 0, "unknown": 1}
     assert result["interactions"] == []
 
 

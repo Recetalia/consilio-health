@@ -1,7 +1,7 @@
 """Health check endpoints."""
 
 from fastapi import APIRouter
-from app.clients import ddinter_db
+from app.clients import recetalia_db
 from app.nlp import severity_classifier
 
 router = APIRouter()
@@ -20,7 +20,7 @@ async def health_check():
 @router.get("/health/data")
 async def data_health_check():
     """Check the status of the drug interaction data source."""
-    connected = await ddinter_db.client.health_check()
+    connected = await recetalia_db.client.health_check()
     return {
         "status": "ready" if connected else "degraded",
         "ddinter": "connected" if connected else "unreachable",
