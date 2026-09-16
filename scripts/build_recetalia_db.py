@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS interaction (
     severity          TEXT    NOT NULL CHECK (severity IN ('minor','moderate','major','unknown')),
     mechanism         TEXT,                 -- DDInter no lo trae; lo cargamos nosotros
     management        TEXT,                 -- ídem
-    source            TEXT    NOT NULL CHECK (source IN ('ddinter','recetalia')),
+    evidence          TEXT,                 -- la oración del prospecto, para source='openfda'
+    source            TEXT    NOT NULL CHECK (source IN ('ddinter','openfda','recetalia')),
     reviewed_by       TEXT,
     reviewed_at       TEXT,
     note              TEXT,
