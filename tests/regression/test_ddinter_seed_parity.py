@@ -20,13 +20,12 @@ _SEED = json.loads(Path("eval/interaction_seed_cases.json").read_text())["positi
 # Pares que hoy NO podemos detectar, con el motivo medido. No se ablanda el
 # gate: se deja constancia de por qué falla y se marca xfail. Cuando exista la
 # expansión por clase van a empezar a pasar solos y hay que sacarlos de acá.
-KNOWN_GAPS = {
-    ("phenelzine", "fluoxetine"):
-        "IMAO + ISRS. DDInter no publica la categoría N, así que el par no existe; "
-        "y el prospecto de fluoxetina advierte sobre la CLASE ('Monoamine Oxidase "
-        "Inhibitors'), nunca nombra a la fenelzina, así que ningún matcheo por "
-        "nombre puede encontrarlo. Necesita expansión por clase.",
-}
+# Vacío a propósito. Acá van los pares que NO podemos detectar, con el motivo
+# medido, para que el gate quede rojo documentado en vez de ablandado.
+# (phenelzine + fluoxetine vivió acá hasta que la expansión por clase lo
+# resolvió: el prospecto advierte sobre "Monoamine Oxidase Inhibitors" sin
+# nombrar a la fenelzina, y la clase MOA la contiene.)
+KNOWN_GAPS: dict[tuple[str, str], str] = {}
 
 
 @pytest.mark.parametrize("case", _SEED)
@@ -53,8 +52,13 @@ async def test_ddinter_seed_severity_matches_expected(case, monkeypatch):
             f"sin interacción para {case['drug_a']} + {case['drug_b']}: "
             "o falta el par en la base, o falta el alias que lo encuentra")
         hit = result["interactions"][0]
-        assert hit["source"] == "ddinter"
-        assert hit["severity"] == case["severity"]
+        # El origen no se fija: un par puede llegar de DDInter, de expansión por
+        # clase sobre un prospecto, o de curación propia. Lo que el gate
+        # garantiza es la severidad curada, venga de donde venga.
+        assert hit["source"] in {"recetalia", "ddinter", "openfda"}, hit["source"]
+        assert hit["severity"] == case["severity"], (
+            f"{case['drug_a']} + {case['drug_b']}: esperaba {case['severity']}, "
+            f"llegó {hit['severity']} desde {hit['source']}")
     finally:
         await recetalia_db.client.close()
 
