@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Smoke test for PillChecker API.
+# Smoke test for Consilio.
 # Waits for the API to become healthy, then tests all endpoints.
 #
 # Prerequisites: curl, jq

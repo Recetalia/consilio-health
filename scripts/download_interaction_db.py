@@ -11,7 +11,7 @@ from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import HTTPRedirectHandler, Request, build_opener, urlopen
 
-USER_AGENT = "pillchecker-api-build"
+USER_AGENT = "consilio-build"
 DEFAULT_ASSET = "ddinter.db"
 
 

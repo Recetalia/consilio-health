@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# End-to-end API contract tests for PillChecker.
+# End-to-end API contract tests for Consilio.
 # Validates every field the iOS app depends on.
 #
 # Usage: ./scripts/e2e-test.sh [BASE_URL] [API_KEY]

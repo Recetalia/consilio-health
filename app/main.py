@@ -43,7 +43,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="PillChecker API",
+    title="Consilio",
     description="Medication interaction checker",
     version="0.1.0",
     lifespan=lifespan,

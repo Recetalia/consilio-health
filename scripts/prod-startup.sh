@@ -4,7 +4,7 @@ set -e
 # Production Startup Script
 # DDInter SQLite DB is baked into the image at build time.
 
-echo "[PROD] Starting PillChecker API..."
+echo "[PROD] Starting Consilio..."
 
 # Execute the CMD
 exec "$@"

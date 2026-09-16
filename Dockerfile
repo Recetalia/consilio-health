@@ -16,30 +16,6 @@ RUN uv sync --no-install-project --no-dev --extra ml
 COPY app/ app/
 RUN uv sync --no-dev --extra ml
 
-# --- DB downloader stage ---
-FROM python:3.12-slim AS db-downloader
-
-WORKDIR /app/data
-
-# Download a pinned DDInter SQLite DB from the project's release source.
-ARG INTERACTION_DB_REPO=SPerekrestova/pillchecker-api
-ARG INTERACTION_DB_TAG=ddinter-2026-05-16
-ARG INTERACTION_DB_SHA256=ebdd0640949ca551c0d669ee1161b00e5d868ef067c857852a8afc380e51d4fb
-COPY scripts/download_interaction_db.py /tmp/download_interaction_db.py
-RUN --mount=type=secret,id=github_token,required=false \
-    INTERACTION_DB_REPO="$(printf '%s' "${INTERACTION_DB_REPO}" | tr -d "\r\n")"; \
-    INTERACTION_DB_TAG="$(printf '%s' "${INTERACTION_DB_TAG}" | tr -d "\r\n")"; \
-    INTERACTION_DB_SHA256="$(printf '%s' "${INTERACTION_DB_SHA256}" | tr -d "\r\n")"; \
-    test -n "${INTERACTION_DB_REPO}" || { echo "INTERACTION_DB_REPO build arg is required"; exit 1; }; \
-    test -n "${INTERACTION_DB_TAG}" || { echo "INTERACTION_DB_TAG build arg is required"; exit 1; }; \
-    if [ -f /run/secrets/github_token ]; then export GITHUB_TOKEN="$(cat /run/secrets/github_token)"; fi; \
-    if [ -n "${INTERACTION_DB_SHA256}" ]; then export INTERACTION_DB_SHA256="${INTERACTION_DB_SHA256}"; fi; \
-    python /tmp/download_interaction_db.py \
-      --repo "${INTERACTION_DB_REPO}" \
-      --tag "${INTERACTION_DB_TAG}" \
-      --asset ddinter.db \
-      --output ddinter.db
-
 # --- Application base stage ---
 FROM python:3.12-slim AS app-base
 
@@ -48,13 +24,21 @@ WORKDIR /app
 # Copy built virtualenv from builder
 COPY --from=builder /app/.venv /app/.venv
 
-# Copy DDInter SQLite DB from downloader stage
-COPY --from=db-downloader /app/data /app/data
+# La base de conocimiento NO va en la imagen: se monta en /app/data.
+#
+# Dos razones. Una legal: hornear el .db derivado de DDInter en una imagen que
+# se distribuye es justamente el acto que gobierna su cláusula NonCommercial.
+# Una práctica: la base la construye nuestro ETL (scripts/build_recetalia_db.py)
+# y se actualiza en otro ciclo que el código.
+#
+# Si falta, el arranque falla a propósito: es mejor que la revisión no levante
+# a que sirva con cobertura degradada en silencio.
+VOLUME ["/app/data"]
 
 ENV PATH="/app/.venv/bin:$PATH"
 ENV HF_HOME=/app/models
 ENV TRANSFORMERS_CACHE=/app/models
-ENV INTERACTION_DB_PATH=/app/data/ddinter.db
+ENV INTERACTION_DB_PATH=/app/data/recetalia_interactions.db
 
 # Pre-download the severity classifier so the image is self-contained.
 # Layer is cached until venv or model ID changes.
@@ -71,10 +55,10 @@ COPY scripts/ /app/scripts/
 RUN chmod +x /app/scripts/prod-startup.sh /app/scripts/ci-startup.sh
 
 # Create a non-root user for security
-RUN groupadd -r pillchecker && useradd -r -g pillchecker pillchecker && \
-    chown -R pillchecker:pillchecker /app
+RUN groupadd -r consilio && useradd -r -g consilio consilio && \
+    chown -R consilio:consilio /app
 
-USER pillchecker
+USER consilio
 
 # --- Runtime stage ---
 FROM app-base AS runtime

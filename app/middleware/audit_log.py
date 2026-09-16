@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
-logger = logging.getLogger("pillchecker.audit")
+logger = logging.getLogger("consilio.audit")
 
 _audit_context: ContextVar["AuditContext | None"] = ContextVar("audit_context", default=None)
 

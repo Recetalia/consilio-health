@@ -46,7 +46,7 @@ from scripts.build_recetalia_db import SCHEMA
 logger = logging.getLogger("resolve_dnma")
 
 BASE = "https://rxnav.nlm.nih.gov/REST"
-USER_AGENT = "recetalia-interactions-build"
+USER_AGENT = "consilio-build"
 
 SIMILARITY_MIN = 0.85
 

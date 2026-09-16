@@ -79,7 +79,25 @@ class TestAPIKeyMiddleware:
         r = client_with_key.post("/interactions", json={"drugs": ["a", "b"]})
         assert r.status_code == 401
 
-    def test_no_api_key_env_disables_auth(self, client_without_key):
-        r = client_without_key.post("/analyze", json={"text": "ibuprofen"})
-        # Auth is disabled when API_KEY env var is not set
-        assert r.status_code != 401
+    def test_sin_api_key_rechaza_todo(self, client_without_key):
+        """Sin API_KEY el servicio NO queda abierto: responde 503.
+
+        El upstream dejaba pasar todo con un comentario que decía "auth
+        disabled". Un despliegue que olvida la variable queda accesible y nada
+        lo delata, porque el servicio responde normal. Un 503 se arregla en
+        minutos; un servicio abierto puede vivir meses.
+        """
+        r = client_without_key.post("/interactions", json={"drugs": ["a", "b"]})
+        assert r.status_code == 503
+        assert "API_KEY" in r.json()["detail"]
+
+    def test_sin_api_key_los_health_siguen_abiertos(self, client_without_key):
+        """El orquestador tiene que poder saber si el contenedor está vivo."""
+        assert client_without_key.get("/health").status_code == 200
+        assert client_without_key.get("/health/data").status_code == 200
+
+    def test_escotilla_de_desarrollo(self, client_without_key):
+        """CONSILIO_ALLOW_NO_API_KEY=1 permite correr sin key en local."""
+        with patch.dict(os.environ, {"CONSILIO_ALLOW_NO_API_KEY": "1"}):
+            r = client_without_key.post("/interactions", json={"drugs": ["a", "b"]})
+        assert r.status_code != 503

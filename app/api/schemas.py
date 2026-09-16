@@ -1,4 +1,4 @@
-"""Pydantic request/response models for the PillChecker API."""
+"""Pydantic request/response models for the Consilio."""
 
 from typing import Annotated, Literal
 

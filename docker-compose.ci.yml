@@ -2,7 +2,7 @@
 # Usage: docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d api
 services:
   api:
-    image: pillchecker-api:ci
+    image: consilio:ci
     entrypoint: ["/app/scripts/ci-startup.sh"]
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
     ports:

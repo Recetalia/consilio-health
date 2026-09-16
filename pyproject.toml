@@ -1,5 +1,5 @@
 [project]
-name = "pillchecker-api"
+name = "consilio"
 version = "0.1.0"
 description = "Medication interaction checker API"
 requires-python = ">=3.12,<3.13"

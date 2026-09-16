@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a DDInter SQLite artefact for PillChecker.
+"""Build a DDInter SQLite artefact for Consilio.
 
 Subcommands:
     fetch          download DDInter CSVs and write data/ddinter_manifest.json
@@ -32,7 +32,7 @@ from scripts import ddinter_sources
 
 logger = logging.getLogger("build_ddinter_db")
 
-USER_AGENT = "pillchecker-ddinter-build"
+USER_AGENT = "consilio-build"
 
 _REQUIRED_CSV_COLUMNS = {"DDInterID_A", "Drug_A", "DDInterID_B", "Drug_B", "Level"}
 DEFAULT_MIN_INTERACTION_ROWS = 150_000

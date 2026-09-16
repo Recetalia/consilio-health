@@ -1,16 +1,29 @@
 services:
-  api:
+  consilio:
     build:
       context: .
       target: runtime
+    container_name: consilio
     ports:
       - "8000:8000"
     volumes:
+      # La base de conocimiento se monta, no se hornea. Ver el comentario del
+      # Dockerfile: es una decisión legal además de práctica.
+      - ./data:/app/data:ro
       - model-cache:/app/models
     environment:
       - HF_HOME=/app/models
       - HF_TOKEN=${HF_TOKEN:-}
-      - API_KEY=${API_KEY}
+      # Obligatoria: el middleware deja pasar todo si no está seteada.
+      - API_KEY=${API_KEY:?definí API_KEY, si no el servicio queda abierto}
+      - INTERACTION_DB_PATH=/app/data/recetalia_interactions.db
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health/data', timeout=5).status==200 else 1)"]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s
+      retries: 3
     restart: unless-stopped
 
 volumes:

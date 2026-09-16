@@ -37,7 +37,7 @@ from pathlib import Path
 logger = logging.getLogger("fetch_openfda")
 
 ENDPOINT = "https://api.fda.gov/drug/label.json"
-USER_AGENT = "recetalia-interactions-build"
+USER_AGENT = "consilio-build"
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS drug_label_text (

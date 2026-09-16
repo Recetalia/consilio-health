@@ -4,6 +4,8 @@ Tests /interactions and /health endpoints directly.
 /analyze requires the NER model loaded — tested via Docker or manual run.
 """
 
+import os
+
 import pytest
 from unittest.mock import AsyncMock, patch, MagicMock
 from fastapi.testclient import TestClient
@@ -37,10 +39,20 @@ def mock_severity():
         yield mock
 
 
+@pytest.fixture(autouse=True)
+def api_key_env():
+    """El middleware ya no falla abierto: sin API_KEY rechaza todo con 503."""
+    with patch.dict(os.environ, {"API_KEY": "test-key"}):
+        yield
+
+
 @pytest.fixture
 def client(mock_ddinter, mock_severity):
     from app.main import app
-    return TestClient(app)
+    # La key va por defecto en el cliente: probar el contrato de /interactions
+    # no es probar la autenticación, que tiene sus propios tests en
+    # tests/test_api_key.py.
+    return TestClient(app, headers={"X-API-Key": "test-key"})
 
 
 class TestInteractionsValidation:

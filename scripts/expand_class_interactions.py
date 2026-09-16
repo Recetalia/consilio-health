@@ -41,7 +41,7 @@ from datetime import datetime, timezone
 logger = logging.getLogger("expand_class")
 
 BASE = "https://rxnav.nlm.nih.gov/REST/rxclass"
-USER_AGENT = "recetalia-interactions-build"
+USER_AGENT = "consilio-build"
 
 # Tipos de clase que representan una CLASE de fármacos. CHEM queda afuera: son
 # 10.364 entradas que en su mayoría son una sustancia sola.

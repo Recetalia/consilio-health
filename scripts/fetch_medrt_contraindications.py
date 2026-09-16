@@ -35,7 +35,7 @@ from scripts.build_recetalia_db import SCHEMA
 logger = logging.getLogger("fetch_medrt")
 
 RXCLASS = "https://rxnav.nlm.nih.gov/REST/rxclass/class/byRxcui.json"
-USER_AGENT = "recetalia-interactions-build"
+USER_AGENT = "consilio-build"
 
 # `kind` por relación. ci_with es la contraindicación directa fármaco-patología;
 # las otras tres son por clase química, mecanismo o efecto fisiológico, que son
