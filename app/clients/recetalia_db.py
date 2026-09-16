@@ -75,6 +75,13 @@ def _like(s: str) -> str:
 
 
 def _readonly_immutable_uri(db_path: str) -> str:
+    """URI de sólo lectura e inmutable.
+
+    ⚠️ `immutable=1` le dice a SQLite que el archivo no cambia, así que saltea
+    el bloqueo y cachea agresivamente. Eso lo hace rápido, pero significa que
+    **un cambio del ETL no se ve hasta reiniciar el servicio**. Es el precio de
+    tratar a la base como un artefacto de build, que es lo que es.
+    """
     absolute = Path(db_path).resolve()
     return f"file:{quote(str(absolute), safe='/')}?mode=ro&immutable=1"
 

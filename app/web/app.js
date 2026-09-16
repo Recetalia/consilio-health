@@ -159,20 +159,27 @@ $("check").addEventListener("click", async () => {
   const btn = $("check");
   btn.disabled = true;
   btn.textContent = "Consultando…";
+  let data;
   try {
     const r = await fetch("/interactions", {
       method: "POST",
       headers: headers(),
       body: JSON.stringify({ drugs: selected.map((s) => s.name) }),
     });
-    if (!r.ok) return handleHttpError(r);
-    render(await r.json());
+    if (!r.ok) { handleHttpError(r); return; }
+    data = await r.json();
   } catch {
     toast("No se pudo consultar el servicio.");
+    return;
   } finally {
     btn.textContent = "Consultar";
     btn.disabled = selected.length < 2;
   }
+  // El render va FUERA del try. Adentro, un error al pintar disparaba el toast
+  // de "no se pudo consultar" sobre una consulta que había respondido 200 y ya
+  // se había pintado: el usuario veía los resultados correctos y un cartel de
+  // error al mismo tiempo.
+  render(data);
 });
 
 function render(data) {
@@ -206,7 +213,7 @@ function render(data) {
   box.hidden = false;
 
   const cov = data.coverage_summary || {};
-  const partes = Object.entries(cov).filter(([, n]) => n > 0 && k_ok(k))
+  const partes = Object.entries(cov).filter(([k, n]) => n > 0 && k_ok(k))
     .map(([k, n]) => `${n} de ${FUENTE[k] || k}`);
   $("sources").textContent = partes.length
     ? `Fuentes consultadas: ${partes.join(" · ")}.`
@@ -227,7 +234,11 @@ function card(i) {
         ${i.uncertain ? '<span class="tag-uncertain">inferida de texto</span>' : ""}
       </div>
       ${i.description
-        ? `<p class="evidence">${escapeHtml(i.description)}</p>`
+        ? `<p class="evidence"${i.source === "openfda" ? ' lang="en"' : ""}>${
+             escapeHtml(i.description)}</p>${
+             i.source === "openfda"
+               ? '<p class="evidence-note">Texto original del prospecto, en inglés.</p>'
+               : ""}`
         : `<p class="evidence sin-texto">La fuente registra el par y su gravedad,
              pero no aporta descripción del mecanismo.</p>`}
       <p class="meta">${FUENTE[i.source] || i.source}${

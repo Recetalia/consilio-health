@@ -1,0 +1,159 @@
+{
+  "_comment": "Nombres en español que un médico uruguayo tipea y RxNorm no conoce. La clave es el nombre canónico tal como está en la tabla `drug`. Curado a mano: RxNorm es inglés y no tiene estos.",
+  "Acetaminophen": [
+    "paracetamol"
+  ],
+  "Acetylsalicylic acid": [
+    "aspirina",
+    "acido acetilsalicilico",
+    "AAS"
+  ],
+  "Epinephrine": [
+    "adrenalina"
+  ],
+  "Norepinephrine": [
+    "noradrenalina"
+  ],
+  "Salbutamol": [
+    "albuterol"
+  ],
+  "Furosemide": [
+    "furosemida"
+  ],
+  "Enalapril": [
+    "enalapril maleato"
+  ],
+  "Ibuprofen": [
+    "ibuprofeno"
+  ],
+  "Diclofenac": [
+    "diclofenac sodico",
+    "diclofenac potasico"
+  ],
+  "Ketorolac": [
+    "ketorolac trometamina"
+  ],
+  "Naproxen": [
+    "naproxeno"
+  ],
+  "Omeprazole": [
+    "omeprazol"
+  ],
+  "Metformin": [
+    "metformina"
+  ],
+  "Warfarin": [
+    "warfarina"
+  ],
+  "Losartan": [
+    "losartan potasico"
+  ],
+  "Atorvastatin": [
+    "atorvastatina"
+  ],
+  "Amlodipine": [
+    "amlodipina"
+  ],
+  "Sertraline": [
+    "sertralina"
+  ],
+  "Fluoxetine": [
+    "fluoxetina"
+  ],
+  "Clonazepam": [
+    "clonazepam"
+  ],
+  "Alprazolam": [
+    "alprazolam"
+  ],
+  "Levothyroxine": [
+    "levotiroxina"
+  ],
+  "Amoxicillin": [
+    "amoxicilina"
+  ],
+  "Ciprofloxacin": [
+    "ciprofloxacina"
+  ],
+  "Azithromycin": [
+    "azitromicina"
+  ],
+  "Cephalexin": [
+    "cefalexina"
+  ],
+  "Prednisone": [
+    "prednisona"
+  ],
+  "Digoxin": [
+    "digoxina"
+  ],
+  "Carvedilol": [
+    "carvedilol"
+  ],
+  "Sildenafil": [
+    "sildenafil citrato"
+  ],
+  "Heparin": [
+    "heparina"
+  ],
+  "Insulin human": [
+    "insulina humana"
+  ],
+  "Morphine": [
+    "morfina"
+  ],
+  "Tramadol": [
+    "tramadol clorhidrato"
+  ],
+  "Codeine": [
+    "codeina"
+  ],
+  "Diazepam": [
+    "diazepam"
+  ],
+  "Phenytoin": [
+    "fenitoina"
+  ],
+  "Carbamazepine": [
+    "carbamazepina"
+  ],
+  "Haloperidol": [
+    "haloperidol"
+  ],
+  "Risperidone": [
+    "risperidona"
+  ],
+  "Quetiapine": [
+    "quetiapina"
+  ],
+  "Allopurinol": [
+    "alopurinol"
+  ],
+  "Spironolactone": [
+    "espironolactona"
+  ],
+  "Hydrochlorothiazide": [
+    "hidroclorotiazida"
+  ],
+  "Simvastatin": [
+    "simvastatina"
+  ],
+  "Clopidogrel": [
+    "clopidogrel"
+  ],
+  "Levofloxacin": [
+    "levofloxacina"
+  ],
+  "Clarithromycin": [
+    "claritromicina"
+  ],
+  "Valproic acid": [
+    "acido valproico",
+    "valproato",
+    "valproato de sodio"
+  ],
+  "Lithium carbonate": [
+    "litio",
+    "carbonato de litio"
+  ]
+}

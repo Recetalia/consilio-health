@@ -73,8 +73,11 @@ main { max-width: 760px; margin: 28px auto 40px; padding: 0 16px; }
   border-radius: 6px;
   box-shadow: var(--shadow);
   margin-bottom: 20px;
-  overflow: hidden;
+  /* Sin overflow:hidden: recortaba el desplegable de sugerencias, que es
+     absolute y se sale de la tarjeta — la segunda opción quedaba cortada al
+     ras del borde. El redondeo se mantiene en el header. */
 }
+.card-header { border-radius: 6px 6px 0 0; }
 .card-header {
   background: var(--surface-alt);
   border-bottom: 1px solid var(--border-strong);
@@ -100,9 +103,12 @@ main { max-width: 760px; margin: 28px auto 40px; padding: 0 16px; }
 }
 .search input:focus { border-color: var(--action); }
 
+/* En flujo, no flotando. Como absolute tapaba el botón Consultar —con tres
+   sugerencias lo cubría entero— y al sacarle el overflow:hidden a la tarjeta
+   además desbordaba hacia afuera. En flujo empuja el botón hacia abajo, que
+   siempre queda visible, y para un formulario de un solo campo no molesta. */
 .suggestions {
   list-style: none; margin: 6px 0 0; padding: 4px 0;
-  position: absolute; left: 0; right: 0; z-index: 10;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -132,7 +138,8 @@ main { max-width: 760px; margin: 28px auto 40px; padding: 0 16px; }
 }
 .chips button:hover { color: var(--major); }
 
-.actions { margin-top: 20px; display: flex; align-items: center; gap: 14px; }
+/* min-height deja lugar para que el desplegable no tape el botón. */
+.actions { margin-top: 20px; min-height: 44px; display: flex; align-items: center; gap: 14px; }
 .btn-primary {
   background: var(--action); border: 1px solid var(--action); color: #fff;
   border-radius: 25px; padding: 10px 26px;
@@ -180,6 +187,7 @@ main { max-width: 760px; margin: 28px auto 40px; padding: 0 16px; }
 
 .evidence { margin: 9px 0 0; font-size: 14px; color: #4a4a4a; }
 .evidence.sin-texto { color: #8a8a8a; font-style: italic; }
+.evidence-note { margin: 3px 0 0; font-size: 11px; color: #9aa0a6; }
 .meta { margin: 9px 0 0; font-size: 12px; color: var(--text-soft); }
 .meta .dot { margin: 0 6px; }
 .tag-uncertain {
