@@ -1,118 +1,165 @@
+# Consilio
+
+**Seguridad en la prescripción.** Un servicio que revisa una lista de
+medicamentos y devuelve las interacciones entre ellos, con su gravedad, la
+evidencia que la respalda y de dónde salió.
+
+Consilio **no bloquea**. Informa; el médico decide. Un sistema que frena se
+aprende a esquivar; uno que aconseja se consulta.
+
 ---
-title: PillChecker Staging
-emoji: 📚
-colorFrom: green
-colorTo: indigo
-sdk: docker
-pinned: true
-app_port: 8000
-license: mit
+
+## Lo que tiene adentro
+
+| | |
+|---|---|
+| Interacciones fármaco-fármaco | 163.660 |
+| Alertas fármaco-patología | 6.522 sobre 965 patologías |
+| Fármacos | 1.939 |
+| Alias de búsqueda | 2.357 |
+
+Tres mecanismos de detección, y cada uno encuentra lo que los otros no:
+
+1. **Base curada** — DDInter 2.0, 160.235 pares con severidad estructurada.
+2. **Prospectos de la FDA** — 2.515 pares que la base curada no tiene, con la
+   frase textual del prospecto como evidencia.
+3. **Expansión por clase** — 455 pares que **ningún sistema por nombre puede
+   encontrar**. Un prospecto que advierte sobre "inhibidores de la MAO" nunca
+   nombra a la fenelzina; Consilio entiende la clase y la expande.
+
+Ese tercero encontró *fenelzina + fluoxetina* (síndrome serotoninérgico) y
+*sildenafil + nitratos* (hipotensión potencialmente fatal).
+
+**Cuando no sabe, lo dice.** Lo que no puede evaluar sale marcado como no
+evaluable, nunca como seguro.
+
 ---
 
-# PillChecker API
+## Correr local
 
-PillChecker helps users find out if two medications are safe to take at the same time. This repository contains the backend API that identifies drugs from OCR text and checks for dangerous interactions using DDInter 2.0 with OpenFDA fallback evidence.
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19792062.svg)](https://doi.org/10.5281/zenodo.19792062)
-
-> **MEDICAL DISCLAIMER**
->
-> This service is provided for **informational and self-educational purposes only**. While the application utilizes data from respected pharmaceutical sources, the information provided should **not** be treated as medical advice, diagnosis, or treatment.
->
-> The developer of this project **does not have any medical qualifications**. This tool was built as a technical exercise to explore NLP and medical data integration.
->
-> **Always consult with a qualified healthcare professional** (such as a doctor or pharmacist) before making any decisions regarding your medications or health. The developer assumes **no responsibility or liability** for any errors, omissions, or consequences arising from the use of the information provided by this service.
-
-## Architecture
-
-### Drug Identification
-
-Converts unstructured OCR text into standardized drug records using a multi-step strategy:
-
-1. **OCR Cleaning**: The `ocr_cleaner` normalizes common OCR artifacts before NER: digit-letter confusion (`0`/`o`, `1`/`l`), `rn`→`m` in drug names, ligatures, invisible characters, and whitespace.
-2. **NER**: The **[OpenMed-NER-PharmaDetect-BioPatient-108M](https://huggingface.co/OpenMed/OpenMed-NER-PharmaDetect-BioPatient-108M)** model (108M parameters) extracts chemical entity names from the cleaned text.
-3. **Fallback**: If NER yields no results, an approximate term search via the **RxNorm REST API** catches brand names (e.g., "Advil" -> ibuprofen).
-4. **Enrichment**: A regex parser extracts dosages (e.g., "400 mg"), and the RxNorm API maps every identified drug to its **RxCUI** for standardized downstream lookups.
-5. **Confidence**: Results with NER score below 0.85 or sourced from the RxNorm fallback are flagged with `needs_confirmation = true` to prompt user verification.
-
-### Interaction Checking
-
-Drug-drug interactions are resolved against a pinned **DDInter 2.0** SQLite database with OpenFDA fallback evidence:
-
-1. **DDInter SQLite client**: `app/clients/ddinter_db.py` opens the pre-built DDInter SQLite database with `aiosqlite` and FTS5 search.
-2. **RxCUI-first lookup**: For each drug pair, the checker resolves RxCUIs through RxNorm, maps them to DDInter IDs, and falls back to DDInter name search when needed.
-3. **OpenFDA fallback**: If DDInter has no pair match, the checker searches FDA label interaction text and classifies severity with the DeBERTa v3 zero-shot classifier.
-4. **Coverage summary**: `/interactions` reports whether each checked pair resolved through DDInter, OpenFDA, or neither source.
-
-### Transparency
-
-Both `/analyze` and `/interactions` responses include:
-- `data_sources`: which models and databases were used for the result
-- `limitations` (interactions only): scope disclaimers about what the system does and does not cover
-
-### Docker Build
-
-The image uses a three-stage build to keep layers small and reproducible:
-
-- **Stage 1 (Python)**: `uv` installs Python dependencies into an isolated venv.
-- **Stage 2 (DB downloader)**: the pinned DDInter SQLite database is downloaded from the explicitly configured GitHub Releases source.
-- **Stage 3 (Runtime)**: combines the venv, SQLite database, and app code. NER and severity models are pre-downloaded so the image is fully self-contained.
-
-## API Endpoints
-
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| `GET` | `/health` | No | Liveness check |
-| `GET` | `/health/data` | No | Readiness -- confirms DDInter SQLite connection |
-| `POST` | `/analyze` | API key | Extract drugs from OCR text |
-| `POST` | `/interactions` | API key | Check interactions for a list of drug names |
-| `POST` | `/admin/cache/clear` | API key | Clear all in-memory caches |
-
-## Eval Benchmark
-
-The benchmark suite and raw results have been migrated to the Hugging Face Hub for better reproducibility and visualization.
-
-*   **Benchmark Dataset:** [SPerva/pillchecker-ner-benchmark](https://huggingface.co/datasets/SPerva/pillchecker-ner-benchmark)
-*   **Result History:** [hf://buckets/SPerva/pillchecker-experiments](https://huggingface.co/buckets/SPerva/pillchecker-experiments)
-*   **Methodology:** See the dataset card on Hugging Face for details on the current 500-case benchmark sample.
-
-| Pipeline (Clean Text) | Precision | Recall | F1 |
-|------------------------|-----------|--------|----|
-| Bare NER Baseline | 46.9% | 84.4% | 60.3% |
-| Full Pipeline | 71.6% | 81.0% | 76.0% |
-
-See [`eval/README.md`](eval/README.md) for evaluation methodology and progress, and [`AGENTS.md`](AGENTS.md) for HF/GitHub ownership and cleanup rules.
-
-## Staging & Deployment
-
-The API is deployed as a staging environment on Hugging Face Spaces for remote testing:
-
-*   **Staging Space:** [sperva-pillchecker-staging](https://huggingface.co/spaces/SPerva/pillchecker-staging)
-*   **API Docs:** [sperva-pillchecker-staging.hf.space/docs](https://sperva-pillchecker-staging.hf.space/docs)
-
-
-- **[PillChecker Collection](https://huggingface.co/collections/SPerva/pillchecker-69ee0f67dee76ff7ae9ea30a)** -- Central hub for all models and datasets used in this project.
-- **[OpenMed NER PharmaDetect](https://huggingface.co/OpenMed/OpenMed-NER-PharmaDetect-BioPatient-108M)** -- drug entity recognition model (108M params). License: Apache 2.0
-- **[RxNorm REST API](https://lhncbc.nlm.nih.gov/RxNav/APIs/RxNormAPIs.html)** -- drug name normalization and RxCUI mapping. Provided by NLM (free to use).
-- **[DDInter 2.0](https://ddinter2.scbdd.com/)** -- drug-drug interaction dataset accessed through a pinned SQLite database configured with `INTERACTION_DB_REPO` and `INTERACTION_DB_TAG` during Docker builds.
-- **[OpenFDA Drug Label API](https://open.fda.gov/apis/drug/label/)** -- fallback evidence source for interaction text when DDInter has no pair match.
-- **[DeBERTa-v3-base-mnli-fever-anli](https://huggingface.co/MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli)** -- zero-shot classifier for interaction severity. License: MIT
-- **[Hugging Face Transformers](https://huggingface.co/docs/transformers)** -- NLP pipeline library. License: Apache 2.0
-
-## Citation
-
-If you use this software or the benchmark dataset in your research, please cite it as:
-
-```bibtex
-@software{perekrestova_pillchecker_2026,
-  author = {Perekrestova, Svetlana},
-  orcid = {0009-0003-2905-6040},
-  title = {PillChecker API: Pharmaceutical Entity Extraction and Interaction Checker},
-  version = {1.2.2},
-  doi = {10.5281/zenodo.19792062},
-  url = {https://github.com/SPerekrestova/pillchecker-api},
-  date = {2026-04-26},
-  publisher = {Zenodo},
-  note = {GitHub Repository}
-}
+```bash
+uv sync                                   # sin torch: ver "El extra ml"
+uv run python -m scripts.build_recetalia_db seed   # requiere data/ddinter.db
+CONSILIO_ALLOW_NO_API_KEY=1 uv run uvicorn app.main:app --port 8100
 ```
+
+- Interfaz de consulta: <http://localhost:8100/>
+- OpenAPI: <http://localhost:8100/docs>
+
+```bash
+uv run pytest -q          # 110 tests
+```
+
+### La base de conocimiento no está en el repo
+
+Se construye con el ETL y **se monta**, no se hornea en la imagen. Es una
+decisión legal además de práctica: ver [Licencias](#licencias).
+
+```bash
+python -m scripts.build_ddinter_db fetch                  # CSV de DDInter
+python -m scripts.build_ddinter_db resolve-rxnorm         # crosswalk RxNorm
+python -m scripts.build_ddinter_db build --tag <tag>      # SQLite crudo
+python -m scripts.build_recetalia_db seed                 # nuestro esquema
+python -m scripts.fetch_openfda_labels                    # prospectos FDA
+python -m scripts.derive_openfda_interactions             # pares por nombre
+python -m scripts.expand_class_interactions               # pares por clase
+python -m scripts.fetch_medrt_contraindications           # fármaco-patología
+python -m scripts.enrich_drug_aliases                     # alias de búsqueda
+python -m scripts.resolve_dnma_substances --dump <dump>   # puente con el DNMA
+```
+
+⚠️ La base se abre con `immutable=1`: **un cambio del ETL no se ve hasta
+reiniciar el servicio**.
+
+### El extra `ml`
+
+El clasificador de severidad (DeBERTa zero-shot) es opcional. PyTorch no publica
+wheels de macOS x86_64, así que con él en el set base la suite no instala en un
+Mac Intel. Sin el modelo, el clasificador cae a un fallback por regex.
+
+```bash
+uv sync --extra ml        # el Dockerfile lo instala siempre
+```
+
+---
+
+## API
+
+| | |
+|---|---|
+| `POST /interactions` | `{"drugs": ["warfarin", "ibuprofen"]}` → pares con gravedad, evidencia y procedencia |
+| `GET /drugs/search?q=` | autocompletado por alias |
+| `GET /health`, `/health/data` | sin autenticación |
+
+Autenticación por header `X-API-Key`. **Sin `API_KEY` seteada el servicio
+responde 503**, no queda abierto. Para desarrollo, `CONSILIO_ALLOW_NO_API_KEY=1`.
+
+### Procedencia y precedencia
+
+Cada hecho lleva su origen, y ante dos filas para el mismo par gana la de mayor
+autoridad:
+
+```
+recetalia  >  ddinter  >  openfda
+```
+
+Lo que revisó un farmacéutico pisa a todo lo importado. Los hallazgos de openFDA
+salen con `uncertain: true`: son inferencia sobre texto libre, y quien los lea
+tiene que poder distinguirlos de una severidad estructurada.
+
+Ese mismo criterio permite refrescar DDInter sin perder curación propia: un
+re-seed borra `source='ddinter'` y nada más.
+
+---
+
+## Licencias
+
+**El código de este repositorio es MIT.**
+
+Los datos son otra cosa, y cada fuente tiene su régimen:
+
+| Fuente | Licencia | Uso comercial |
+|---|---|---|
+| **openFDA** | CC0 1.0 | sí, sin restricción |
+| **RxNorm / RxClass / MED-RT** (NLM) | sin licencia requerida | sí |
+| **DDInter 2.0** | **CC BY-NC-SA 4.0** | **no** |
+
+⚠️ **DDInter es NonCommercial.** Aporta el 98 % de los pares, y su cláusula
+gobierna la **distribución y explotación comercial**, no tener una copia local
+para desarrollar o evaluar. Por eso la base **no se hornea en la imagen**: se
+monta. Antes de cualquier uso comercial hay que resolverlo — negociando licencia
+con el equipo de DDInter, o reconstruyendo la base sólo con las fuentes
+permisivas, que el esquema soporta sin cambios de código.
+
+La licencia de DDInter que declara este código proviene del repositorio de
+origen; conviene verificarla en <https://ddinter2.scbdd.com/>.
+
+---
+
+## Origen
+
+Consilio es un fork de
+[SPerekrestova/pillchecker-api](https://github.com/SPerekrestova/pillchecker-api)
+(MIT), de Svetlana Perekrestova. De ahí vienen el pipeline de construcción de la
+base DDInter, el crosswalk con RxNorm y buena parte de la infraestructura de
+pruebas.
+
+Qué cambió en el fork:
+
+- Se quitó todo lo que no es interacciones: OCR, NER, parser de dosis y el
+  endpoint `/analyze`.
+- Esquema propio con procedencia por fila, que habilita curación que sobrevive a
+  los re-seeds.
+- Pares derivados de openFDA y expansión por clase, que el original no tenía.
+- Alertas fármaco-patología desde MED-RT.
+- Puente con el DNMA del MSP uruguayo.
+- Interfaz de consulta propia.
+- La API key dejó de fallar abierta; el rate limit dejó de ser 10/min fijo.
+
+---
+
+## Advertencia
+
+Consilio genera información automáticamente a partir de fuentes públicas.
+**No sustituye el criterio clínico.** Que no se encuentre una interacción
+documentada no significa que no exista.

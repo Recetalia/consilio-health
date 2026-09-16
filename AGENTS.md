@@ -1,133 +1,71 @@
-# Agent rules for PillChecker API
+# Reglas del repositorio
 
-These rules are authoritative for AI agents working in this repository.
+Consilio es un servicio de seguridad en la prescripción. Un error acá no rompe
+una pantalla: puede hacer que un médico recete algo que no debía, o peor, que
+confíe en un silencio. Estas reglas salen de eso.
 
-## Source-of-truth rules
+## Lo que nunca se hace
 
-1. GitHub is the source of truth for application code, Docker configuration, tests, docs, and workflow definitions.
-2. Hugging Face Space `SPerva/pillchecker-staging` is generated from GitHub. Never copy code from the Space back into GitHub as a source of truth.
-3. Do not manually edit files in the HF Space. If the Space drifts, fix GitHub and run the GitHub -> HF Space sync.
-4. Benchmark data and results do not belong in the Space. Use the HF dataset and bucket listed below.
-5. Do not delete or rewrite HF artifacts unless a human explicitly approves the exact paths.
-6. Never commit secrets. Use `HF_TOKEN` from GitHub/Devin secrets for Hugging Face writes.
+1. **No inventar datos que parezcan evidencia.** Si una fuente aporta el par y
+   la gravedad pero no el mecanismo, la respuesta lo dice. Rellenar con una
+   plantilla que repite los nombres ocupa el lugar de la evidencia sin serlo.
+   (Pasó: `"Interaction reported in DDInter 2.0 for X + Y"`.)
 
-## Hugging Face entity registry
+2. **No confundir "sin evidencia" con "seguro".** Un par que no está en la base
+   sale como *no encontrado*, nunca como *sin riesgo*. Un sistema que calla
+   cuando no sabe enseña a confiar en su silencio.
 
-| Entity | Type | Canonical contents | Update rules |
-| --- | --- | --- | --- |
-| `SPerva/pillchecker-staging` | Space | Staging deployment mirror of deployable GitHub files. | One-way sync from GitHub `main` through `.github/workflows/hf-sync.yml` and `scripts/sync_hf_space.py`. No Space-to-GitHub sync. No manual Space edits. |
-| `SPerva/pillchecker-ner-benchmark` | Dataset | Benchmark input cases and dataset card methodology. | Store benchmark cases under `data/`. Do not store result history under `results/`. Add schema changes to `eval/README.md` before changing dataset fields. |
-| `hf://buckets/SPerva/pillchecker-experiments` | Bucket | Immutable benchmark run outputs and historical reports. | Store outputs under `benchmark-results/<YYYY-MM-DD>/<run-id>/` with a manifest. Do not place unversioned root `results.json` files. Do not overwrite old runs. |
-| `SPerva/ml-intern-sessions` | Dataset | Private exploratory agent traces. | Non-canonical archive only. Promote conclusions into GitHub docs or dataset cards before relying on them. Delete empty traces after approval. |
-| `SPerva/pillchecker` collection | Collection | Links to project HF assets. | Keep as navigation only; do not store data in the collection itself. |
-| External models such as `OpenMed/OpenMed-NER-PharmaDetect-BioPatient-108M` | Model | Upstream model artifacts. | Treat as read-only dependencies; pin/report model IDs in benchmark manifests. |
+3. **No mapear por aproximación sin verificar.** El score de `approximateTerm`
+   de RxNorm no discrimina: medido, una cadena inventada puntúa 9,4 contra 10,5
+   de un match perfecto. La aceptación la decide comparar el nombre devuelto con
+   el consultado. Mapear en silencio una sustancia desconocida al fármaco
+   equivocado es peor que no mapearla.
 
-## Code update rules
+4. **No degradar en silencio hacia el usuario.** Si el motor no responde, la
+   respuesta lo dice explícitamente. Y un error al pintar no puede disfrazarse
+   de error de red: eso ya produjo una pantalla con resultados correctos y un
+   cartel de error al mismo tiempo.
 
-1. Make code changes in GitHub branches and PRs only.
-2. Do not push directly to `main`.
-3. Keep `.github/workflows/hf-sync.yml` one-way: GitHub `main` -> `SPerva/pillchecker-staging`.
-4. If a file should be present in the Space, add it to `DEFAULT_ALLOW_PATTERNS` in `scripts/sync_hf_space.py`.
-5. If a file should never be deployed to the Space, add it to `DEFAULT_IGNORE_PATTERNS` or keep it outside the allowlist.
-6. Run at least:
-   - `git diff --check`
-   - `python -m py_compile scripts/sync_hf_space.py` after editing the sync script
-   - `uv run pytest tests/ --ignore=tests/test_rxnorm_client.py -v`
-7. Update PR descriptions after pushing follow-up commits.
+## Procedencia
 
-## Benchmark dataset rules
+Cada hecho lleva `source`. Es lo que permite refrescar una fuente sin perder la
+curación propia: un re-seed borra `source='ddinter'` y nada más. Editar filas
+importadas en el lugar funciona hasta el primer re-seed, que se lleva meses de
+revisión farmacéutica sin avisar.
 
-1. Keep generated benchmark cases in `SPerva/pillchecker-ner-benchmark/data/`.
-2. Benchmark records should follow `eval/benchmark_record.schema.json`.
-3. Required benchmark records should include at minimum:
-   - source text used by the pipeline
-   - expected active ingredients
-   - OCR noise level or source split
-   - source medicine metadata needed to reproduce the case
-4. Add these fields before using the benchmark for linking or interaction claims:
-   - reviewed `expected_rxcuis` plus `rxnorm_resolution`
-   - `clean_text` for OCR-cleaner evaluation
-   - `expected_interactions` for interaction recall/severity evaluation
-   - known-safe pairs for false-positive measurement
-5. Use `eval/prepare_rxnorm_labels.py` to generate reviewable RxNorm candidate labels. Do not overwrite `data/benchmark.json` until the non-exact candidates are reviewed.
-6. The dataset card must explain data generation, license/source, schema, and limitations.
-7. Do not commit large benchmark data or result JSON files to GitHub.
+Precedencia: `recetalia > ddinter > openfda`. Vive en SQL (`_PRECEDENCE`), no en
+convención.
 
-## Benchmark result rules
+## ETL y runtime
 
-1. Store benchmark outputs in the bucket, not the dataset and not GitHub.
-2. Use immutable paths: `benchmark-results/<YYYY-MM-DD>/<run-id>/`.
-3. Each run directory should contain:
-   - `results.json`
-   - `manifest.json` following `eval/benchmark_run_manifest.schema.json`
-   - optional markdown summary or plots
-4. Root-level files in the bucket should be human-readable summaries only, such as `BENCHMARK.md`.
-5. If a result must be superseded, write a new run and mark the old one as superseded in a summary; do not overwrite it.
-6. Tier 1 benchmark entrypoints are `eval/prepare_interaction_labels.py` for review-only interaction candidates and `eval/run_benchmark.py` for manifest-backed benchmark runs. Generated candidate JSON and local `benchmark-results/` directories should stay out of GitHub unless a human explicitly changes their lifecycle. The benchmark runner uses HF for dataset/result artifacts and GitHub Releases, via `INTERACTION_DB_REPO`/`INTERACTION_DB_TAG`, for `ddinter.db`.
+El ETL escribe, el runtime lee. La base se abre `mode=ro&immutable=1`.
 
-## Cleanup rules
+**Ninguna request de un médico puede disparar una descarga, un rebuild ni una
+llamada a un tercero por datos de referencia.** Si hace falta un dato nuevo, se
+precalcula.
 
-1. Safe cleanup candidates are duplicate result copies, zero-byte traces, stale Space-only files, and unversioned legacy files after moving them to a versioned legacy path.
-2. Before deleting HF data, verify an equivalent canonical copy exists or that the file is genuinely empty/stale.
-3. Record cleanup decisions in PR descriptions and this file.
-4. For Space trash, prefer fixing the allowlist and letting GitHub -> HF sync prune it after merge.
+Corolario: un cambio del ETL no se ve hasta reiniciar el servicio.
 
-## Internal project context
+## Mediciones
 
-1. `SPerva/ml-intern-sessions` is internal kitchen for exploratory agent traces. Do not treat it as evaluation methodology or public evidence.
-2. Devin session `devin-edd6eef4cda74faf909cb8bd08d3f7c8` is internal implementation context for PR #45 follow-up work.
-3. PR #53 (`feat/benchmark`) is temporary exploratory work. Extract useful benchmark ideas into reviewed GitHub changes, then close or supersede the PR and remove the branch when it is no longer needed.
-4. Keep internal inventories, cleanup notes, and agent action items here rather than in `eval/README.md`.
+Los números de los comentarios y los commits salen de correr algo, no de
+estimar. Si un comentario dice "descartó 1.511", ese número se midió. Cuando una
+medición contradice algo escrito, se corrige el texto en el lugar — no se agrega
+una nota al pie.
 
-## Docs and scripts audit
+## Licencias
 
-1. `docs/openapi.json` is generated API contract documentation and should be regenerated after schema or route changes.
-2. `docs/infrastructure_hardening.md` is active GCP audit documentation, not trash.
-3. `scripts/smoke-test.sh` is the quick service readiness/API smoke test.
-4. `scripts/e2e-test.sh` is the broader API contract test for iOS-facing fields.
-5. `scripts/smoke_test_interactions.py` is the targeted interaction-regression smoke test.
-6. `scripts/ci-startup.sh` and `scripts/prod-startup.sh` are both required because Docker Compose CI overrides the production entrypoint.
-7. `scripts/download_interaction_db.py` remains necessary while Docker builds fetch the pinned DDInter SQLite DB from GitHub Releases.
+Antes de sumar una fuente de datos, verificar su licencia **en la fuente** y
+anotarla en el README. `NonCommercial`, `ShareAlike` y `NoDerivatives` cambian
+qué se puede distribuir.
 
-## GCP pipeline rules
+La base de conocimiento **no se hornea en la imagen**. Se monta.
 
-1. GitHub Actions deploys to Cloud Run only when `WIF_PROVIDER`, `WIF_SERVICE_ACCOUNT`, and `GCP_PROJECT_ID` are configured.
-2. The deployer identity should use Workload Identity Federation, not long-lived JSON keys.
-3. Set `CLOUD_RUN_SERVICE_ACCOUNT` when runtime should use an account other than the default `deploy-sa@<project>.iam.gserviceaccount.com`.
-4. Set `INTERACTION_DB_REPO` explicitly to the maintained GitHub release repo that publishes `ddinter.db`.
-5. Keep `INTERACTION_DB_TAG` pinned before enabling CI image builds or Cloud Run deploys for the explicit DB release source.
-6. Do not store GCP credentials in the repository.
+## Tests
 
-## Recent cleanup state
+`uv run pytest -q` tiene que pasar antes de cualquier commit.
 
-1. Duplicate result files under `SPerva/pillchecker-ner-benchmark/results/*.json` were deleted after approval; bucket result copies remain canonical.
-2. Empty trace `SPerva/ml-intern-sessions/sessions/2026-05-06/a720491d-d166-47b8-baad-1c2e71bb4ec1.jsonl` was deleted after approval.
-3. Bucket root `results.json` was moved to `benchmark-results/legacy/results.json`; the root copy was removed.
-4. The benchmark dataset card was corrected to document the current 500-case sample and dataset/result ownership rules.
-
-## Current action items
-
-1. Let the GitHub -> HF Space sync prune stale Space-only benchmark scripts after this PR merges to `main`.
-2. Close or supersede PR #53 after extracting any useful ideas into grounded follow-up work.
-3. Review the 16 RxNorm non-exact ingredient candidates before updating the canonical benchmark dataset.
-4. Populate benchmark ground truth fields listed below before making stronger evaluation claims.
-
-## Next implementation after PR #55
-
-DDInter migration is complete. Continue the GCP deploy-hardening track before expanding benchmark scope. `docs/infrastructure_hardening.md` contains the detailed plan; the execution order for the next Devin session is:
-
-1. DDInter migration complete. DDI source = DDInter 2.0 + OpenFDA fallback. See PRs #56 (Phase A), #60 (Phase B), #61 (follow-ups), this PR (Phase C).
-2. Add a release preflight job that verifies the configured tag, `ddinter.db` asset, size, and checksum before Docker build.
-3. Add checksum pinning, such as `INTERACTION_DB_SHA256`, and verify it in the download/build path.
-4. Re-enable and validate Docker image build, integration smoke tests, Cloud Run deploy, `/health`, `/health/data`, and one authenticated `/interactions` request.
-5. Add Cloud Run hardening flags: startup/liveness probes, explicit runtime service account, revision labels, and instance policy.
-6. Add post-deploy smoke tests and logging/alerting for startup failures, DDInter connection failures, and repeated 5xx responses.
-7. After DB/deploy infrastructure is trustworthy, continue benchmark expansion from the 500 reviewed seed toward larger reviewed and weak-label stress-test splits.
-
-## Current known issues
-
-1. Benchmark cases still need reviewed `expected_rxcuis`, `clean_text`, `expected_interactions`, and known-safe pairs.
-2. RxNorm audit exact-match coverage is 183/199 unique ingredient names; the remaining 16 names need human review before canonical dataset rewrite.
-3. GLiNER results should stay out of README/project claims until code, configuration, and artifacts are reproducible.
-4. Interaction benchmark results are not meaningful until real interaction ground truth exists.
-5. OCR-cleaner evaluation must use independent clean references, not cleaner-generated text as its own oracle.
+El gate de regresión (`tests/regression/`) compara contra severidades curadas.
+Si falla, **no se ablanda**: o se arregla el motor, o se documenta el hueco con
+su motivo medido en `KNOWN_GAPS` para que quede rojo explicado en vez de verde
+falso.
