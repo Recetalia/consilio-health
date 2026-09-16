@@ -15,8 +15,14 @@ aprende a esquivar; uno que aconseja se consulta.
 |---|---|
 | Interacciones fármaco-fármaco | 163.660 |
 | Alertas fármaco-patología | 6.522 sobre 965 patologías |
-| Fármacos | 1.939 |
+| Fármacos en el catálogo de interacciones | 1.939 |
 | Alias de búsqueda | 2.357 |
+
+Cobertura del vademécum uruguayo (DNMA): **59,5 % de los 6.847 productos
+comerciales** tiene todas sus sustancias mapeadas. Medido por sustancia da
+52,7 % (733 de 1.390); sube al mirar productos porque las sustancias comunes
+están en más marcas. Aparte, 657 productos (9,6 %) **no tienen sustancia
+asociada en el propio DNMA** y son inevaluables por construcción.
 
 Tres mecanismos de detección, y cada uno encuentra lo que los otros no:
 
