@@ -7,9 +7,13 @@ build/
 .venv/
 venv/
 .env
-data/ddinter/*.tsv
-data/ddinter/*.csv
+# `build_ddinter_db fetch` escribe en data/, no en data/ddinter/
+data/*.csv
+data/*.tsv
 data/ddinter.db
+data/ddinter_manifest.json
+data/rxnorm_crosswalk.json
+data/rxnorm_unmapped.json
 models/
 *.pt
 *.bin
