@@ -13,10 +13,10 @@ aprende a esquivar; uno que aconseja se consulta.
 
 | | |
 |---|---|
-| Interacciones fármaco-fármaco | 163.660 |
+| Interacciones fármaco-fármaco | 164.668 |
 | Alertas fármaco-patología | 6.522 sobre 965 patologías |
 | Fármacos en el catálogo de interacciones | 1.939 |
-| Alias de búsqueda | 2.357 |
+| Alias de búsqueda | 2.387 |
 
 Cobertura del vademécum uruguayo (DNMA): **59,5 % de los 6.847 productos
 comerciales** tiene todas sus sustancias mapeadas. Medido por sustancia da
@@ -27,14 +27,24 @@ asociada en el propio DNMA** y son inevaluables por construcción.
 Tres mecanismos de detección, y cada uno encuentra lo que los otros no:
 
 1. **Base curada** — DDInter 2.0, 160.235 pares con severidad estructurada.
-2. **Prospectos de la FDA** — 2.515 pares que la base curada no tiene, con la
-   frase textual del prospecto como evidencia.
-3. **Expansión por clase** — 455 pares que **ningún sistema por nombre puede
+2. **Prospectos de la FDA** — 3.629 pares que la base curada no tiene, con la
+   frase textual del prospecto como evidencia. Salen de 1.248 prospectos
+   incorporados.
+3. **Expansión por clase** — 804 pares que **ningún sistema por nombre puede
    encontrar**. Un prospecto que advierte sobre "inhibidores de la MAO" nunca
    nombra a la fenelzina; Consilio entiende la clase y la expande.
 
 Ese tercero encontró *fenelzina + fluoxetina* (síndrome serotoninérgico) y
 *sildenafil + nitratos* (hipotensión potencialmente fatal).
+
+### Alertas fármaco-paciente
+
+Embarazo (con semana de gestación), lactancia, función renal, función hepática y
+alergias declaradas. **No pasan por CIE-10 y es deliberado:** no son
+diagnósticos, son estados del paciente. Son 728 de las 6.522 alertas cargadas,
+disponibles con cuatro mapeos a mano.
+
+Las patologías sí son diagnósticos y esperan el puente CIE-10 ↔ MeSH.
 
 **Cuando no sabe, lo dice.** Lo que no puede evaluar sale marcado como no
 evaluable, nunca como seguro.
@@ -95,6 +105,7 @@ uv sync --extra ml        # el Dockerfile lo instala siempre
 |---|---|
 | `POST /interactions` | `{"drugs": ["warfarin", "ibuprofen"]}` → pares con gravedad, evidencia y procedencia |
 | `GET /drugs/search?q=` | autocompletado por alias |
+| `POST /contraindications` | `{"drugs": [...], "profile": {...}}` → alertas fármaco-paciente |
 | `GET /health`, `/health/data` | sin autenticación |
 
 Autenticación por header `X-API-Key`. **Sin `API_KEY` seteada el servicio
