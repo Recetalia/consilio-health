@@ -88,6 +88,8 @@ def main() -> int:
     p.add_argument("--rate", type=float, default=3.0,
                    help="req/s. El techo sin API key es 240/min = 4/s.")
     p.add_argument("--limit", type=int)
+    p.add_argument("--skip-existing", action="store_true",
+                   help="no re-consultar los que ya tienen texto guardado")
     args = p.parse_args()
 
     api_key = os.environ.get("OPENFDA_API_KEY")
@@ -104,6 +106,12 @@ def main() -> int:
             "select distinct d.drug_id, d.canonical from drug d "
             "join dnma_substance_map m on m.drug_id = d.drug_id "
             "order by d.canonical").fetchall()
+    if args.skip_existing:
+        done = {r[0] for r in db.execute(
+            "select distinct drug_id from drug_label_text where source='openfda'")}
+        antes = len(rows)
+        rows = [r for r in rows if r[0] not in done]
+        logger.info("Ya tenían texto: %d; quedan %d", antes - len(rows), len(rows))
     if args.limit:
         rows = rows[:args.limit]
 

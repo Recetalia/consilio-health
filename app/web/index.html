@@ -20,27 +20,86 @@
 </header>
 
 <main>
-  <section class="card">
-    <div class="card-header">
-      <h5>Medicamentos a verificar</h5>
-    </div>
-    <div class="card-body">
-      <p class="hint">Escribí el nombre del principio activo. Agregá dos o más para consultar.</p>
+  <div class="cols">
 
-      <ul id="chips" class="chips"></ul>
-
-      <div class="search">
-        <input id="q" type="text" autocomplete="off" spellcheck="false"
-               placeholder="warfarina, ibuprofeno, sildenafil…">
-        <ul id="suggestions" class="suggestions" hidden></ul>
+    <section class="card">
+      <div class="card-header"><h5>Medicamentos a verificar</h5></div>
+      <div class="card-body">
+        <p class="hint">Escribí el nombre del principio activo. Agregá dos o más para consultar interacciones entre ellos.</p>
+        <ul id="chips" class="chips"></ul>
+        <div class="search">
+          <input id="q" type="text" autocomplete="off" spellcheck="false"
+                 placeholder="warfarina, ibuprofeno, sildenafil…">
+          <ul id="suggestions" class="suggestions" hidden></ul>
+        </div>
       </div>
+    </section>
 
-      <div class="actions">
-        <button id="check" class="btn-primary" disabled>Consultar</button>
-        <button id="clear" class="btn-link" hidden>Vaciar</button>
+    <section class="card">
+      <div class="card-header"><h5>Perfil del paciente <span class="opt">opcional</span></h5></div>
+      <div class="card-body profile">
+
+        <div class="row">
+          <label for="sexo">Sexo</label>
+          <select id="sexo">
+            <option value="">—</option>
+            <option value="F">Femenino</option>
+            <option value="M">Masculino</option>
+          </select>
+
+          <label for="edad">Edad</label>
+          <input id="edad" type="number" min="0" max="130" placeholder="años">
+        </div>
+
+        <div id="gestacion" class="row gestacion" hidden>
+          <label class="check"><input id="embarazo" type="checkbox"> Embarazo</label>
+          <label class="check"><input id="lactancia" type="checkbox"> Lactancia</label>
+          <select id="semanas" disabled>
+            <option value="">semana —</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label for="renal">Función renal</label>
+          <select id="renal">
+            <option value="">normal</option>
+            <option value="leve">alterada — leve</option>
+            <option value="moderada">alterada — moderada</option>
+            <option value="grave">alterada — grave</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label for="hepatica">Función hepática</label>
+          <select id="hepatica">
+            <option value="">normal</option>
+            <option value="alterada">alterada</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="qa">Alergias a medicamentos</label>
+          <ul id="chips-alergias" class="chips chips-alergia"></ul>
+          <div class="search">
+            <input id="qa" type="text" autocomplete="off" spellcheck="false"
+                   placeholder="penicilina, aspirina…">
+            <ul id="suggestions-alergias" class="suggestions" hidden></ul>
+          </div>
+        </div>
+
+        <p class="nota">
+          Las patologías del paciente todavía no se pueden cargar: requieren el
+          mapeo de códigos CIE-10, que está en curso.
+        </p>
       </div>
-    </div>
-  </section>
+    </section>
+
+  </div>
+
+  <div class="actions">
+    <button id="check" class="btn-primary" disabled>Consultar</button>
+    <button id="clear" class="btn-link" hidden>Vaciar todo</button>
+  </div>
 
   <section id="results" hidden></section>
 </main>
