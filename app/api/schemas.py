@@ -59,3 +59,44 @@ class InteractionsResponse(BaseModel):
     coverage_summary: dict[str, int] = Field(
         default_factory=lambda: {"recetalia": 0, "ddinter": 0, "openfda": 0, "unknown": 0})
     limitations: list[str] = _INTERACTION_LIMITATIONS
+
+
+# --- POST /contraindications ---
+
+class PatientProfileIn(BaseModel):
+    """Perfil del paciente. Todo opcional: sin datos no hay alertas.
+
+    Los estados fisiológicos son flags y no códigos de patología, porque no son
+    diagnósticos. `patologias_mesh` existe para cuando el puente CIE-10 traduzca
+    lo que el médico cargue; hoy se puede mandar directo si el llamador ya tiene
+    descriptores MeSH.
+    """
+    sexo: Literal["M", "F"] | None = None
+    edad: int | None = Field(None, ge=0, le=130)
+    embarazo: bool = False
+    semanas_gestacion: int | None = Field(None, ge=1, le=45)
+    lactancia: bool = False
+    funcion_renal: str | None = None
+    funcion_hepatica: str | None = None
+    alergias: list[str] = Field(default_factory=list, max_length=50)
+    patologias_mesh: list[str] = Field(default_factory=list, max_length=50)
+
+
+class ContraindicationsRequest(BaseModel):
+    drugs: list[Annotated[str, StringConstraints(min_length=1, max_length=200,
+                                                 strip_whitespace=True)]] = Field(
+        ..., min_length=1, examples=[["warfarin", "ibuprofen"]])
+    profile: PatientProfileIn = Field(default_factory=PatientProfileIn)
+
+
+class ContraindicationsResponse(BaseModel):
+    contraindications: list[dict] = Field(default_factory=list)
+    precautions: list[dict] = Field(default_factory=list)
+    allergies: list[dict] = Field(default_factory=list)
+    """Fármacos que no pudimos evaluar. Explícito, nunca omitido en silencio."""
+    not_evaluated: list[dict] = Field(default_factory=list)
+    """Incoherencias del perfil: se avisan, no se resuelven por nuestra cuenta."""
+    profile_warnings: list[str] = Field(default_factory=list)
+    disclaimer: str = (
+        "Informaci\u00f3n generada autom\u00e1ticamente a partir de fuentes p\u00fablicas. "
+        "No sustituye el criterio cl\u00ednico.")
