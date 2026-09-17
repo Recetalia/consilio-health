@@ -228,6 +228,12 @@ const alerg = wireSearch({
 $("clear").addEventListener("click", () => {
   selected.length = 0;
   alergias.length = 0;
+  // También el texto tipeado: dejarlo quedaba un "penicillin" suelto en el
+  // campo después de vaciar, como si siguiera cargado.
+  $("q").value = "";
+  $("qa").value = "";
+  $("suggestions").hidden = true;
+  $("suggestions-alergias").hidden = true;
   ["sexo", "edad", "renal", "hepatica"].forEach((id) => { $(id).value = ""; });
   $("embarazo").checked = false;
   $("lactancia").checked = false;

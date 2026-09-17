@@ -155,5 +155,125 @@
   "Lithium carbonate": [
     "litio",
     "carbonato de litio"
+  ],
+  "Benzylpenicillin": [
+    "penicilina",
+    "penicilina G",
+    "bencilpenicilina"
+  ],
+  "Phenoxymethylpenicillin": [
+    "penicilina V",
+    "fenoximetilpenicilina"
+  ],
+  "Ampicillin": [
+    "ampicilina"
+  ],
+  "Gentamicin": [
+    "gentamicina"
+  ],
+  "Vancomycin": [
+    "vancomicina"
+  ],
+  "Ceftriaxone": [
+    "ceftriaxona"
+  ],
+  "Metronidazole": [
+    "metronidazol"
+  ],
+  "Fluconazole": [
+    "fluconazol"
+  ],
+  "Ranitidine": [
+    "ranitidina"
+  ],
+  "Loratadine": [
+    "loratadina"
+  ],
+  "Cetirizine": [
+    "cetirizina"
+  ],
+  "Dexamethasone": [
+    "dexametasona"
+  ],
+  "Hydrocortisone": [
+    "hidrocortisona"
+  ],
+  "Ketoprofen": [
+    "ketoprofeno"
+  ],
+  "Meloxicam": [
+    "meloxicam"
+  ],
+  "Paroxetine": [
+    "paroxetina"
+  ],
+  "Escitalopram": [
+    "escitalopram"
+  ],
+  "Citalopram": [
+    "citalopram"
+  ],
+  "Venlafaxine": [
+    "venlafaxina"
+  ],
+  "Amitriptyline": [
+    "amitriptilina"
+  ],
+  "Gabapentin": [
+    "gabapentina"
+  ],
+  "Pregabalin": [
+    "pregabalina"
+  ],
+  "Levetiracetam": [
+    "levetiracetam"
+  ],
+  "Atenolol": [
+    "atenolol"
+  ],
+  "Bisoprolol": [
+    "bisoprolol"
+  ],
+  "Nifedipine": [
+    "nifedipina"
+  ],
+  "Verapamil": [
+    "verapamilo"
+  ],
+  "Rosuvastatin": [
+    "rosuvastatina"
+  ],
+  "Ezetimibe": [
+    "ezetimibe"
+  ],
+  "Glibenclamide": [
+    "glibenclamida"
+  ],
+  "Insulin glargine": [
+    "insulina glargina"
+  ],
+  "Salmeterol": [
+    "salmeterol"
+  ],
+  "Budesonide": [
+    "budesonida"
+  ],
+  "Montelukast": [
+    "montelukast"
+  ],
+  "Pantoprazole": [
+    "pantoprazol"
+  ],
+  "Esomeprazole": [
+    "esomeprazol"
+  ],
+  "Ondansetron": [
+    "ondansetrón"
+  ],
+  "Metoclopramide": [
+    "metoclopramida"
+  ],
+  "Dexketoprofen": [
+    "dexketoprofeno"
   ]
 }

@@ -275,3 +275,27 @@ main > .actions { margin: 4px 0 24px; }
   border-radius: 6px; padding: 10px 14px; margin-bottom: 10px;
   font-size: 13px; color: #8a6d3b;
 }
+
+/* El atributo `hidden` del navegador es `display:none` con especificidad 0, así
+   que cualquier regla de clase que setee display se lo come. Pasó con el bloque
+   de embarazo: `.profile .row{display:flex}` lo mantenía visible siempre. */
+[hidden] { display: none !important; }
+
+/* --- alineación del perfil --- */
+.profile .row {
+  display: grid; grid-template-columns: 110px 1fr; gap: 10px;
+  align-items: center; margin-bottom: 12px;
+}
+.profile .row.gestacion { grid-template-columns: 1fr; gap: 8px; }
+.profile .row.gestacion .check { min-width: 0; }
+.profile label { min-width: 0; }
+.profile select { width: 100%; }
+.profile input[type="number"] { width: 100%; max-width: 110px; }
+
+/* Cards de la misma altura: si no, queda un hueco blanco grande bajo la más
+   corta y el conjunto se lee desprolijo. */
+main > .cols { align-items: stretch; }
+main > .cols > .card { display: flex; flex-direction: column; }
+main > .cols > .card .card-body { flex: 1; }
+
+.profile .row.row-2 { grid-template-columns: 110px 1fr 56px 1fr; }
