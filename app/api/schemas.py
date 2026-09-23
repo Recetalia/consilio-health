@@ -23,13 +23,21 @@ class InteractionResult(BaseModel):
     rxcui_a: str | None = None
     rxcui_b: str | None = None
     severity: str
-    source: Literal["ddinter", "openfda", "recetalia"]
+    # ⚠️ Este literal es un contrato, no una anotación: si se agrega una fuente
+    # a la base y no se agrega acá, el endpoint devuelve 500 en cuanto aparece
+    # un hallazgo de esa fuente. Pasó al cargar la AEMPS, y no lo vio ningún
+    # test porque los de la API mockean el servicio por encima de este modelo.
+    source: Literal["aemps", "ddinter", "openfda", "recetalia"]
     # Pueden faltar: DDInter aporta el par y el nivel, no texto. Antes se
     # rellenaban con una plantilla que sólo repetía los dos nombres, y eso se
     # lee como evidencia sin serlo.
     description: str | None = None
     management: str | None = None
     uncertain: bool = False
+    # Presentes sólo cuando el hallazgo se armó con más de una fuente: la
+    # gravedad de una y el texto de otra. Se declara en vez de disimularse.
+    severity_source: str | None = None
+    text_source: str | None = None
 
 
 class DDInterDataSource(BaseModel):
@@ -57,7 +65,8 @@ class InteractionsResponse(BaseModel):
     error: str | None = None
     data_sources: InteractionsDataSources | None = None
     coverage_summary: dict[str, int] = Field(
-        default_factory=lambda: {"recetalia": 0, "ddinter": 0, "openfda": 0, "unknown": 0})
+        default_factory=lambda: {"recetalia": 0, "aemps": 0, "ddinter": 0,
+                                 "openfda": 0, "unknown": 0})
     limitations: list[str] = _INTERACTION_LIMITATIONS
 
 

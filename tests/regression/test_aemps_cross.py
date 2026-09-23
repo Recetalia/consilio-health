@@ -124,3 +124,52 @@ async def test_la_alerta_condicionada_se_marca_como_tal(db):
     assert r["geriatric"]
     assert all("condicionada" in a for a in r["geriatric"])
     assert any(a["condicionada"] for a in r["geriatric"])
+
+
+# --- contrato HTTP ----------------------------------------------------------
+
+async def test_el_endpoint_no_revienta_con_una_fuente_nueva(monkeypatch):
+    """Guarda contra el 500 que dejó la carga de la AEMPS.
+
+    `InteractionResult.source` es un `Literal` cerrado. Al agregar 'aemps' a la
+    base sin agregarlo al modelo, la API devolvía 500 para cualquier par que
+    resolviera por esa fuente — y no lo vio ningún test porque los de la API
+    mockean el servicio *por encima* del modelo de respuesta. Éste pega al
+    endpoint de verdad, contra la base de verdad.
+    """
+    if not DB_PATH.exists():
+        pytest.skip("falta la base")
+    monkeypatch.setenv("API_KEY", "test-local")
+    from fastapi.testclient import TestClient
+    from app.main import app
+
+    with TestClient(app) as c:
+        r = c.post("/interactions", json={"drugs": ["warfarin", "ibuprofen"]},
+                   headers={"X-API-Key": "test-local"})
+    assert r.status_code == 200, r.text
+    hit = r.json()["interactions"][0]
+    assert hit["severity"] == "major"
+    assert "hemorragias" in (hit["description"] or "")
+    assert hit["management"], "el manejo clínico tiene que llegar al cliente"
+
+
+async def test_todas_las_fuentes_de_la_base_estan_en_el_contrato():
+    """Que el literal no se quede atrás de la base otra vez.
+
+    Compara lo que hay realmente en `interaction.source` contra lo que el
+    modelo admite, así el próximo ETL que agregue una fuente rompe acá y no en
+    producción.
+    """
+    if not DB_PATH.exists():
+        pytest.skip("falta la base")
+    import sqlite3
+    from typing import get_args
+    from app.api.schemas import InteractionResult
+
+    con = sqlite3.connect(DB_PATH)
+    en_base = {r[0] for r in con.execute("select distinct source from interaction")}
+    con.close()
+    admitidas = set(get_args(InteractionResult.model_fields["source"].annotation))
+    assert en_base <= admitidas, (
+        f"la base tiene fuentes que el contrato no admite: {en_base - admitidas}. "
+        "El endpoint devuelve 500 en cuanto aparezca un hallazgo de esa fuente.")

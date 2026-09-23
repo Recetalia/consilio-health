@@ -22,6 +22,7 @@ const SEV = {
 };
 
 const FUENTE = {
+  aemps:     "AEMPS — Agencia Española de Medicamentos",
   ddinter:   "DDInter 2.0 — base curada de interacciones",
   openfda:   "openFDA — prospecto oficial de la FDA",
   medrt:     "MED-RT — Biblioteca Nacional de Medicina (EE.UU.)",
@@ -314,6 +315,7 @@ function render(inter, contra) {
     html += al.map(cardAlergia).join("");
     html += (contra.contraindications || []).map((c) => cardPaciente(c, "major")).join("");
     html += (contra.precautions || []).map((c) => cardPaciente(c, "moderate")).join("");
+    html += (contra.geriatric || []).map(cardGeriatrica).join("");
 
     // Lo que no se pudo evaluar se dice, no se omite.
     noId.forEach((a) => {
@@ -327,11 +329,12 @@ function render(inter, contra) {
     });
 
     const total = al.length + (contra.contraindications || []).length +
-                  (contra.precautions || []).length;
+                  (contra.precautions || []).length + (contra.geriatric || []).length;
     if (total === 0 && !noId.length) {
       html += `<div class="empty-state"><strong>Sin alertas para este perfil.</strong>
-        Hoy se evalúan embarazo, lactancia, función renal y hepática, y las
-        alergias declaradas.</div>`;
+        Hoy se evalúan embarazo, lactancia, función renal y hepática, las
+        alergias declaradas y, a partir de los 65 años, los criterios de
+        prescripción en el anciano.</div>`;
     }
   } else {
     html += '<div class="empty-state">Completá el perfil del paciente para cruzarlo contra los medicamentos.</div>';
@@ -367,7 +370,14 @@ function cardInteraccion(i) {
                ? '<p class="evidence-note">Texto original del prospecto, en inglés.</p>' : ""}`
         : `<p class="evidence sin-texto">La fuente registra el par y su gravedad,
              pero no aporta descripción del mecanismo.</p>`}
-      <p class="meta">${FUENTE[i.source] || i.source}</p>
+      ${i.management
+        ? `<p class="manejo"><strong>Qué hacer:</strong> ${escapeHtml(i.management)}</p>`
+        : ""}
+      <p class="meta">${FUENTE[i.source] || i.source}${
+        // Un hallazgo armado con dos fuentes no se presenta como si fuera de una.
+        i.severity_source
+          ? ` · gravedad según ${FUENTE[i.severity_source] || i.severity_source}`
+          : ""}</p>
     </article>`;
 }
 
@@ -380,6 +390,30 @@ function cardPaciente(c, sev) {
       </div>
       <p class="evidence">${escapeHtml(condEs(c.condition))}</p>
       <p class="meta">${FUENTE[c.source] || c.source}</p>
+    </article>`;
+}
+
+/* Criterio de prescripción en el anciano.
+   La mayoría viene condicionada a algo que no está en la receta —una
+   comorbilidad, un valor de laboratorio—. Esas NO se muestran como una
+   afirmación sobre el paciente: se muestran como una pregunta. Presentarlas
+   como hechos sería falso en la mayoría de los casos, y es exactamente lo que
+   hace que un médico deje de leer las alertas. */
+function cardGeriatrica(g) {
+  const cond = g.condicionada;
+  return `
+    <article class="finding ${cond ? "moderate" : "major"}">
+      <div class="finding-head">
+        <span class="pair">${escapeHtml(g.drug)}</span>
+        <span class="badge ${cond ? "moderate" : "major"}">${
+          cond ? "Verificar — mayor de 65" : "Evitar — mayor de 65"}</span>
+      </div>
+      ${g.situacion
+        ? `<p class="evidence">${cond ? "Aplica si: " : ""}${escapeHtml(g.situacion)}</p>`
+        : ""}
+      <p class="manejo"><strong>Qué hacer:</strong> ${escapeHtml(g.recomendacion)}</p>
+      <p class="meta">${FUENTE[g.source] || g.source} — criterios de prescripción
+        en el anciano</p>
     </article>`;
 }
 
