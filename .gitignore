@@ -48,3 +48,14 @@ article.md
 
 # Local venv created by `uv run`
 .venv/
+
+# Fuentes crudas de la AEMPS y de CMS: pesan 237 MB juntas y se vuelven a bajar
+# con su script. Lo que SÍ se versiona es lo derivado —`aemps_*.json` y el
+# diccionario ATC— porque reconstruirlo exige parsear un XML de 193 MB.
+data/aemps/Prescripcion.xml
+data/aemps/aemps.zip
+data/aemps/DICCIONARIO_DCP*.xml
+data/aemps/DICCIONARIO_LABORATORIOS.xml
+data/icd10/*.txt
+data/icd10/*.pdf
+data/icd10/*.zip

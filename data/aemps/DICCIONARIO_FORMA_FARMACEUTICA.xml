@@ -1,0 +1,1373 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<aemps_prescripcion_formas_farmaceuticas xmlns="http://schemas.aemps.es/prescripcion/aemps_prescripcion_formas_farmaceuticas" xsi:schemaLocation="http://schemas.aemps.es/prescripcion/aemps_prescripcion_formas_farmaceuticas http://schemas.aemps.es/prescripcion/aemps_prescripcion_formas_farmaceuticas.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1</codigoformafarmaceutica>
+    <formafarmaceutica>GOTAS ORALES EN SOLUCIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>64</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>2</codigoformafarmaceutica>
+    <formafarmaceutica>GOTAS ORALES EN SUSPENSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>64</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>3</codigoformafarmaceutica>
+    <formafarmaceutica>GOTAS ORALES EN EMULSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>64</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>5</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>6</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>7</codigoformafarmaceutica>
+    <formafarmaceutica>EMULSIÓN ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>8</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SOLUCIÓN ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>9</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SUSPENSIÓN ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>10</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO PARA SOLUCIÓN ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>11</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO PARA SUSPENSIÓN ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>13</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SOLUCIÓN ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>14</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SUSPENSIÓN ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>15</codigoformafarmaceutica>
+    <formafarmaceutica>JARABE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>18</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO SOLUBLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>10</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>19</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO DISPERSABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>10</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>20</codigoformafarmaceutica>
+    <formafarmaceutica>TISANA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>21</codigoformafarmaceutica>
+    <formafarmaceutica>GEL ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>22</codigoformafarmaceutica>
+    <formafarmaceutica>PASTA ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>24</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>25</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO EFERVESCENTE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>44</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>26</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>27</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO EFERVESCENTE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>44</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>28</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO GASTRORRESISTENTE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>29</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO DE LIBERACIÓN PROLONGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>45</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>30</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO DE LIBERACIÓN MODIFICADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>45</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>32</codigoformafarmaceutica>
+    <formafarmaceutica>CÁPSULA DURA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>4</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>33</codigoformafarmaceutica>
+    <formafarmaceutica>CÁPSULA BLANDA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>4</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>34</codigoformafarmaceutica>
+    <formafarmaceutica>CÁPSULA DURA GASTRORRESISTENTE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>4</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>35</codigoformafarmaceutica>
+    <formafarmaceutica>CÁPSULA BLANDA GASTRORRESISTENTE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>4</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>36</codigoformafarmaceutica>
+    <formafarmaceutica>CÁPSULA DURA DE LIBERACIÓN PROLONGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>5</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>38</codigoformafarmaceutica>
+    <formafarmaceutica>CÁPSULA DURA DE LIBERACIÓN MODIFICADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>5</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>40</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>10</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>41</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO RECUBIERTO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>10</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>42</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO RECUBIERTO CON PELÍCULA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>10</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>43</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO EFERVESCENTE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>13</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>44</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO BUCAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>11</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>45</codigoformafarmaceutica>
+    <formafarmaceutica>LIOFILIZADO ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>12</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>46</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO GASTRORRESISTENTE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>10</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>47</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO DE LIBERACIÓN PROLONGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>14</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>48</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO DE LIBERACIÓN MODIFICADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>14</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>49</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO MASTICABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>15</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>50</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA PULVERIZACIÓN BUCAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>54</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>52</codigoformafarmaceutica>
+    <formafarmaceutica>SISTEMA DE LIBERACIÓN VAGINAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>22</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>53</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION ORAL Y RECTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>78</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>54</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO PARA CHUPAR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>11</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>56</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION PARA PULVERIZACION NASAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>53</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>57</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA GARGARISMOS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>52</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>59</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SOLUCIÓN PARA GARGARISMOS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>52</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>61</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN BUCAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>26</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>65</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION PARA PULVERIZACION SUBLINGUAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>56</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>66</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA ENJUAGUE BUCAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>52</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>69</codigoformafarmaceutica>
+    <formafarmaceutica>GEL BUCAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>26</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>70</codigoformafarmaceutica>
+    <formafarmaceutica>PASTA BUCAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>26</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>71</codigoformafarmaceutica>
+    <formafarmaceutica>CHICLE MEDICAMENTOSO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>7</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>72</codigoformafarmaceutica>
+    <formafarmaceutica>GEL GINGIVAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>52</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>75</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO SUBLINGUAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>16</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>77</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO BUCODISPERSABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>12</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>78</codigoformafarmaceutica>
+    <formafarmaceutica>BARRA URETRAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>50</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>80</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN INYECTABLE Y PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>83</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN DENTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>52</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>87</codigoformafarmaceutica>
+    <formafarmaceutica>ADITIVO PARA EL BAÑO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>51</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>88</codigoformafarmaceutica>
+    <formafarmaceutica>CREMA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>18</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>89</codigoformafarmaceutica>
+    <formafarmaceutica>GEL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>24</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>90</codigoformafarmaceutica>
+    <formafarmaceutica>POMADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>47</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>91</codigoformafarmaceutica>
+    <formafarmaceutica>PASTA CUTÁNEA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>43</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>92</codigoformafarmaceutica>
+    <formafarmaceutica>ESPUMA CUTÁNEA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>39</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>93</codigoformafarmaceutica>
+    <formafarmaceutica>CHAMPÚ</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>6</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>94</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA PULVERIZACIÓN CUTÁNEA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>39</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>95</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN PARA PULVERIZACIÓN CUTÁNEA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>39</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>97</codigoformafarmaceutica>
+    <formafarmaceutica>LÍQUIDO CUTÁNEO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>39</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN CUTÁNEA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>39</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>100</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN CUTÁNEA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>39</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>101</codigoformafarmaceutica>
+    <formafarmaceutica>EMULSIÓN CUTÁNEA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>23</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>102</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO CUTÁNEO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>63</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>104</codigoformafarmaceutica>
+    <formafarmaceutica>PARCHE TRANSDÉRMICO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>42</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>105</codigoformafarmaceutica>
+    <formafarmaceutica>COLODIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>39</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>106</codigoformafarmaceutica>
+    <formafarmaceutica>BARNIZ DE UÑAS MEDICAMENTOSO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>3</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>107</codigoformafarmaceutica>
+    <formafarmaceutica>CATAPLASMA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>2</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>108</codigoformafarmaceutica>
+    <formafarmaceutica>BARRA CUTÁNEA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>63</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>110</codigoformafarmaceutica>
+    <formafarmaceutica>APÓSITO IMPREGNADO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>2</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>112</codigoformafarmaceutica>
+    <formafarmaceutica>APÓSITO ADHESIVO MEDICAMENTOSO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>2</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>115</codigoformafarmaceutica>
+    <formafarmaceutica>BARRA DENTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>52</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>116</codigoformafarmaceutica>
+    <formafarmaceutica>BARRA NASAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>53</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>121</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO PARA SOLUCIÓN ORAL EN SOBRE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>128</codigoformafarmaceutica>
+    <formafarmaceutica>GEL OFTÁLMICO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>25</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>129</codigoformafarmaceutica>
+    <formafarmaceutica>POMADA OFTÁLMICA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>48</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>130</codigoformafarmaceutica>
+    <formafarmaceutica>COLIRIO EN SOLUCIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>8</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>131</codigoformafarmaceutica>
+    <formafarmaceutica>COLIRIO EN SUSPENSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>8</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>135</codigoformafarmaceutica>
+    <formafarmaceutica>COLIRIO DE LIBERACION PROLONGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>9</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>136</codigoformafarmaceutica>
+    <formafarmaceutica>GEL TRANSDÉRMICO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>24</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>138</codigoformafarmaceutica>
+    <formafarmaceutica>INSERTO OFTÁLMICO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>31</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>142</codigoformafarmaceutica>
+    <formafarmaceutica>GOTAS ÓTICAS EN SOLUCIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>27</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>143</codigoformafarmaceutica>
+    <formafarmaceutica>GOTAS ÓTICAS EN SUSPENSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>27</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>149</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA LAVADO ÓTICO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>27</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>155</codigoformafarmaceutica>
+    <formafarmaceutica>POMADA NASAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>53</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>156</codigoformafarmaceutica>
+    <formafarmaceutica>GOTAS NASALES EN SOLUCIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>53</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>157</codigoformafarmaceutica>
+    <formafarmaceutica>GOTAS NASALES EN SUSPENSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>53</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>159</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO NASAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>53</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>160</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSION ORAL EN SOBRE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>161</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN PARA PULVERIZACIÓN NASAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>53</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>162</codigoformafarmaceutica>
+    <formafarmaceutica>Polvo para solución intravesical y para solución inyectable</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>98</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>165</codigoformafarmaceutica>
+    <formafarmaceutica>CREMA VAGINAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>60</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>166</codigoformafarmaceutica>
+    <formafarmaceutica>GEL VAGINAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>60</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>169</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN VAGINAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>40</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>171</codigoformafarmaceutica>
+    <formafarmaceutica>EMULSIÓN VAGINAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>60</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>173</codigoformafarmaceutica>
+    <formafarmaceutica>ÓVULO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>41</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>174</codigoformafarmaceutica>
+    <formafarmaceutica>CÁPSULA VAGINAL DURA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>41</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>175</codigoformafarmaceutica>
+    <formafarmaceutica>CÁPSULA VAGINAL BLANDA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>41</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>176</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO VAGINAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>41</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>180</codigoformafarmaceutica>
+    <formafarmaceutica>EQUIVALENTE DE TEJIDO VIVO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>97</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>181</codigoformafarmaceutica>
+    <formafarmaceutica>CREMA RECTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>59</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>183</codigoformafarmaceutica>
+    <formafarmaceutica>POMADA RECTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>59</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>184</codigoformafarmaceutica>
+    <formafarmaceutica>ESPUMA RECTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>59</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>185</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN RECTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>38</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>186</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN RECTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>38</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>190</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SUSPENSIÓN RECTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>38</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>193</codigoformafarmaceutica>
+    <formafarmaceutica>SUPOSITORIO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>67</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>196</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA INHALACIÓN POR NEBULIZADOR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>197</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>198</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN PARA INHALACIÓN POR NEBULIZADOR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>200</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SOLUCIÓN PARA INHALACIÓN POR NEBULIZADOR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>202</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA INHALACIÓN EN ENVASE A PRESIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>203</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN PARA INHALACIÓN EN ENVASE A PRESIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>205</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA INHALACIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>206</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA INHALACIÓN (CÁPSULA DURA)</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>213</codigoformafarmaceutica>
+    <formafarmaceutica>LÍQUIDO PARA INHALACIÓN DEL VAPOR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>214</codigoformafarmaceutica>
+    <formafarmaceutica>GAS PARA INHALACION</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>215</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>216</codigoformafarmaceutica>
+    <formafarmaceutica>EMULSION INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>217</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SOLUCIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>218</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SUSPENSIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>219</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SOLUCIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>220</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SUSPENSIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>221</codigoformafarmaceutica>
+    <formafarmaceutica>CONCENTRADO PARA SOLUCIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>222</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>223</codigoformafarmaceutica>
+    <formafarmaceutica>EMULSIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>224</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SOLUCIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>225</codigoformafarmaceutica>
+    <formafarmaceutica>CONCENTRADO PARA SOLUCIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>226</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SOLUCIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>227</codigoformafarmaceutica>
+    <formafarmaceutica>DISOLVENTE PARA USO PARENTERAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>228</codigoformafarmaceutica>
+    <formafarmaceutica>IMPLANTE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>30</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>231</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION PARA DIALISIS PERITONEAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>20</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>232</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA HEMOFILTRACIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>29</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>233</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION PARA HEMODIAFILTRACION</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>29</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>237</codigoformafarmaceutica>
+    <formafarmaceutica>GLÓBULOS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>10</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>238</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION ORAL EN SOBRE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>239</codigoformafarmaceutica>
+    <formafarmaceutica>GEL URETRAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>50</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>240</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION INYECTABLE DE LIBERACION PROLONGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>241</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA INSTILACIÓN ENDOTRAQUEOPULMONAR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>32</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>243</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN PARA INSTILACIÓN ENDOTRAQUEOPULMONAR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>32</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>245</codigoformafarmaceutica>
+    <formafarmaceutica>GEL ENDOCERVICAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>69</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>249</codigoformafarmaceutica>
+    <formafarmaceutica>PRECURSOR RADIOFARMACÉUTICO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>57</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>252</codigoformafarmaceutica>
+    <formafarmaceutica>PASTILLA DE GOMA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>10</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>253</codigoformafarmaceutica>
+    <formafarmaceutica>PASTILLA PARA CHUPAR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>11</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>256</codigoformafarmaceutica>
+    <formafarmaceutica>GOTAS ÓTICAS EN SOLUCIÓN EN ENVASE UNIDOSIS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>27</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>257</codigoformafarmaceutica>
+    <formafarmaceutica>GENERADOR DE RADIONÚCLIDO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>57</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>259</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA INHALACIÓN (UNIDOSIS)</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>262</codigoformafarmaceutica>
+    <formafarmaceutica>SISTEMA DE LIBERACIÓN INTRAUTERINO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>21</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>267</codigoformafarmaceutica>
+    <formafarmaceutica>EQUIPO DE REACTIVOS PARA PREPARACIÓN RADIOFARMACÉUTICA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>57</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>269</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN GASTROENTÉRICA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>37</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>271</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA CONSERVACIÓN DE ÓRGANOS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>17</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>274</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA MODIFICACIÓN DE LAS FRACCIONES SANGUÍNEAS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>95</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>275</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA ADHESIVO TISULAR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>1</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>277</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA INHALACIÓN DEL VAPOR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>282</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO EFERVESCENTE Y POLVO PARA SUSPENSIÓN ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>288</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SOLUCIÓN INYECTABLE Y PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>289</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SUSPENSION INTRAVESICAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>49</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>290</codigoformafarmaceutica>
+    <formafarmaceutica>LIOFILIZADO PARA SOLUCIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>291</codigoformafarmaceutica>
+    <formafarmaceutica>LIOFILIZADO PARA SOLUCIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>292</codigoformafarmaceutica>
+    <formafarmaceutica>PELICULA BUCODISPERSABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>12</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>293</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA ADHESIVO TISULAR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>1</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>294</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN INYECTABLE EN PLUMA PRECARGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>296</codigoformafarmaceutica>
+    <formafarmaceutica>CONCENTRADO PARA SOLUCIÓN ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>297</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SOLUCIÓN PARA INHALACIÓN POR NEBULIZADOR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>299</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y SOLUCIÓN PARA SOLUCIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>300</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SUSPENSIÓN INYECTABLE DE LIBERACIÓN PROLONGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1138</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA CONCENTRADO PARA SOLUCION INYECTABLE Y PARA PERFUSION</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1228</codigoformafarmaceutica>
+    <formafarmaceutica>CÁPSULA GASTRORRESISTENTE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>4</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1277</codigoformafarmaceutica>
+    <formafarmaceutica>BAÑO OCULAR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>8</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1285</codigoformafarmaceutica>
+    <formafarmaceutica>EMULSIÓN INYECTABLE Y PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1286</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN INYECTABLE EN JERINGA PRECARGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1287</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN INYECTABLE EN JERINGA PRECARGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1291</codigoformafarmaceutica>
+    <formafarmaceutica>PARCHE CUTÁNEO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>2</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1292</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSION PARA IMPLANTACION</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>30</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1293</codigoformafarmaceutica>
+    <formafarmaceutica>CONCENTRADO Y DISOLVENTE PARA SOLUCIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1316</codigoformafarmaceutica>
+    <formafarmaceutica>PASTILLA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>10</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1324</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO EN SOBRE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1325</codigoformafarmaceutica>
+    <formafarmaceutica>CONCENTRADO PARA DISPERSIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1328</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO Y DISOLVENTE PARA SUSPENSION ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1330</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION NASAL Y BUCAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>73</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1332</codigoformafarmaceutica>
+    <formafarmaceutica>POMADA BUCAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>26</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1333</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SOLUCIÓN INTRAVESICAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>49</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1335</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA CONCENTRADO PARA DISPERSION PARA PERFUSION</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1341</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION PARA PULVERIZACION TRANSDERMICA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>96</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1343</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA GARGARISMOS Y ENJUAGUE BUCAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>52</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1346</codigoformafarmaceutica>
+    <formafarmaceutica>APÓSITO ADHESIVO PARA PRUEBA DE PROVOCACIÓN CON ALERGENOS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>91</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1348</codigoformafarmaceutica>
+    <formafarmaceutica>CÁPSULA BLANDA MASTICABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>4</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1349</codigoformafarmaceutica>
+    <formafarmaceutica>COLIRIO EN EMULSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>8</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1350</codigoformafarmaceutica>
+    <formafarmaceutica>COLIRIO EN SOLUCIÓN EN ENVASE UNIDOSIS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>8</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1353</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO MASTICABLE Y DISPERSABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>15</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1356</codigoformafarmaceutica>
+    <formafarmaceutica>COMPRIMIDO Y DISOLVENTE PARA SUSPENSIÓN RECTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>38</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1358</codigoformafarmaceutica>
+    <formafarmaceutica>CONCENTRADO PARA EMULSIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1359</codigoformafarmaceutica>
+    <formafarmaceutica>CONCENTRADO PARA SOLUCIÓN INYECTABLE Y PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1360</codigoformafarmaceutica>
+    <formafarmaceutica>CONCENTRADO PARA SOLUCIÓN ORAL Y RECTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>78</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1367</codigoformafarmaceutica>
+    <formafarmaceutica>CONCENTRADO Y DISOLVENTE PARA SOLUCIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1373</codigoformafarmaceutica>
+    <formafarmaceutica>DISPERSIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1377</codigoformafarmaceutica>
+    <formafarmaceutica>GAS LICUADO MEDICINAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1378</codigoformafarmaceutica>
+    <formafarmaceutica>GAS COMPRIMIDO MEDICINAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1379</codigoformafarmaceutica>
+    <formafarmaceutica>GAS CRIOGÉNICO MEDICINAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1382</codigoformafarmaceutica>
+    <formafarmaceutica>GEL INTESTINAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>100</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1383</codigoformafarmaceutica>
+    <formafarmaceutica>GEL PERIODONTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>52</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1390</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO PARA SOLUCIÓN VAGINAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>40</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1394</codigoformafarmaceutica>
+    <formafarmaceutica>IMPLANTE INTRAVÍTREO EN APLICADOR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>31</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1403</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA CONCENTRADO PARA SOLUCIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1413</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SUSPENSIÓN INTRAVESICAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>49</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1414</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SUSPENSIÓN ORAL Y RECTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>78</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1415</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SUSPENSION PARA IMPLANTACION</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>30</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1417</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA CONCENTRADO PARA SOLUCIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1418</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA DISPERSIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1423</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SOLUCIÓN INYECTABLE EN JERINGA PRECARGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1424</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SOLUCIÓN INYECTABLE Y PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1427</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y SUSPENSIÓN PARA SUSPENSIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1429</codigoformafarmaceutica>
+    <formafarmaceutica>POMADA ÓTICA Y OFTÁLMICA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>71</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1435</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN INYECTABLE EN CARTUCHO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1436</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN INYECTABLE Y PARA PERFUSIÓN EN JERINGA PRECARGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1437</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN ORAL O CONCENTRADO PARA INHALACIÓN POR NEBULIZADOR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>75</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1438</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN ORAL Y PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>77</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1439</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA HEMODIÁLISIS Y HEMOFILTRACIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>29</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1440</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA INHALACIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1444</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA PRUEBA CON ALERGENOS POR PUNCIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>91</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1446</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA PULVERIZACIÓN BUCAL Y LARINGOFARÍNGEA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>54</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1449</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN INYECTABLE EN PLUMA PRECARGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1451</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN ORAL Y RECTAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>78</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1453</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSION Y GRANULADO EFERVESCENTE PARA SUSPENSION ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1459</codigoformafarmaceutica>
+    <formafarmaceutica>LIOFILIZADO Y DISOLVENTE PARA SOLUCIÓN INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1463</codigoformafarmaceutica>
+    <formafarmaceutica>Película bucal (oromucosal film)</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>12</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1464</codigoformafarmaceutica>
+    <formafarmaceutica>PRECURSOR RADIOFARMACEUTICO EN SOLUCION</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>57</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1465</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN ORAL E INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>76</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1467</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION PARA CARDIOPLEJIA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1473</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULOS RECUBIERTOS EN SOBRES</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1474</codigoformafarmaceutica>
+    <formafarmaceutica>PELICULA BUCODISPERSABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>12</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1475</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA DISPERSIÓN PARA PERFUSIÓN</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1476</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION PARA GARGARISMOS Y PARA LAVADO NASAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>73</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1478</codigoformafarmaceutica>
+    <formafarmaceutica>CONCENTRADO PARA SUSPENSION ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1479</codigoformafarmaceutica>
+    <formafarmaceutica>DISPERSION PARA PERFUSION</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1483</codigoformafarmaceutica>
+    <formafarmaceutica>PELICULA SUBLINGUAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>16</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1487</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSION INYECTABLE DE LIBERACION PROLONGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1490</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SOLUCION ORAL EN SOBRE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1491</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y DISOLVENTE PARA SOLUCION INYECTABLE EN PLUMA PRECARGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1492</codigoformafarmaceutica>
+    <formafarmaceutica>LÍQUIDO ORAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1493</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO Y GEL PARA GEL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>24</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1494</codigoformafarmaceutica>
+    <formafarmaceutica>MATRIZ ADHESIVA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>1</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1495</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION INYECTABLE Y PARA PERFUSION</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>1505</codigoformafarmaceutica>
+    <formafarmaceutica>JARABE EN SOBRE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>93900</codigoformafarmaceutica>
+    <formafarmaceutica>GRAGEAS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>10</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>94002</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO RECUBIERTO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98916</codigoformafarmaceutica>
+    <formafarmaceutica>GEL OFTÁLMICO EN ENVASE UNIDOSIS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>25</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98917</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION PARA PERFUSION EN JERINGA PRECARGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98919</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA CONCENTRADO Y SOLUCIÓN PARA SOLUCIÓN PARA PERFUSION</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98920</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN PARA PULVERIZACIÓN NASAL EN ENVASE UNIDOSIS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>53</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98929</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCIÓN ORAL EN ENVASE UNIDOSIS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98931</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION PARA CARDIOPLEJIA/CONSERVACION DE ORGANOS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>17</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98933</codigoformafarmaceutica>
+    <formafarmaceutica>GEL INTRAUTERINO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>99</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98934</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION PARA PERFUSION EN CARTUCHO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98935</codigoformafarmaceutica>
+    <formafarmaceutica>CONCENTRADO PARA DISPERSION INYECTABLE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98941</codigoformafarmaceutica>
+    <formafarmaceutica>POLVO PARA SUSPENSION ORAL EN SOBRE</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98942</codigoformafarmaceutica>
+    <formafarmaceutica>SUSPENSIÓN INYECTABLE DE LIBERACIÓN PROLONGADA EN JERINGA PRECARGADA</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98943</codigoformafarmaceutica>
+    <formafarmaceutica>BASTONCILLO CUTANEO IMPREGNADO</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>39</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98944</codigoformafarmaceutica>
+    <formafarmaceutica>SOLUCION CUTANEA EN ENVASE UNIDOSIS</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>39</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98988</codigoformafarmaceutica>
+    <formafarmaceutica>LIOFILIZADO SUBLINGUAL</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>12</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>98999</codigoformafarmaceutica>
+    <formafarmaceutica>DISPERSION INYECTABLE Y PARA PERFUSION</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>99015</codigoformafarmaceutica>
+    <formafarmaceutica>Colirio en emulsion en envase unidosis</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>8</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>99018</codigoformafarmaceutica>
+    <formafarmaceutica>GRANULADO EN CAPSULAS PARA ABRIR</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>4</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+  <formasfarmaceuticas>
+    <codigoformafarmaceutica>99033</codigoformafarmaceutica>
+    <formafarmaceutica>Emulsion inyectable y para perfusion en jeringa precargada</formafarmaceutica>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+  </formasfarmaceuticas>
+</aemps_prescripcion_formas_farmaceuticas>

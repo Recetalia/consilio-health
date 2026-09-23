@@ -8,15 +8,30 @@ alertas fármaco-patología de MED-RT y el mapeo de sustancias del DNMA.
 
 Ante dos filas para el mismo hecho gana la de mayor autoridad:
 
-    recetalia  >  ddinter  >  openfda
+    recetalia  >  aemps  >  ddinter  >  openfda
 
 `recetalia` es lo que revisó un farmacéutico y pisa a todo lo importado.
+`aemps` es un regulador y es el único que trae mecanismo y manejo escritos.
 `ddinter` trae severidad estructurada de una base curada. `openfda` es una
 inferencia sobre texto libre de prospecto: sirve donde no hay nada mejor, pero
-no compite con las otras dos.
+no compite con las otras.
 
 Esa precedencia es SQL, no convención: vive en `_PRECEDENCE` y se aplica en
 cada búsqueda de par.
+
+## La gravedad NO sale de la precedencia
+
+Es la única excepción, y está medida. De los 741 pares donde la AEMPS coincide
+con una fuente previa, **215 los tiene DDInter como `major` y la AEMPS como
+`desaconsejada`**, y al revés **29 los contraindica la AEMPS y DDInter los deja
+en `moderate` o menos**. O sea que cualquiera de los dos órdenes se equivoca en
+cientos de pares, y en la dirección peligrosa: avisar de menos.
+
+Por eso la gravedad se resuelve aparte —**se toma la más alta y se dice quién
+la dijo** (`severity_source`)— mientras el resto de la fila (texto, evidencia)
+sigue saliendo de la precedencia. Bajar una contraindicación de un regulador a
+"moderada" porque otra fuente opina distinto no es resolver un conflicto: es
+esconderlo.
 """
 
 from __future__ import annotations
@@ -41,7 +56,11 @@ DB_PATH = os.environ.get("INTERACTION_DB_PATH", DEFAULT_DB_PATH)
 # Menor número = más autoridad. Se usa como ORDER BY.
 # La columna va calificada: `drug` también tiene `source`, y sin el prefijo el
 # JOIN de lookup_pair falla con "ambiguous column name".
-_PRECEDENCE = "case i.source when 'recetalia' then 0 when 'ddinter' then 1 else 2 end"
+_PRECEDENCE = ("case i.source when 'recetalia' then 0 when 'aemps' then 1 "
+               "when 'ddinter' then 2 else 3 end")
+
+# Para elegir la gravedad más alta entre fuentes que no coinciden.
+_SEVERITY_RANK = {"major": 3, "moderate": 2, "minor": 1, "unknown": 0}
 
 _SALTS = (
     "potasico", "sodico", "calcico", "magnesico", "clorhidrato", "hidrocloruro",
@@ -216,37 +235,64 @@ class RecetaliaDatabase:
     # --- interacciones ----------------------------------------------------
 
     async def lookup_pair(self, drug_a: int, drug_b: int) -> dict[str, Any] | None:
-        """El mejor hecho conocido para el par, por precedencia de procedencia."""
+        """El mejor hecho conocido para el par.
+
+        Se traen TODAS las filas del par —son pocas, una por fuente— porque hay
+        tres decisiones distintas y no se resuelven igual:
+
+        * la **fila base** (evidencia, procedencia) sale de `_PRECEDENCE`;
+        * la **gravedad**, de la más alta entre fuentes (ver el docstring del
+          módulo: la precedencia acá avisaría de menos);
+        * el **texto** de mecanismo y manejo, del primero que lo tenga — hoy
+          casi siempre la AEMPS, que es la única fuente que lo trae escrito.
+
+        Cuando una de las tres no coincide con la fila base se dice de dónde
+        salió, en vez de presentarlas como si fueran todas de la misma fuente.
+        """
         if drug_a == drug_b:
             return None
         lo, hi = (drug_a, drug_b) if drug_a < drug_b else (drug_b, drug_a)
         conn = await self._c()
         async with conn.execute(
             f"""select i.severity, i.mechanism, i.management, i.evidence, i.source,
-                       i.reviewed_by, a.canonical as name_a, b.canonical as name_b
+                       i.reviewed_by, i.note, a.canonical as name_a, b.canonical as name_b
                 from interaction i
                 join drug a on a.drug_id = i.drug_a_id
                 join drug b on b.drug_id = i.drug_b_id
                 where i.drug_a_id = ? and i.drug_b_id = ?
-                order by {_PRECEDENCE}
-                limit 1""",
+                order by {_PRECEDENCE}""",
             (lo, hi),
         ) as cur:
-            row = await cur.fetchone()
-        if row is None:
+            rows = await cur.fetchall()
+        if not rows:
             return None
-        return {
-            "severity": (row["severity"] or "unknown").lower(),
-            "mechanism": row["mechanism"],
-            "management": row["management"],
-            "evidence": row["evidence"],
-            "source": row["source"],
-            "reviewed_by": row["reviewed_by"],
-            "drug_a_name": row["name_a"],
-            "drug_b_name": row["name_b"],
-            # openFDA es inferencia sobre texto libre; las otras dos no.
-            "uncertain": row["source"] == "openfda",
+
+        base = rows[0]
+        peor = max(rows, key=lambda r: _SEVERITY_RANK.get(
+            (r["severity"] or "unknown").lower(), 0))
+        con_texto = next((r for r in rows if r["mechanism"] or r["management"]), None)
+
+        out = {
+            "severity": (peor["severity"] or "unknown").lower(),
+            "mechanism": con_texto["mechanism"] if con_texto else None,
+            "management": con_texto["management"] if con_texto else None,
+            "evidence": base["evidence"],
+            "source": base["source"],
+            "reviewed_by": base["reviewed_by"],
+            "drug_a_name": base["name_a"],
+            "drug_b_name": base["name_b"],
+            # openFDA es inferencia sobre texto libre; las otras no.
+            "uncertain": base["source"] == "openfda",
         }
+        if peor["source"] != base["source"]:
+            out["severity_source"] = peor["source"]
+        if con_texto is not None and con_texto["source"] != base["source"]:
+            out["text_source"] = con_texto["source"]
+        # Una regla de la AEMPS puede haber matcheado por clase y no por
+        # molécula. Es menos específica, y el médico tiene derecho a saberlo.
+        if con_texto is not None and con_texto["note"]:
+            out["text_match"] = con_texto["note"]
+        return out
 
     async def lookup_by_rxcui(self, rxcui_a: str, rxcui_b: str) -> dict[str, Any] | None:
         ids = await self.drug_ids_by_rxcui([rxcui_a, rxcui_b])
@@ -281,6 +327,111 @@ class RecetaliaDatabase:
         ) as cur:
             rows = await cur.fetchall()
         return [dict(r) for r in rows]
+
+    async def condition_ids_for_icd10(self, codes: list[str]) -> dict[str, list[int]]:
+        """Códigos CIE-10 del paciente → condiciones MeSH que activan.
+
+        Los anclajes del puente vienen en tres formas —código exacto (`E86.9`),
+        categoría (`N18`) y rango (`K70-K77`)— y hay que resolver las tres. Si
+        sólo se buscara igualdad, un paciente con `N18.5` no dispararía la
+        alerta anclada en `N18`: es el caso más grave de insuficiencia renal y
+        se quedaría sin aviso.
+
+        Todo local. El puente ya está construido en `condition_xref`; acá sólo
+        se consulta.
+        """
+        if not codes:
+            return {}
+        conn = await self._c()
+        out: dict[str, list[int]] = {}
+
+        for raw in codes:
+            code = (raw or "").strip().upper().replace(" ", "")
+            if not code:
+                continue
+            # Candidatos: el código y todos sus ancestros por truncación.
+            # N18.5 -> N18.5, N18, N1  (el punto no cuenta como nivel)
+            plain = code.replace(".", "")
+            candidates = {code, plain}
+            for n in range(len(plain) - 1, 2, -1):
+                candidates.add(plain[:n])
+                if n > 3:
+                    candidates.add(plain[:3] + "." + plain[3:n])
+            ph = ",".join("?" * len(candidates))
+            async with conn.execute(
+                f"""select distinct x.to_id
+                     from condition c join condition_xref x on x.from_id = c.condition_id
+                    where c.code_system='icd10cm' and c.code in ({ph})""",
+                tuple(candidates),
+            ) as cur:
+                hits = {r["to_id"] for r in await cur.fetchall()}
+
+            # Rangos: 'K70-K77' cubre K70..K77. Se comparan los tres primeros
+            # caracteres, que es el nivel en que el CIE-10 define sus bloques.
+            head = plain[:3]
+            if len(head) == 3 and head[1:].isdigit():
+                async with conn.execute(
+                    """select c.code, x.to_id from condition c
+                        join condition_xref x on x.from_id = c.condition_id
+                       where c.code_system='icd10cm' and c.code like '%-%'"""
+                ) as cur:
+                    for r in await cur.fetchall():
+                        lo, _, hi = r["code"].partition("-")
+                        if lo[:1] == head[:1] == hi[:1] and lo[1:3].isdigit() and hi[1:3].isdigit():
+                            if int(lo[1:3]) <= int(head[1:3]) <= int(hi[1:3]):
+                                hits.add(r["to_id"])
+            if hits:
+                out[raw] = sorted(await self._with_mesh_ancestors(hits))
+        return out
+
+    async def _with_mesh_ancestors(self, condition_ids: set[int]) -> set[int]:
+        """Suma los ancestros MeSH de cada condición.
+
+        Sin esto, `N18.5` llega a "Renal Insufficiency, Chronic" y se queda ahí,
+        mientras la contraindicación de la metformina vive en "Renal
+        Insufficiency" a secas. En CIE-10 `N18` y `N19` son HERMANOS y truncar
+        no los conecta; en MeSH sí, y el número de árbol lo hace explícito:
+
+            Renal Insufficiency, Chronic   C12.950.419.780.750
+            Renal Insufficiency            C12.950.419.780      ← prefijo
+
+        Ascender es, entonces, coincidencia de prefijo. Se sube sólo hacia
+        arriba: un ancestro es más general que el diagnóstico del paciente, así
+        que la alerta sigue aplicando. Bajar sería lo contrario —suponerle al
+        paciente una enfermedad más específica de la que tiene— y eso no se hace.
+        """
+        if not condition_ids:
+            return condition_ids
+        conn = await self._c()
+        ph = ",".join("?" * len(condition_ids))
+        async with conn.execute(
+            f"select tree from condition where condition_id in ({ph}) and tree is not null",
+            tuple(condition_ids),
+        ) as cur:
+            trees = [t for r in await cur.fetchall() for t in (r["tree"] or "").split(",") if t]
+        if not trees:
+            return condition_ids
+
+        out = set(condition_ids)
+        # Los prefijos de cada árbol son exactamente sus ancestros.
+        prefijos: set[str] = set()
+        for t in trees:
+            partes = t.split(".")
+            for k in range(1, len(partes)):
+                prefijos.add(".".join(partes[:k]))
+        if not prefijos:
+            return out
+        ph2 = ",".join("?" * len(prefijos))
+        async with conn.execute(
+            f"""select condition_id, tree from condition
+                 where code_system='mesh' and tree is not null""",
+        ) as cur:
+            for r in await cur.fetchall():
+                for t in (r["tree"] or "").split(","):
+                    if t and t in prefijos:
+                        out.add(r["condition_id"])
+                        break
+        return out
 
     async def condition_ids_for_codes(
         self, codes: list[tuple[str, str]]

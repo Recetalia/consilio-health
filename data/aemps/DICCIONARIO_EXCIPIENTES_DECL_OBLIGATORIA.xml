@@ -1,0 +1,2303 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<aemps_prescripcion_excipientes xmlns="http://schemas.aemps.es/prescripcion/aemps_prescripcion_excipientes" xsi:schemaLocation="http://schemas.aemps.es/prescripcion/aemps_prescripcion_excipientes http://schemas.aemps.es/prescripcion/aemps_prescripcion_excipientes.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <excipientes>
+    <codigoedo>25</codigoedo>
+    <edo>BETADEX</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>32</codigoedo>
+    <edo>CARBONATO SODICO MONOHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>34</codigoedo>
+    <edo>CASEINATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>35</codigoedo>
+    <edo>CELACTOSA 80</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>51</codigoedo>
+    <edo>CREMOPHOR EL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>54</codigoedo>
+    <edo>CROMATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>61</codigoedo>
+    <edo>ACEITE DE CACAHUETE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>62</codigoedo>
+    <edo>CACAHUETE, ACEITE DE, HIDROGENADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>65</codigoedo>
+    <edo>DOCUSATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>66</codigoedo>
+    <edo>DODECIL SULFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>78</codigoedo>
+    <edo>ACEITE DE MAIZ</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>87</codigoedo>
+    <edo>ALFADEX</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>91</codigoedo>
+    <edo>MALTITOL (E965)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>93</codigoedo>
+    <edo>GLICEROL ESTER HIDROGENADO DE COLOFONIA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>100</codigoedo>
+    <edo>ISOMALT C (ISOMALTITOL)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>114</codigoedo>
+    <edo>SULFITO DE SODIO HEPTAHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>120</codigoedo>
+    <edo>ISOMALTA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>121</codigoedo>
+    <edo>ACEITE DE SESAMO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>124</codigoedo>
+    <edo>FOSFATIDILGLICEROL DE HUEVO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>131</codigoedo>
+    <edo>ETER CETOESTEARILICO DE POLIETILENGLICOL (BRIJ 72)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>132</codigoedo>
+    <edo>CALCOBUTROL SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>133</codigoedo>
+    <edo>ISOESTEARATOS SORBITANGLICERILO-CERA ABEJAS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>136</codigoedo>
+    <edo>ALQUIL BENZOATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>152</codigoedo>
+    <edo>ACEITE DE GERMEN DE MAIZ</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>156</codigoedo>
+    <edo>SULFOBUTILETER BETACICLODEXTRINA DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>167</codigoedo>
+    <edo>FITATO DE SODIO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>172</codigoedo>
+    <edo>TRIACETINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>181</codigoedo>
+    <edo>HIDROGENO ORTOFOSFATO DISODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>182</codigoedo>
+    <edo>PARAHIDROXIBENZOATO DE PROPILO SODICO (E-217)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>183</codigoedo>
+    <edo>PARAHIDROXIBENZOATO DE ETILO SODICO (E-215)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>190</codigoedo>
+    <edo>FENILMERCURIO ACETATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>198</codigoedo>
+    <edo>ACETATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>202</codigoedo>
+    <edo>LACTOSA ANHIDRA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>207</codigoedo>
+    <edo>ACETIL TRIPTOFANATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>210</codigoedo>
+    <edo>POLIETILENGLICOL 120 METILGLUCOSA DIOLEATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>214</codigoedo>
+    <edo>PARAHIDROXIBENZOATO DE METILO (E-218)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>224</codigoedo>
+    <edo>MONOESTEARATO DE SACAROSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>231</codigoedo>
+    <edo>OLEATO DE POLIGLICEROL (PLUROL OLEICO)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>250</codigoedo>
+    <edo>ACIDO BENZOICO (E210)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>252</codigoedo>
+    <edo>ACIDO BORICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>274</codigoedo>
+    <edo>PARAHIDROXIBENZOATO DE ETILO (E-214)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>275</codigoedo>
+    <edo>PARAHIDROXIBENZOATO DE METILO SODICO (E-219)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>276</codigoedo>
+    <edo>PARAHIDROXIBENZOATO DE PROPILO (E-216)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>297</codigoedo>
+    <edo>ROJO ALLURA AC (E129)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>300</codigoedo>
+    <edo>SACAROSA A LA SILICE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>308</codigoedo>
+    <edo>SULFATO DODECILO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>319</codigoedo>
+    <edo>TIOSULFATO SODICO PENTAHIDRATADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>325</codigoedo>
+    <edo>PIROFOSFATO SODICO DECAHIDRATADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>331</codigoedo>
+    <edo>HIALURONATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>332</codigoedo>
+    <edo>SACARINA SODICA DIHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>359</codigoedo>
+    <edo>JARABE DE GLUCOSA DESHIDRATADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>367</codigoedo>
+    <edo>CERA DE ESTERES CETILICOS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>377</codigoedo>
+    <edo>GLICEROL TRIALCANOATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>384</codigoedo>
+    <edo>ACIDO SORBICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>391</codigoedo>
+    <edo>EDTA SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>417</codigoedo>
+    <edo>ALCOHOL DESNATURALIZADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>419</codigoedo>
+    <edo>OLEILICO, ALCOHOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>440</codigoedo>
+    <edo>CARBOXIMETILALMIDON</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>452</codigoedo>
+    <edo>AZUCAR , ESFERAS DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>454</codigoedo>
+    <edo>AZUCAR DE CONFITERIA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>458</codigoedo>
+    <edo>MONOESTEARATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>468</codigoedo>
+    <edo>DIBEHENATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>470</codigoedo>
+    <edo>PELLETS NEUTROS (ALMIDON DE MAIZ Y ESFERAS AZUCAR)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>475</codigoedo>
+    <edo>HIDROGENO CARBONATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>476</codigoedo>
+    <edo>FOSFATO DISODICO DIHIDRATADO HIDROGENADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>478</codigoedo>
+    <edo>AZUCAR DE GRAGEADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>486</codigoedo>
+    <edo>HIDROGENO CARBONATO SODICO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>496</codigoedo>
+    <edo>FOSFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>503</codigoedo>
+    <edo>SACAROSA DE COMPRESION</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>507</codigoedo>
+    <edo>METILHIDROXIBENZOATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>509</codigoedo>
+    <edo>ARLATONE 983 S</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>521</codigoedo>
+    <edo>ALCOHOL SDA-3A</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>523</codigoedo>
+    <edo>PELLETS DE AZUCAR</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>524</codigoedo>
+    <edo>HIDROGENO FOSFATO DE DISODIO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>525</codigoedo>
+    <edo>DIHIDROGENOFOSFATO DE SODIO DIHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>528</codigoedo>
+    <edo>SACARINATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>535</codigoedo>
+    <edo>FOSFATO DIHIDROGENO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>537</codigoedo>
+    <edo>GLICEROL BIDESTILADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>538</codigoedo>
+    <edo>SACAROSA / MALTODEXTRINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>540</codigoedo>
+    <edo>FOSFATO SODICO DIHIDRATADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>544</codigoedo>
+    <edo>SACAROSA / ALMIDON DE MAIZ</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>549</codigoedo>
+    <edo>FOSFATO MONOSODICO MONOHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>551</codigoedo>
+    <edo>FOSFATO DIHIDROGENO DISODICO DIHIDRATADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>559</codigoedo>
+    <edo>JARABE DE GLUCOSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>573</codigoedo>
+    <edo>GLICOLATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>574</codigoedo>
+    <edo>ALCOHOL ETILICO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>576</codigoedo>
+    <edo>DIHIDROGENOFOSFATO DE POTASIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>579</codigoedo>
+    <edo>FOSFATO MONOPOTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>580</codigoedo>
+    <edo>HIDROGENOCARBONATO DE POTASIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>586</codigoedo>
+    <edo>ACETATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>587</codigoedo>
+    <edo>NARANJA PAL SUPER (E-110)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>599</codigoedo>
+    <edo>HIDROGENO FOSFATO DE DISODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>600</codigoedo>
+    <edo>JARABE DE GLUCOSA HIDROGENADO (LYCASIN)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>601</codigoedo>
+    <edo>DIHIDROGENOFOSFATO DE DISODIO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>609</codigoedo>
+    <edo>BETACICLODEXTRINAS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>626</codigoedo>
+    <edo>SORBITOL ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>646</codigoedo>
+    <edo>DEXTROSA ANHIDRA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>647</codigoedo>
+    <edo>DEXTROSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>656</codigoedo>
+    <edo>GLUTAMATO SODICO MONOHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>659</codigoedo>
+    <edo>SULFATO SODICO DECAHIDRATADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>673</codigoedo>
+    <edo>SACARINA SODICA MONOHIDRATADA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>674</codigoedo>
+    <edo>HIDROGENOFOSFATO DE SODIO DODECAHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>688</codigoedo>
+    <edo>SULFOSALICILATO DISODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>689</codigoedo>
+    <edo>BIFOSFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>696</codigoedo>
+    <edo>ESFERAS LACTOSA MONOHIDRATO-CELULOSA MICROCRISTALINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>703</codigoedo>
+    <edo>FOSFATO DISODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>704</codigoedo>
+    <edo>ISOMALTA (E 953)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>728</codigoedo>
+    <edo>GLUTAMATO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>742</codigoedo>
+    <edo>CREMOPHOR RH40</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>769</codigoedo>
+    <edo>DIHIDROXIALUMINIO CARBONATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>780</codigoedo>
+    <edo>GLICEROL FORMAL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>793</codigoedo>
+    <edo>DIHIDROGENOFOSFATO DE SODIO MONOHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>811</codigoedo>
+    <edo>GAMMACICLODEXTRINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>818</codigoedo>
+    <edo>ALCOHOL BENCILICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>829</codigoedo>
+    <edo>ALCOHOL BETA FENILETILICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>836</codigoedo>
+    <edo>CETOESTEARILICO, ALCOHOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>838</codigoedo>
+    <edo>CETILICO, ALCOHOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>864</codigoedo>
+    <edo>ALCOHOL DE LANOLINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>870</codigoedo>
+    <edo>ESTEARILICO, ALCOHOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>873</codigoedo>
+    <edo>ALCOHOL ETILICO (ETANOL)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>962</codigoedo>
+    <edo>ALGINATO DE PROPILENGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>967</codigoedo>
+    <edo>ALGINATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>974</codigoedo>
+    <edo>ALMIDON</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>975</codigoedo>
+    <edo>PARAHIDROXIBENZOATO DE BUTILO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1025</codigoedo>
+    <edo>ALMIDON DE MAIZ</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1038</codigoedo>
+    <edo>ALMIDON DE PATATA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1041</codigoedo>
+    <edo>ALMIDON DE TRIGO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1100</codigoedo>
+    <edo>AMARANTO (CI=16185,E-123)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1133</codigoedo>
+    <edo>AMARILLO DE QUINOLEINA (E-104, CI=47005)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1166</codigoedo>
+    <edo>CLORURO DE BENZALCONIO SOLUCION AL 50%</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1172</codigoedo>
+    <edo>CAPRIL CAPRATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1187</codigoedo>
+    <edo>AMARILLO ANARANJADO S (E 110, CI=15985)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1202</codigoedo>
+    <edo>HIDROXIBENZOATO DE METILO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1221</codigoedo>
+    <edo>ALMIDON PREGELATINIZADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1230</codigoedo>
+    <edo>COLORANTE ROJO COCHINILLA (E-124)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1270</codigoedo>
+    <edo>TARTRACINA (E-102)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1276</codigoedo>
+    <edo>MACROGOLGLICEROL, HIDROXIESTEARATO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1414</codigoedo>
+    <edo>AROMA DE FRUTAS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1424</codigoedo>
+    <edo>AROMA DE MIEL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1562</codigoedo>
+    <edo>ASCORBATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1611</codigoedo>
+    <edo>AZUCAR</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1646</codigoedo>
+    <edo>AZUCAR CARAMELIZADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1668</codigoedo>
+    <edo>AZUCAR INVERTIDA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1797</codigoedo>
+    <edo>BENZOATO DE BENCILO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1801</codigoedo>
+    <edo>BENZOATO DE SODIO  (E 211)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1833</codigoedo>
+    <edo>HIDROGENOCARBONATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1845</codigoedo>
+    <edo>ETANOL ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1854</codigoedo>
+    <edo>HIDROXIPROPIL GAMMACICLODEXTRINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1857</codigoedo>
+    <edo>HIPROMELOSA/DIOXIDO DE TITANIO (E-171)/PROPILENGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1860</codigoedo>
+    <edo>SORBITOL CARBONATO CALCICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1867</codigoedo>
+    <edo>BISULFITO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1870</codigoedo>
+    <edo>BITARTRATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1876</codigoedo>
+    <edo>MONOLAURIL SULFOSUCCINATO DISODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1878</codigoedo>
+    <edo>BORATO DE FENILMERCURIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1882</codigoedo>
+    <edo>BORATO SODICO (BORAX)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1883</codigoedo>
+    <edo>DIOLEOILFOSFATIDILGLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1884</codigoedo>
+    <edo>DIPALMITOILFOSFATIDILGLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1891</codigoedo>
+    <edo>POLIOXIETILEN-POLIOXIPROPILENGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1892</codigoedo>
+    <edo>ACIDO CALOXETICO TRISODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1898</codigoedo>
+    <edo>BROMO-2-NITROPROPANO 1,3 DIOL (BRONOPOL)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1903</codigoedo>
+    <edo>HIDROGENOFOSFATO DISODICO DIHIDRATADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1908</codigoedo>
+    <edo>BUTILHIDROXIANISOL (E 320)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1910</codigoedo>
+    <edo>BUTILHIDROXITOLUENO (E321)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1911</codigoedo>
+    <edo>BUTIL PARABEN</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1912</codigoedo>
+    <edo>METILGLUCOSA SESQUIESTEARATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1937</codigoedo>
+    <edo>MACROGOLGLICEROL, RICINOLEATO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1942</codigoedo>
+    <edo>GLUCOSA LIQUIDA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1955</codigoedo>
+    <edo>SOLUCION SULFITO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1964</codigoedo>
+    <edo>LACTOSA MONOHIDRATO, SEMIMICRONIZADA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1965</codigoedo>
+    <edo>LACTOSA MONOHIDRATO, MICRONIZADA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1985</codigoedo>
+    <edo>GLICEROL (85%)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1986</codigoedo>
+    <edo>SORBITOL LIQUIDO CRISTALIZABLE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>1997</codigoedo>
+    <edo>CAPRILATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2007</codigoedo>
+    <edo>CAPSULAS DE GELATINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2009</codigoedo>
+    <edo>CAPSULAS DE GELATINA DURA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2071</codigoedo>
+    <edo>CARBONATO DE GLICINA SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2096</codigoedo>
+    <edo>CARBONATO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2097</codigoedo>
+    <edo>CARBONATO POTASICO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2098</codigoedo>
+    <edo>CARBONATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2100</codigoedo>
+    <edo>CARBONATO DE SODIO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2172</codigoedo>
+    <edo>CELULOSA MICROCRISTALINA-CARMELOSA SODICA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2198</codigoedo>
+    <edo>CARMELOSA SODICA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2199</codigoedo>
+    <edo>CARBOXIMETILAMILOPECTINA SODICA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2200</codigoedo>
+    <edo>CARBOXIMETILALMIDON SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2216</codigoedo>
+    <edo>ROJO CARMIN, COCHINILLA (E-120; CI=75470)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2222</codigoedo>
+    <edo>CARAMELO DE SULFITO AMONICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2224</codigoedo>
+    <edo>CARRAGENATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2228</codigoedo>
+    <edo>CASEINA-FORMALDEHIDO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2249</codigoedo>
+    <edo>HIDROGENOFOSFATO DISODICO DODECAHIDRATADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2256</codigoedo>
+    <edo>GLUCOSA +MALTOSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2258</codigoedo>
+    <edo>METOXIPROPANODIOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2261</codigoedo>
+    <edo>CERA DE ABEJAS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2281</codigoedo>
+    <edo>ALCOHOL ISOESTEARILICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2291</codigoedo>
+    <edo>CERA DE LANA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2297</codigoedo>
+    <edo>CERA EMULSIFICANTE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2303</codigoedo>
+    <edo>CERA LANETTE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2338</codigoedo>
+    <edo>CICLAMATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2342</codigoedo>
+    <edo>MAGROGOL-SORBITAN-MONOLAURATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2351</codigoedo>
+    <edo>CITRAL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2360</codigoedo>
+    <edo>CITRATO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2362</codigoedo>
+    <edo>CITRATO DE SODIO (E-331)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2368</codigoedo>
+    <edo>CITRATO SODICO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2372</codigoedo>
+    <edo>CITRATO SODICO DIHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2380</codigoedo>
+    <edo>CITRATO SODICO TRIBASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2384</codigoedo>
+    <edo>CITRATO DE TRIETILO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2413</codigoedo>
+    <edo>ALCOHOL DE LANOLINA POLIOXIETILENADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2423</codigoedo>
+    <edo>OLEATO DE SORBITAN</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2429</codigoedo>
+    <edo>CLOROCRESOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2439</codigoedo>
+    <edo>CLOROFILINA A CUPROSODICA (CI=75810)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2446</codigoedo>
+    <edo>ESTER DE SACAROSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2453</codigoedo>
+    <edo>BENZALCONIO, CLORURO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2477</codigoedo>
+    <edo>CLORURO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2479</codigoedo>
+    <edo>CLORURO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2487</codigoedo>
+    <edo>SOJA, ACEITE DE, REFINADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2516</codigoedo>
+    <edo>SABOR GUARANA FRESA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2542</codigoedo>
+    <edo>HIDROXIPROPILBETADEX</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2567</codigoedo>
+    <edo>ESTEARATO SODICO GLICOLADO TIPO A</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2620</codigoedo>
+    <edo>MONOPALMITATOESTEARATO DE PROPILENGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2632</codigoedo>
+    <edo>PREMEZCLA LACTOSA/ALMIDON</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2689</codigoedo>
+    <edo>HIDROXIPROPIL BETACICLODEXTRINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2696</codigoedo>
+    <edo>D-GLUCITOL -D-MANITOL-OLIGOSACARIDOS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2741</codigoedo>
+    <edo>SULFATO ALUMINIO POTASIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2742</codigoedo>
+    <edo>DIHIDROGENO FOSFATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2743</codigoedo>
+    <edo>MONOHIDROGENO FOSFATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2751</codigoedo>
+    <edo>DIESTEARATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2785</codigoedo>
+    <edo>MINICAPSULAS DE MENTA.</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2795</codigoedo>
+    <edo>CARRAGENANO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2860</codigoedo>
+    <edo>CARMOISINA, AZORRUBINA (CI=14720,E-122)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2868</codigoedo>
+    <edo>ACETATO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2873</codigoedo>
+    <edo>SORBITOL LIQUIDO NO CRISTALIZABLE  (E420)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2898</codigoedo>
+    <edo>ETANOL AL 96%</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2926</codigoedo>
+    <edo>SORBATO DE POTASIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2929</codigoedo>
+    <edo>SEQUION (SAL SODICA DE DTPMP)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2930</codigoedo>
+    <edo>FOSFATO DISODICO DIHIDROGENO MONOHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2934</codigoedo>
+    <edo>HIDROGENOFOSFATO DIPOTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2956</codigoedo>
+    <edo>OPADRY AMB BLANCO 80W68912</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2959</codigoedo>
+    <edo>DOCUSATO DE SODIO + BENZOATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2960</codigoedo>
+    <edo>CROMOGLICATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2972</codigoedo>
+    <edo>1,2 DIOLEOIL –SN-GLICERO-3-FOSFO-L-SERINA SAL MONOSODICA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2978</codigoedo>
+    <edo>SACAROSA REFINADA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2979</codigoedo>
+    <edo>POLVO DE SACAROSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>2990</codigoedo>
+    <edo>CAPSULAS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3007</codigoedo>
+    <edo>CUMARINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3012</codigoedo>
+    <edo>CUTINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3024</codigoedo>
+    <edo>SACAROSA /DIOXIDO DE SILICIO COLOIDAL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3038</codigoedo>
+    <edo>MALTITOL LIQUIDO E965</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3045</codigoedo>
+    <edo>ALCOHOL ETILICO 96%</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3048</codigoedo>
+    <edo>LACTOSA MONOHIDRATO (PHARMATOSE 200M)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3049</codigoedo>
+    <edo>LACTOSA MONOHIDRATO (PHARMATOSE DCL 11)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3052</codigoedo>
+    <edo>DEXTRINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3061</codigoedo>
+    <edo>CARRAGENINA LAMBDA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3065</codigoedo>
+    <edo>POLISORBATO 80/ OCTOXINOL 10</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3076</codigoedo>
+    <edo>ALCOHOL CETOESTEARILICO- CETOESTEARILO SULFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3086</codigoedo>
+    <edo>DOCOSANOATO GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3110</codigoedo>
+    <edo>DIMETILSULFOXIDO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3117</codigoedo>
+    <edo>DIOCTILSULFOSUCCINATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3120</codigoedo>
+    <edo>SORBITOL DIOLEATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3147</codigoedo>
+    <edo>MANITOL / ALMIDON DE MAIZ</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3148</codigoedo>
+    <edo>HIDROGENOFOSFATO DE SODIO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3162</codigoedo>
+    <edo>EDETATO CALCICO DISODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3164</codigoedo>
+    <edo>EDETATO DISODICO DIHIDRATADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3165</codigoedo>
+    <edo>EDETATO DE DISODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3168</codigoedo>
+    <edo>LACTOSA MONOHIDRATO MOLIDA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3169</codigoedo>
+    <edo>LACTOSA MONOHIDRATO SECADA POR ASPERSION</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3175</codigoedo>
+    <edo>EDETATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3176</codigoedo>
+    <edo>ACETATO SODICO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3183</codigoedo>
+    <edo>CERA BLANCA DE ABEJAS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3197</codigoedo>
+    <edo>BENZIL BENZOATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3217</codigoedo>
+    <edo>LACTITOL (E-966)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3219</codigoedo>
+    <edo>DIOXIDO DE AZUFRE (E-220)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3235</codigoedo>
+    <edo>PROPILENGLICOL MONOCAPRILATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3236</codigoedo>
+    <edo>ALFACICLODEXTRINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3255</codigoedo>
+    <edo>NITRATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3257</codigoedo>
+    <edo>MICA (SILICATO DE POTASIO Y ALUMINIO - OXIDO DE TITANIO)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3377</codigoedo>
+    <edo>ESENCIA DE BERGAMOTA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3449</codigoedo>
+    <edo>ESENCIA DE FRUTAS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3940</codigoedo>
+    <edo>ESTEARATO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3941</codigoedo>
+    <edo>ESTEARATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>3949</codigoedo>
+    <edo>FUMARATO DE ESTEARILO Y SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4047</codigoedo>
+    <edo>ETER ETILICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4067</codigoedo>
+    <edo>ETIL PARABEN</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4166</codigoedo>
+    <edo>EUGENOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4382</codigoedo>
+    <edo>FORMALDEHIDO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4385</codigoedo>
+    <edo>FORMALDEHIDO SULFOXILATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4456</codigoedo>
+    <edo>HIDROGENOFOSFATO DE SODIO HEPTAHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4487</codigoedo>
+    <edo>FOSFATO POTASICO DIBASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4488</codigoedo>
+    <edo>FOSFATO POTASICO MONOBASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4490</codigoedo>
+    <edo>FOSFATO POTASICO MONOBASICO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4495</codigoedo>
+    <edo>FOSFATO SODICO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4500</codigoedo>
+    <edo>FOSFATO SODICO DIBASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4502</codigoedo>
+    <edo>HIDROGENOFOSFATO DE SODIO DIHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4503</codigoedo>
+    <edo>FOSFATO SODICO MONOBASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4504</codigoedo>
+    <edo>FOSFATO SODICO MONOBASICO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4506</codigoedo>
+    <edo>FOSFATO SODICO MONOBASICO DIHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4507</codigoedo>
+    <edo>FOSFATO DE SODIO MONOBASICO MONOHIDRATADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4511</codigoedo>
+    <edo>FOSFATO SODICO TRIBASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4512</codigoedo>
+    <edo>FOSFATO SODICO DIBASICO DODECAHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4517</codigoedo>
+    <edo>FOSFITO DISODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4562</codigoedo>
+    <edo>FRUCTOSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4636</codigoedo>
+    <edo>PALMITO ESTEARATO DE GLICEROL Y POLIOXIE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4639</codigoedo>
+    <edo>GENTISATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4642</codigoedo>
+    <edo>GERANIOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4660</codigoedo>
+    <edo>GLICEROL FORMALDEHIDO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4661</codigoedo>
+    <edo>GLICEROL (E 422)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4755</codigoedo>
+    <edo>CARBOXIMETILALMIDON SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4772</codigoedo>
+    <edo>GLUCONATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4774</codigoedo>
+    <edo>GLUCOSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4786</codigoedo>
+    <edo>GLUCOSA ANHIDRA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4794</codigoedo>
+    <edo>GLUCOSA MONOHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4801</codigoedo>
+    <edo>GLUTAMATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4837</codigoedo>
+    <edo>GOMA ARABIGA (E414)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4864</codigoedo>
+    <edo>GOMA DE TRAGACANTO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4885</codigoedo>
+    <edo>XANTANO, GOMA DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4924</codigoedo>
+    <edo>HARINA GUAR</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4927</codigoedo>
+    <edo>HEPARINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4986</codigoedo>
+    <edo>POTASIO, HIDROXIDO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>4991</codigoedo>
+    <edo>HIDROXIDO DE SODIO (E 524)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5083</codigoedo>
+    <edo>ISOPROPILIDEN GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5107</codigoedo>
+    <edo>JARABE DE ALMIDON</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5120</codigoedo>
+    <edo>JARABE DE FRAMBUESA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5128</codigoedo>
+    <edo>JARABE DE TOMILLO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5133</codigoedo>
+    <edo>JARABE SIMPLE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5170</codigoedo>
+    <edo>CAPRO-CAPRILATO DE GLICEROL Y POLIOXIETI</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5213</codigoedo>
+    <edo>LACA DE AMARILLO ANARANJADO S (E 110, CI=15985)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5258</codigoedo>
+    <edo>LACTATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5266</codigoedo>
+    <edo>LACTOSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5362</codigoedo>
+    <edo>LANOLINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5370</codigoedo>
+    <edo>LANOLINA HIDROGENADA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5394</codigoedo>
+    <edo>LAURILETER SULFOSUCCINATO DISODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5398</codigoedo>
+    <edo>LAURILSULFATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5399</codigoedo>
+    <edo>LAURILSULFOACETATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5420</codigoedo>
+    <edo>LECITINA DE SOJA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5568</codigoedo>
+    <edo>MANITOL (E-421)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5600</codigoedo>
+    <edo>CAPRIL CAPRILATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5601</codigoedo>
+    <edo>MARRON CHOCOLATE HT (CI=20285)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5814</codigoedo>
+    <edo>POTASIO, METABISULFITO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5817</codigoedo>
+    <edo>SODIO, METABISULFITO DE (E 223)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5851</codigoedo>
+    <edo>METIL PARABEN SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5852</codigoedo>
+    <edo>METILPARABENO (E 218)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5971</codigoedo>
+    <edo>MIEL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>5977</codigoedo>
+    <edo>PROPILENGLICOL DICAPRILATO-DICAPRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6013</codigoedo>
+    <edo>MONO Y DIESTEARATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6028</codigoedo>
+    <edo>PROPILENGLICOL MONOESTEARATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6098</codigoedo>
+    <edo>MONOOLEATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6175</codigoedo>
+    <edo>NEGRO BRILLANTE BN (E 151 CI=28440)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6266</codigoedo>
+    <edo>FENILMERCURIO NITRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6325</codigoedo>
+    <edo>SODIO OLEATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6397</codigoedo>
+    <edo>PARAHIDROXIBENZOATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6435</codigoedo>
+    <edo>PALMITATO DE SACAROSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6510</codigoedo>
+    <edo>SABOR A FRUTA DE LA PASION</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6596</codigoedo>
+    <edo>PIROFOSFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6635</codigoedo>
+    <edo>POLIETILEN POLIPROPILENGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6748</codigoedo>
+    <edo>POLIMETACRILATO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6786</codigoedo>
+    <edo>POLISORBATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6789</codigoedo>
+    <edo>POLISORBATO 20</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6790</codigoedo>
+    <edo>POLISORBATO 40</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6791</codigoedo>
+    <edo>POLISORBATO 60</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6792</codigoedo>
+    <edo>POLISORBATO 80</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6897</codigoedo>
+    <edo>ROJO PONCEAU 3R</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6975</codigoedo>
+    <edo>PROPILPARABENO (E 216)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>6996</codigoedo>
+    <edo>PROPILENGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7022</codigoedo>
+    <edo>PROPIL PARABEN SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7100</codigoedo>
+    <edo>RIBOFLAVINA-5-FOSFATO SODICO (E-101A)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7168</codigoedo>
+    <edo>ROJO PONCEAU 4R (CI=16255, E-124)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7210</codigoedo>
+    <edo>SABOR A MIEL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7231</codigoedo>
+    <edo>SABOR A FRUTAS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7234</codigoedo>
+    <edo>SABORIZANTE FRUTAS DEL BOSQUE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7238</codigoedo>
+    <edo>SABOR A GUARANA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7316</codigoedo>
+    <edo>SACARINA SODICA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7330</codigoedo>
+    <edo>SACARINA SODICA ANHIDRA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7368</codigoedo>
+    <edo>SACAROSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7380</codigoedo>
+    <edo>CETOESTEARILO SULFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7397</codigoedo>
+    <edo>ESTEARATO DE GLICEROL Y POLIOXIETILENGLI</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7615</codigoedo>
+    <edo>SORBATO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7628</codigoedo>
+    <edo>SORBITAN</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7633</codigoedo>
+    <edo>SORBITAN MONOESTEARATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7635</codigoedo>
+    <edo>SORBITAN, LAURATO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7636</codigoedo>
+    <edo>SORBITAN MONOOLEATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7638</codigoedo>
+    <edo>SORBITAN MONOPALMITATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7642</codigoedo>
+    <edo>SORBITAN SESQUIOLEATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7643</codigoedo>
+    <edo>SORBITAN TRIOLEATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7646</codigoedo>
+    <edo>SORBITOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7673</codigoedo>
+    <edo>SORBITOL ISOPROPILICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7746</codigoedo>
+    <edo>SULFATO DE LAURILO Y SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7759</codigoedo>
+    <edo>SULFATO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7760</codigoedo>
+    <edo>SULFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7761</codigoedo>
+    <edo>SULFATO SODICO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7767</codigoedo>
+    <edo>SULFITO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7768</codigoedo>
+    <edo>SULFITO DE SODIO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7966</codigoedo>
+    <edo>SODIO, TARTRATO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>7969</codigoedo>
+    <edo>TARTRAZINA (E-102; CI=19140)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8060</codigoedo>
+    <edo>TIMEROSAL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8084</codigoedo>
+    <edo>TIOGLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8088</codigoedo>
+    <edo>TIOSULFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8163</codigoedo>
+    <edo>TRIPOLIFOSFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8178</codigoedo>
+    <edo>POLISORBATO 61</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8406</codigoedo>
+    <edo>YODURO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8412</codigoedo>
+    <edo>SILICATO ALUMINICO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8569</codigoedo>
+    <edo>FOSFATO SODICO DIBASICO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8807</codigoedo>
+    <edo>CAUCHO VIRGEN</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8912</codigoedo>
+    <edo>YODURO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8924</codigoedo>
+    <edo>PALMITO ESTEARATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8961</codigoedo>
+    <edo>XILITOL (E-967)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>8980</codigoedo>
+    <edo>ACETOBUTIL RICINOLEATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9032</codigoedo>
+    <edo>ALMIDON DE MAIZ DESECADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9041</codigoedo>
+    <edo>LAURILMIRISTIL SULFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9056</codigoedo>
+    <edo>ALCOHOL ESTEARILICO POLIOXIETILENADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9064</codigoedo>
+    <edo>TARTRATO SODICO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9071</codigoedo>
+    <edo>RICINO, ACEITE DE, HIDROGENADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9074</codigoedo>
+    <edo>ACEITE DE RICINO POLIOXIETILENADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9085</codigoedo>
+    <edo>ALCOHOL CETOESTEARILICO POLIOXIETILENADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9088</codigoedo>
+    <edo>POLIOXIPROPILEN-15-ESTEARIL ETER</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9092</codigoedo>
+    <edo>LAURILSARCOSINATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9115</codigoedo>
+    <edo>ALCOHOL DE LANOLINA ETOXILADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9131</codigoedo>
+    <edo>ACEITE DE RICINO HIDROGENADO-POLIOXIETIL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9140</codigoedo>
+    <edo>EDETATO DE CALCIO Y SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9142</codigoedo>
+    <edo>CROSCARMELOSA SODICA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9150</codigoedo>
+    <edo>ACETATO DE SODIO TRIHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9152</codigoedo>
+    <edo>ACEITE DE SOJA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9153</codigoedo>
+    <edo>SOJA, ACEITE DE, HIDROGENADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9173</codigoedo>
+    <edo>JARABE DE SORBITOL DESHIDRATADO (SUST. S</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9174</codigoedo>
+    <edo>FOSFATO SODICO TRIBASICO DODECAHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9180</codigoedo>
+    <edo>ALMIDON SUCROSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9181</codigoedo>
+    <edo>ALMIDON SACAROSA MICROESFERAS 20-25 MALLA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9195</codigoedo>
+    <edo>DIBUTIL HIDROXI TOLUENO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9208</codigoedo>
+    <edo>IODATO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9214</codigoedo>
+    <edo>JARABE DE SAUCO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9216</codigoedo>
+    <edo>EDETATO TETRASODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9217</codigoedo>
+    <edo>ALMIDON DE MAIZ PREGELATINIZADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9227</codigoedo>
+    <edo>CITRATO SODICO DIBASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9232</codigoedo>
+    <edo>POLIACRILATO SODICO (ESPESANTE,POLIMERO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9233</codigoedo>
+    <edo>RESINA DE FORMALDEHIDO Y MELAMINA (AGENT</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9240</codigoedo>
+    <edo>METILGLUCOSA DIOLEATO DE PROPILENGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9259</codigoedo>
+    <edo>SABORIZANTE AZUCAR BLANCO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9260</codigoedo>
+    <edo>CALDIAMIDA SODICA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9265</codigoedo>
+    <edo>PROPIONATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9266</codigoedo>
+    <edo>CIANURO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9267</codigoedo>
+    <edo>DIPROPILENGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9270</codigoedo>
+    <edo>ESTEARATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9273</codigoedo>
+    <edo>CRODALAN AWS (ALCOHOL DE LANOLINA ACETIL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9278</codigoedo>
+    <edo>FOSFATO SODICO TRIBASICO MONOHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9284</codigoedo>
+    <edo>FOSFATIDILCOLINA HIDROGENADA DE SOJA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9285</codigoedo>
+    <edo>DIESTEAROIL FOSFATIDIL GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9286</codigoedo>
+    <edo>SUCCINATO DISODICO HEXAHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9310</codigoedo>
+    <edo>ACEITE DE RICINO POLIMERIZADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9327</codigoedo>
+    <edo>POTASIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>9328</codigoedo>
+    <edo>SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15000</codigoedo>
+    <edo>ARLATONE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15025</codigoedo>
+    <edo>ASPARTAMO (E-951)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15033</codigoedo>
+    <edo>POLISORBATO 65</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15042</codigoedo>
+    <edo>OLEATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15049</codigoedo>
+    <edo>MIRISTATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15053</codigoedo>
+    <edo>LAURILETER SULFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15069</codigoedo>
+    <edo>ETIL PARABEN SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15085</codigoedo>
+    <edo>SOLUCION TAMPON CITRATO-FOSFATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15087</codigoedo>
+    <edo>GALACTOSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15089</codigoedo>
+    <edo>ACEITE DE RICINO SULFATADO (ACTRASOL C-7</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15095</codigoedo>
+    <edo>TINTURA DE BENJUI</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15114</codigoedo>
+    <edo>ALGINATO CALCICO Y SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15117</codigoedo>
+    <edo>LACA DE ALUMINIO ROJO PONCEAU 4R (E 124, CI=16255)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15134</codigoedo>
+    <edo>BEHENATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15135</codigoedo>
+    <edo>CLORHIDRATO-L-CISTEINATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15152</codigoedo>
+    <edo>FENILALANINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15153</codigoedo>
+    <edo>OLEFINA SULFONATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15195</codigoedo>
+    <edo>ACETATO SODICO TETRAHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15199</codigoedo>
+    <edo>OLEATO DE POTASIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15204</codigoedo>
+    <edo>ALCOHOL DE LANOLINA ACETILADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15212</codigoedo>
+    <edo>POLIOXIETILEN SORBITAN MONOOLEATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15244</codigoedo>
+    <edo>PIRROLIDONA CARBOXILATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15265</codigoedo>
+    <edo>ACESULFAMO POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15303</codigoedo>
+    <edo>LYCASIN (MEZCLA MALTITOL,SORBITOL Y OTRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15305</codigoedo>
+    <edo>LACTOSA HIDRATADA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15308</codigoedo>
+    <edo>DMPG (DIMIRISTOIL FOSFATIDIL GLICEROL)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15314</codigoedo>
+    <edo>SULFATO DE COLESTERIL SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15339</codigoedo>
+    <edo>HARINA DE AVENA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15343</codigoedo>
+    <edo>NONILFENOL ETER SULFATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15357</codigoedo>
+    <edo>MONOMIRISTATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15377</codigoedo>
+    <edo>HEXADECIL HIDROGENO FOSFATO DE POTASIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15378</codigoedo>
+    <edo>POLIDEXTROSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15384</codigoedo>
+    <edo>ALCOLEC 662/PROPILENGLICOL=PHOSAL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15393</codigoedo>
+    <edo>3-HEXILOXIPROPILENOGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15394</codigoedo>
+    <edo>NONILOXIPROPILENOGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15395</codigoedo>
+    <edo>DIESTEARATO DE SACAROSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15396</codigoedo>
+    <edo>ACEITE DE SOJA PARCIALMENTE HIDROGENADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15398</codigoedo>
+    <edo>JARABE DE SACAROSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15404</codigoedo>
+    <edo>JARABE DE MALTITOL (E965)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15413</codigoedo>
+    <edo>POLIMETACRILATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15418</codigoedo>
+    <edo>POLIACRILIN POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15448</codigoedo>
+    <edo>RICINOLEATO DE GLICEROL Y POLIETILENGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15462</codigoedo>
+    <edo>ION SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15469</codigoedo>
+    <edo>LAURATO DE PROPILENGLICOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15491</codigoedo>
+    <edo>ESTER ETILICO DE VIT F</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15510</codigoedo>
+    <edo>CICLODEXTRINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15515</codigoedo>
+    <edo>FENOPARABEN</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15516</codigoedo>
+    <edo>COLATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15547</codigoedo>
+    <edo>LACTOSA MONOHIDRATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15567</codigoedo>
+    <edo>FOSFATO TRISODICO ANHIDRO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15569</codigoedo>
+    <edo>FOSFATO DISODICO DODECAHIDRATADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15574</codigoedo>
+    <edo>ALCOHOL ETILICO (ETANOL) DESNATURALIZADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15576</codigoedo>
+    <edo>SOLUCION DE SORBITOL 70%</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15577</codigoedo>
+    <edo>CERA AMARILLA DE ABEJAS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15587</codigoedo>
+    <edo>GLICEROL 40-55, MONOESTEARATO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15611</codigoedo>
+    <edo>PEG 20 METILGLUCOSA SESQUIESTEARATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15638</codigoedo>
+    <edo>CARRAGENATO HIDROLIZADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15644</codigoedo>
+    <edo>POLACRILIN POTASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15664</codigoedo>
+    <edo>ALMIDON OCTENIL SUCCINATO ALUMINICO(E 1452)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15668</codigoedo>
+    <edo>LECITINA DE SOJA HIDROGENADA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15670</codigoedo>
+    <edo>ALMIDON OCTENIL SUCCINATO SODIO (E-1450)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15681</codigoedo>
+    <edo>CARBOXIMETILALMIDON SODICO TIPO A</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15691</codigoedo>
+    <edo>CACAHUETE, ACEITE DE, REFINADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15735</codigoedo>
+    <edo>GLICEROL, MONOCAPRILOCAPRATO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15769</codigoedo>
+    <edo>CITRATO SODICO MONOBASICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15787</codigoedo>
+    <edo>SORBITOL LIQUIDO, PARCIALMENTE DESHIDRATADO (E-420)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15801</codigoedo>
+    <edo>SACAROSA, MONOPALMITATO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15883</codigoedo>
+    <edo>MANITOL SD 200 (E 421)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15884</codigoedo>
+    <edo>MANITOL 35 (E-421)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15885</codigoedo>
+    <edo>ETANOL 99,5%(V/V)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15923</codigoedo>
+    <edo>POLVO SABOR VAINILLA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15962</codigoedo>
+    <edo>CETOESTEARILICO, ALCOHOL, EMULSIONANTE (TIPO B)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>15998</codigoedo>
+    <edo>MONO/DI-(Z,R)-12-HIDROXIOCTADECA-9-ENOATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16042</codigoedo>
+    <edo>SOLUCION DE HIDROXIDO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16047</codigoedo>
+    <edo>CLORURO DE BENZALCONIO SOLUCION</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16088</codigoedo>
+    <edo>ACIDO CLORHIDRICO/HIDROXIDO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16090</codigoedo>
+    <edo>ALMIDON MODIFICADO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16120</codigoedo>
+    <edo>CLORURO DE SODIO PARA INYECCION</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16155</codigoedo>
+    <edo>SOLUCION SORBITOL AL 70% (NO CRISTALIZABLE)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16168</codigoedo>
+    <edo>PIGMENTO MEZCLA PB-220001 AMARILLO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16208</codigoedo>
+    <edo>SUCCINATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16242</codigoedo>
+    <edo>HIDROXIDO DE SODIO PELLETS</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16288</codigoedo>
+    <edo>GLICEROL MONOESTEARATO 40-55 TIPO II</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16297</codigoedo>
+    <edo>EDETATO MAGNESICO DISODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16538</codigoedo>
+    <edo>ESTEARATO DE SORBITAN TIPO I</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16539</codigoedo>
+    <edo>ESTEARATO DE SORBITAN TIPO II</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16586</codigoedo>
+    <edo>ESTEARATO DE SACAROSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16588</codigoedo>
+    <edo>PROPILENGLICOL MONOCAPRILATO TIPO II</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16612</codigoedo>
+    <edo>SULFOBUTILETER BETACICLODEXTRINA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16645</codigoedo>
+    <edo>FOSFATIDILCOLINA DE SOJA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16702</codigoedo>
+    <edo>MEZCLA DE CELULOSA Y MANITOL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16711</codigoedo>
+    <edo>ESFERAS DE AZUCAR (SACAROSA Y ALMIDON DE MAIZ)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16792</codigoedo>
+    <edo>SORBITOL SOLUCION</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16808</codigoedo>
+    <edo>LACTOSA MONOHIDRATO 100 M</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16814</codigoedo>
+    <edo>LACTOSA MONOHIDRATO 200 M</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16815</codigoedo>
+    <edo>MEZCLA DE ETANOL - AGUA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>16816</codigoedo>
+    <edo>OPADRY II 39K170005 AMARILLO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17015</codigoedo>
+    <edo>N- ACETILTRIPTOFANATO SODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17030</codigoedo>
+    <edo>LACA ALUMINIO AMARILLO FD&amp;C 6 (E110)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17064</codigoedo>
+    <edo>LACTOSA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17069</codigoedo>
+    <edo>ETIL, METIL Y PROPIL PARAHIDROXIBENZOATO (E214, E218, E216)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17115</codigoedo>
+    <edo>CETOESTEARILICO, ALCOHOL, EMULSIONANTE (TIPO A)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17212</codigoedo>
+    <edo>ASCORBATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17278</codigoedo>
+    <edo>ACEITE DE SOJA HIDROGENADO (TIPO II)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17318</codigoedo>
+    <edo>CAPRIL CAPRATO DE GLICEROL HIDROFILO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17330</codigoedo>
+    <edo>GLICEROL DIOLEATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17371</codigoedo>
+    <edo>OPADRY AMARILLO 03F520096</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17457</codigoedo>
+    <edo>DIHIDROGENOFOSFATO DE SODIO DIHIDRATO (E 339)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17526</codigoedo>
+    <edo>OPADRY II AZUL 32K205007</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17624</codigoedo>
+    <edo>OPADRY II AMARILLO 85F220127</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17676</codigoedo>
+    <edo>OPADRY 80W265010 MARRON</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17698</codigoedo>
+    <edo>OPADRY II BEIGE 85F97282</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17711</codigoedo>
+    <edo>OPADRY 03K510007 VERDE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17772</codigoedo>
+    <edo>1,2-DIMIRISTOIL-RAC-GLICERO-3-METOXIPOLIETILEN GLICOL-2000 (PEG2000 DMG)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>17937</codigoedo>
+    <edo>MACROGOL 20 GLICEROL, MONOESTEARATO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>18036</codigoedo>
+    <edo>ALCOHOL FENIILETILICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>18166</codigoedo>
+    <edo>ISOMALTOSA (E 953)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>18221</codigoedo>
+    <edo>RICINOLEATO DE GLICEROL</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>18280</codigoedo>
+    <edo>ETANOL 94%</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>18303</codigoedo>
+    <edo>CARBONATO DE SODIO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>18315</codigoedo>
+    <edo>TRIGLICEROL DIOLEATO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>18482</codigoedo>
+    <edo>POLACRILINA POTASICA</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>18744</codigoedo>
+    <edo>FOSFATO TRISODICO</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>18941</codigoedo>
+    <edo>MANITOL SD 100 (E 421)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>18968</codigoedo>
+    <edo>GLICEROL, DICAPRILOCAPRATO DE</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>19032</codigoedo>
+    <edo>CITRATO DE SODIO DIHIDRATO (E-331)</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>100254</codigoedo>
+    <edo>ETANOL 95%</edo>
+  </excipientes>
+  <excipientes>
+    <codigoedo>100275</codigoedo>
+    <edo>SORBITAN, ESTEARATO DE</edo>
+  </excipientes>
+</aemps_prescripcion_excipientes>

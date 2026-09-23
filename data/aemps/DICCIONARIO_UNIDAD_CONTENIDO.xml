@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<aemps_prescripcion_unidad_contenido xmlns="http://schemas.aemps.es/prescripcion/aemps_prescripcion_unidad_contenido" xsi:schemaLocation="http://schemas.aemps.es/prescripcion/aemps_prescripcion_unidad_contenido http://schemas.aemps.es/prescripcion/aemps_prescripcion_unidad_contenido.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <unidadescontenido>
+    <codigounidadcontenido>1</codigounidadcontenido>
+    <unidadcontenido>ampolla para inyección</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>5</codigounidadcontenido>
+    <unidadcontenido>aplicacion rectal</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>6</codigounidadcontenido>
+    <unidadcontenido>aplicación uretral</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>8</codigounidadcontenido>
+    <unidadcontenido>cápsula inhalación/alveolo</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>9</codigounidadcontenido>
+    <unidadcontenido>chicle</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>10</codigounidadcontenido>
+    <unidadcontenido>comprimido</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>11</codigounidadcontenido>
+    <unidadcontenido>cápsula/comprimido vaginal</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>12</codigounidadcontenido>
+    <unidadcontenido>dispositivo intrauterino</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>13</codigounidadcontenido>
+    <unidadcontenido>dosis oral en envase multidosis</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>14</codigounidadcontenido>
+    <unidadcontenido>enema</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>16</codigounidadcontenido>
+    <unidadcontenido>envase uso oftalmico unidosis</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>17</codigounidadcontenido>
+    <unidadcontenido>envase uso oral unidosis</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>18</codigounidadcontenido>
+    <unidadcontenido>envase uso vaginal unidosis</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>19</codigounidadcontenido>
+    <unidadcontenido>esponja</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>21</codigounidadcontenido>
+    <unidadcontenido>g</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>23</codigounidadcontenido>
+    <unidadcontenido>implante</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>25</codigounidadcontenido>
+    <unidadcontenido>l</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>26</codigounidadcontenido>
+    <unidadcontenido>ml</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>27</codigounidadcontenido>
+    <unidadcontenido>óvulo</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>28</codigounidadcontenido>
+    <unidadcontenido>parche</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>29</codigounidadcontenido>
+    <unidadcontenido>pastilla</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>30</codigounidadcontenido>
+    <unidadcontenido>pulverización inhalada</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>31</codigounidadcontenido>
+    <unidadcontenido>pulverización nasal</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>32</codigounidadcontenido>
+    <unidadcontenido>pulverización sublingual</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>33</codigounidadcontenido>
+    <unidadcontenido>supositorio</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>34</codigounidadcontenido>
+    <unidadcontenido>vial para inyección</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>35</codigounidadcontenido>
+    <unidadcontenido>vial para inyección/nebulización</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>36</codigounidadcontenido>
+    <unidadcontenido>N/A (más de 4 PA)</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>37</codigounidadcontenido>
+    <unidadcontenido>envase uso nasal unidosis</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>40</codigounidadcontenido>
+    <unidadcontenido>ampolla nebulización</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>41</codigounidadcontenido>
+    <unidadcontenido>gota</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>43</codigounidadcontenido>
+    <unidadcontenido>cápsula</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>44</codigounidadcontenido>
+    <unidadcontenido>envase uso tópico unidosis</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>45</codigounidadcontenido>
+    <unidadcontenido>dosis inyectable en envase multidosis</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>48</codigounidadcontenido>
+    <unidadcontenido>frasco perfusión</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>49</codigounidadcontenido>
+    <unidadcontenido>pluma precargada</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>50</codigounidadcontenido>
+    <unidadcontenido>generador</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>51</codigounidadcontenido>
+    <unidadcontenido>envase uso ótico unidosis</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>53</codigounidadcontenido>
+    <unidadcontenido>ampolla bebible</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>54</codigounidadcontenido>
+    <unidadcontenido>envase irrigación vesical</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>56</codigounidadcontenido>
+    <unidadcontenido>aplicación</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>57</codigounidadcontenido>
+    <unidadcontenido>cartucho precargado</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>58</codigounidadcontenido>
+    <unidadcontenido>mg</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>59</codigounidadcontenido>
+    <unidadcontenido>vial bebible</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>60</codigounidadcontenido>
+    <unidadcontenido>vial nebulización</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>61</codigounidadcontenido>
+    <unidadcontenido>jeringa precargada</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>63</codigounidadcontenido>
+    <unidadcontenido>envase uso oral/rectal unidosis</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>64</codigounidadcontenido>
+    <unidadcontenido>sobre</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>65</codigounidadcontenido>
+    <unidadcontenido>bolsa perfusión</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>68</codigounidadcontenido>
+    <unidadcontenido>cm2</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>69</codigounidadcontenido>
+    <unidadcontenido>apósito</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>70</codigounidadcontenido>
+    <unidadcontenido>envase</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>71</codigounidadcontenido>
+    <unidadcontenido>pulverización transdérmica</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>73</codigounidadcontenido>
+    <unidadcontenido>pulverización bucal</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>76</codigounidadcontenido>
+    <unidadcontenido>Vial para inyección/Instilación intravesical</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>77</codigounidadcontenido>
+    <unidadcontenido>inyector precargado</unidadcontenido>
+  </unidadescontenido>
+  <unidadescontenido>
+    <codigounidadcontenido>78</codigounidadcontenido>
+    <unidadcontenido>ampolla uso extracorporal</unidadcontenido>
+  </unidadescontenido>
+</aemps_prescripcion_unidad_contenido>

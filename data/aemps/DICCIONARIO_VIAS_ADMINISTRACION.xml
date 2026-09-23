@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<aemps_prescripcion_vias_administracion xmlns="http://schemas.aemps.es/prescripcion/aemps_prescripcion_vias_administracion" xsi:schemaLocation="http://schemas.aemps.es/prescripcion/aemps_prescripcion_vias_administracion http://schemas.aemps.es/prescripcion/aemps_prescripcion_vias_administracion.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <viasadministracion>
+    <codigoviaadministracion>7</codigoviaadministracion>
+    <viaadministracion>HEMODIÁLISIS</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>10</codigoviaadministracion>
+    <viaadministracion>OTRA VÍA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>15</codigoviaadministracion>
+    <viaadministracion>USO CUTÁNEO</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>16</codigoviaadministracion>
+    <viaadministracion>USO DENTAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>19</codigoviaadministracion>
+    <viaadministracion>USO GINGIVAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>21</codigoviaadministracion>
+    <viaadministracion>USO BUCOFARÍNGEO</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>22</codigoviaadministracion>
+    <viaadministracion>VÍA ENDOCERVICAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>24</codigoviaadministracion>
+    <viaadministracion>VÍA ENDOTRAQUEOPULMONAR</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>25</codigoviaadministracion>
+    <viaadministracion>VÍA EPIDURAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>27</codigoviaadministracion>
+    <viaadministracion>VÍA GASTROENTÉRICA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>29</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAARTERIAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>30</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAARTICULAR</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>31</codigoviaadministracion>
+    <viaadministracion>VÍA INTRACARDIACA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>32</codigoviaadministracion>
+    <viaadministracion>VÍA INTRACAVERNOSA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>35</codigoviaadministracion>
+    <viaadministracion>VÍA INTRADÉRMICA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>38</codigoviaadministracion>
+    <viaadministracion>VÍA INTRALESIONAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>40</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAMAMARIA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>41</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAMUSCULAR</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>42</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAOCULAR</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>43</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAPERITONEAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>44</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAPLEURAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>46</codigoviaadministracion>
+    <viaadministracion>VÍA INTRASINOVIAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>47</codigoviaadministracion>
+    <viaadministracion>VÍA INTRATECAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>48</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAUTERINA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>49</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAVENOSA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>50</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAVESICAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>51</codigoviaadministracion>
+    <viaadministracion>VÍA NASAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>53</codigoviaadministracion>
+    <viaadministracion>VÍA OFTÁLMICA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>54</codigoviaadministracion>
+    <viaadministracion>VÍA ORAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>55</codigoviaadministracion>
+    <viaadministracion>VÍA ÓTICA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>57</codigoviaadministracion>
+    <viaadministracion>VÍA PERIARTICULAR</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>58</codigoviaadministracion>
+    <viaadministracion>VÍA PERINEURAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>59</codigoviaadministracion>
+    <viaadministracion>VÍA RECTAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>62</codigoviaadministracion>
+    <viaadministracion>VÍA SUBCUTÁNEA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>63</codigoviaadministracion>
+    <viaadministracion>VÍA TRANSDÉRMICA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>64</codigoviaadministracion>
+    <viaadministracion>VÍA URETRAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>65</codigoviaadministracion>
+    <viaadministracion>VÍA VAGINAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>67</codigoviaadministracion>
+    <viaadministracion>VÍA INHALATORIA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>68</codigoviaadministracion>
+    <viaadministracion>Vía bucal (buccal use)</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>69</codigoviaadministracion>
+    <viaadministracion>VÍA SUBLINGUAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>73</codigoviaadministracion>
+    <viaadministracion>VÍA INTRATUMORAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>74</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAVÍTREA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>77</codigoviaadministracion>
+    <viaadministracion>VÍA INTRACEREBRAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>89</codigoviaadministracion>
+    <viaadministracion>USO RETROBULBAR</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>93</codigoviaadministracion>
+    <viaadministracion>Via bucal (oromucosal use)</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>102</codigoviaadministracion>
+    <viaadministracion>USO EPILESIONAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>104</codigoviaadministracion>
+    <viaadministracion>USO INTESTINAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>105</codigoviaadministracion>
+    <viaadministracion>VÍA INTRAÓSEA</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>106</codigoviaadministracion>
+    <viaadministracion>USO PERIODONTAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>124</codigoviaadministracion>
+    <viaadministracion>USO PERIÓSEO</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>125</codigoviaadministracion>
+    <viaadministracion>IMPLANTACIÓN</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>127</codigoviaadministracion>
+    <viaadministracion>INFILTRACIÓN</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>129</codigoviaadministracion>
+    <viaadministracion>USO EXTRACORPORAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>131</codigoviaadministracion>
+    <viaadministracion>USO PERITUMORAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>132</codigoviaadministracion>
+    <viaadministracion>USO INTRAGLANDULAR</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>136</codigoviaadministracion>
+    <viaadministracion>USO SUBRETINAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>137</codigoviaadministracion>
+    <viaadministracion>USO INTRACAMERAL</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>138</codigoviaadministracion>
+    <viaadministracion>VIA INTRATORACICO</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>139</codigoviaadministracion>
+    <viaadministracion>USO INTRACOLANGIOPANCREATICO</viaadministracion>
+  </viasadministracion>
+  <viasadministracion>
+    <codigoviaadministracion>142</codigoviaadministracion>
+    <viaadministracion>USO PERILESIONAL</viaadministracion>
+  </viasadministracion>
+</aemps_prescripcion_vias_administracion>

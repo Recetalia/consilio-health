@@ -18,7 +18,7 @@ from app.nlp import severity_classifier
 
 logger = logging.getLogger(__name__)
 
-_EMPTY_COVERAGE = {"recetalia": 0, "ddinter": 0, "openfda": 0, "unknown": 0}
+_EMPTY_COVERAGE = {"recetalia": 0, "aemps": 0, "ddinter": 0, "openfda": 0, "unknown": 0}
 
 
 async def check(drug_names: list[str]) -> dict[str, Any]:
@@ -118,9 +118,11 @@ def _format_local(
     # ("Interaction reported in DDInter 2.0 for X + Y") sólo repetía los dos
     # nombres que el médico ya tiene delante, y ocupaba el lugar de la
     # evidencia sin serlo. Es mejor que la interfaz diga que no hay descripción.
-    description = hit.get("evidence") or hit.get("mechanism") or None
+    # El mecanismo va primero: es la explicación clínica. `evidence` es la cita
+    # de dónde salió, y sirve de respaldo sólo cuando no hay mecanismo.
+    description = hit.get("mechanism") or hit.get("evidence") or None
 
-    return {
+    entry = {
         "drug_a": drug_a,
         "drug_b": drug_b,
         "rxcui_a": rxcui_a,
@@ -134,6 +136,13 @@ def _format_local(
         # openFDA sale de texto libre: el médico tiene que poder distinguirlo
         "uncertain": hit["uncertain"],
     }
+    # Cuando la gravedad o el texto no salen de la misma fuente que el resto de
+    # la fila, se dice. Un hallazgo armado con dos fuentes que se presenta como
+    # si fuera de una sola no se puede auditar.
+    for k in ("severity_source", "text_source"):
+        if hit.get(k):
+            entry[k] = hit[k]
+    return entry
 
 
 async def _openfda_pair(drug_a: str, drug_b: str) -> dict[str, Any] | None:

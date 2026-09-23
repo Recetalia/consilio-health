@@ -1,0 +1,291 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<aemps_prescripcion_formas_farmaceuticas_simplificadas xmlns="http://schemas.aemps.es/prescripcion/aemps_prescripcion_formas_farmaceuticas_simplificadas" xsi:schemaLocation="http://schemas.aemps.es/prescripcion/aemps_prescripcion_formas_farmaceuticas_simplificadas http://schemas.aemps.es/prescripcion/aemps_prescripcion_formas_farmaceuticas_simplificadas.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>1</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>ADHESIVO TISULAR</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>2</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>APÓSITO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>3</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>BARNIZ DE UÑAS</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>4</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>CAPSULA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>5</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>CAPSULA LIBERACION MODIFICADA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>6</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>CHAMPU</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>7</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>CHICLE</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>8</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>COLIRIO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>9</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>COLIRIO DE LIBERACION PROLONGADA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>10</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>COMPRIMIDO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>11</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>COMPRIMIDO BUCAL/PARA CHUPAR</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>12</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>COMPRIMIDO BUCODISPERSABLE/LIOTAB</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>13</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>COMPRIMIDO EFERVESCENTE</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>14</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>COMPRIMIDO LIBERACION MODIFICADA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>15</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>COMPRIMIDO MASTICABLE</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>16</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>COMPRIMIDO SUBLINGUAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>17</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>CONSERVACION ORGANOS</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>18</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>CREMA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>20</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>DIALISIS PERITONEAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>21</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>DISPOSITIVO INTRAUTERINO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>22</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>DISPOSITIVO VAGINAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>23</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>EMULSION</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>24</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>GEL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>25</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>GEL OFTALMICO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>26</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>GEL/PASTA/LIQUIDO BUCAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>27</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>LÍQUIDO OTICO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>29</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>HEMOFILTRACION</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>30</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>IMPLANTE</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>31</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>IMPLANTE OFTALMICO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>32</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>INHALACION ENDOTRAQUEOPULMONAR</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>33</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>INHALACIÓN PULMONAR</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>34</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>INYECTABLE</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>35</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>INYECTABLE PERFUSION</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>37</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>LIQUIDO GASTROENTERICO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>38</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>LIQUIDO RECTAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>39</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>LIQUIDO USO TOPICO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>40</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>LIQUIDO VAGINAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>41</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>OVULO/CAPSULA/COMPRIMIDO VAGINAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>42</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>PARCHE TRANSDERMICO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>43</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>PASTA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>44</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SOLUCIÓN/SUSPENSIÓN ORAL EFERVESCENTE</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>45</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>POLVO/GRANULADO LIBERACION MODIFICADA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>47</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>POMADA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>48</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>POMADA OFTALMICA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>49</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>PREPARADO IRRIGACION VESICAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>50</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>PREPARADO URETRAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>51</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>PRODUCTO PARA EL BAÑO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>52</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>PRODUCTO USO BUCAL TOPICO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>53</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>PRODUCTO USO NASAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>54</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>PULVERIZACION BUCAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>56</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>PULVERIZACION SUBLINGUAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>57</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>RADIOFARMACO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>59</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SEMISOLIDO RECTAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>60</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SEMISOLIDO VAGINAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>63</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SOLIDO USO TOPICO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>64</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SOLUCION/SUSPENSION GOTAS ORALES</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>67</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SUPOSITORIO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>69</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>GEL ENDOCERVICAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>71</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>POMADA OFTÁLMICA/ÓTICA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>73</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>PRODUCTO USO NASAL/BUCAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>75</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SOLUCIÓN/SUSPENSIÓN ORAL/INHALACIÓN PULMONAR</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>76</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SOLUCIÓN/SUSPENSIÓN ORAL/INYECTABLE</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>77</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SOLUCIÓN/SUSPENSIÓN ORAL/INYECTABLE PERFUSIÓN</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>78</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SOLUCIÓN/SUSPENSIÓN ORAL/RECTAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>91</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>PRUEBA ALERGIA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>93</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SOLUCIÓN/SUSPENSIÓN ORAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>95</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SOLUCIÓN PARA MODIFICACIÓN DE LAS FRACCIONES SANGUÍNEAS</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>96</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>SOLUCIÓN TRANSDÉRMICA</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>97</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>EQUIVALENTE DE TEJIDO VIVO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>98</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>INYECTABLE/INTRAVESICAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>99</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>GEL INTRAUTERINO</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+  <formasfarmaceuticassimplificadas>
+    <codigoformafarmaceuticasimplificada>100</codigoformafarmaceuticasimplificada>
+    <formafarmaceuticasimplificada>GEL INTESTINAL</formafarmaceuticasimplificada>
+  </formasfarmaceuticassimplificadas>
+</aemps_prescripcion_formas_farmaceuticas_simplificadas>

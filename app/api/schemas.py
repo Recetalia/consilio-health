@@ -80,6 +80,7 @@ class PatientProfileIn(BaseModel):
     funcion_hepatica: str | None = None
     alergias: list[str] = Field(default_factory=list, max_length=50)
     patologias_mesh: list[str] = Field(default_factory=list, max_length=50)
+    patologias_icd10: list[str] = Field(default_factory=list, max_length=50)
 
 
 class ContraindicationsRequest(BaseModel):

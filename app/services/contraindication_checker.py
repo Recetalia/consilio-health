@@ -66,12 +66,27 @@ async def check(drug_names: list[str], profile: PatientProfile) -> dict[str, Any
 
     # --- 2) estados y patologías ---
     codes = profile.mesh_codes()
-    if not codes:
+    if not codes and not profile.patologias_icd10:
         return out
 
     id_by_code = await db.condition_ids_for_codes([("mesh", c) for c in codes])
     condition_ids = [cid for (sys, code), cid in id_by_code.items()
                      if code not in NOT_A_CONDITION]
+
+    # Las patologías que carga el médico vienen en CIE-10. El puente las
+    # traduce resolviendo código exacto, ancestros por truncación y rangos.
+    if profile.patologias_icd10:
+        traducidas = await db.condition_ids_for_icd10(profile.patologias_icd10)
+        for cid_list in traducidas.values():
+            condition_ids.extend(cid_list)
+        no_traducidas = [c for c in profile.patologias_icd10 if c not in traducidas]
+        for c in no_traducidas:
+            # No se omite en silencio: el médico tiene que saber que ese
+            # diagnóstico no se pudo tener en cuenta.
+            out["not_evaluated"].append(
+                {"drug": None, "icd10": c,
+                 "reason": "sin equivalencia conocida para ese código CIE-10"})
+        condition_ids = list(dict.fromkeys(condition_ids))
     if not condition_ids:
         return out
 

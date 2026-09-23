@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<aemps_prescripcion_envases xmlns="http://schemas.aemps.es/prescripcion/aemps_prescripcion_envases" xsi:schemaLocation="http://schemas.aemps.es/prescripcion/aemps_prescripcion_envases http://schemas.aemps.es/prescripcion/aemps_prescripcion_envases.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <envases>
+    <codigoenvase>1</codigoenvase>
+    <envase>Ampolla</envase>
+  </envases>
+  <envases>
+    <codigoenvase>2</codigoenvase>
+    <envase>Aplicador</envase>
+  </envases>
+  <envases>
+    <codigoenvase>3</codigoenvase>
+    <envase>Bolsa</envase>
+  </envases>
+  <envases>
+    <codigoenvase>4</codigoenvase>
+    <envase>Bidón</envase>
+  </envases>
+  <envases>
+    <codigoenvase>5</codigoenvase>
+    <envase>Blister</envase>
+  </envases>
+  <envases>
+    <codigoenvase>6</codigoenvase>
+    <envase>Frasco</envase>
+  </envases>
+  <envases>
+    <codigoenvase>7</codigoenvase>
+    <envase>Caja</envase>
+  </envases>
+  <envases>
+    <codigoenvase>10</codigoenvase>
+    <envase>Cánula</envase>
+  </envases>
+  <envases>
+    <codigoenvase>11</codigoenvase>
+    <envase>Cápsula de cierre</envase>
+  </envases>
+  <envases>
+    <codigoenvase>12</codigoenvase>
+    <envase>Cartucho</envase>
+  </envases>
+  <envases>
+    <codigoenvase>14</codigoenvase>
+    <envase>Vaso dosificador</envase>
+  </envases>
+  <envases>
+    <codigoenvase>17</codigoenvase>
+    <envase>Envase espolvoreador</envase>
+  </envases>
+  <envases>
+    <codigoenvase>19</codigoenvase>
+    <envase>Bala de gas</envase>
+  </envases>
+  <envases>
+    <codigoenvase>22</codigoenvase>
+    <envase>Jeringa para inyección</envase>
+  </envases>
+  <envases>
+    <codigoenvase>23</codigoenvase>
+    <envase>Tarro</envase>
+  </envases>
+  <envases>
+    <codigoenvase>25</codigoenvase>
+    <envase>Bomba dosificadora</envase>
+  </envases>
+  <envases>
+    <codigoenvase>27</codigoenvase>
+    <envase>Aplicador nasal</envase>
+  </envases>
+  <envases>
+    <codigoenvase>28</codigoenvase>
+    <envase>Nebulizador</envase>
+  </envases>
+  <envases>
+    <codigoenvase>31</codigoenvase>
+    <envase>Jeringa para uso oral</envase>
+  </envases>
+  <envases>
+    <codigoenvase>33</codigoenvase>
+    <envase>Jeringa precargada</envase>
+  </envases>
+  <envases>
+    <codigoenvase>34</codigoenvase>
+    <envase>Envase a presión</envase>
+  </envases>
+  <envases>
+    <codigoenvase>35</codigoenvase>
+    <envase>Sobre</envase>
+  </envases>
+  <envases>
+    <codigoenvase>37</codigoenvase>
+    <envase>Envase unidosis</envase>
+  </envases>
+  <envases>
+    <codigoenvase>39</codigoenvase>
+    <envase>Bomba pulverizadora</envase>
+  </envases>
+  <envases>
+    <codigoenvase>41</codigoenvase>
+    <envase>Tapón</envase>
+  </envases>
+  <envases>
+    <codigoenvase>42</codigoenvase>
+    <envase>Tiras</envase>
+  </envases>
+  <envases>
+    <codigoenvase>43</codigoenvase>
+    <envase>Envase de comprimidos</envase>
+  </envases>
+  <envases>
+    <codigoenvase>44</codigoenvase>
+    <envase>Tubo</envase>
+  </envases>
+  <envases>
+    <codigoenvase>45</codigoenvase>
+    <envase>Vial</envase>
+  </envases>
+  <envases>
+    <codigoenvase>46</codigoenvase>
+    <envase>Aplicador bucal</envase>
+  </envases>
+  <envases>
+    <codigoenvase>49</codigoenvase>
+    <envase>Aplicador para pruebas de alérgenos</envase>
+  </envases>
+  <envases>
+    <codigoenvase>53</codigoenvase>
+    <envase>Dispensador de dosis múltiples</envase>
+  </envases>
+  <envases>
+    <codigoenvase>56</codigoenvase>
+    <envase>Envase cuentagotas</envase>
+  </envases>
+  <envases>
+    <codigoenvase>65</codigoenvase>
+    <envase>Envase multidosis</envase>
+  </envases>
+  <envases>
+    <codigoenvase>66</codigoenvase>
+    <envase>Pluma precargada</envase>
+  </envases>
+  <envases>
+    <codigoenvase>67</codigoenvase>
+    <envase>Envase multidosis con bombeo sin entrada de aire</envase>
+  </envases>
+  <envases>
+    <codigoenvase>68</codigoenvase>
+    <envase>Envase pulverizador</envase>
+  </envases>
+  <envases>
+    <codigoenvase>69</codigoenvase>
+    <envase>Desconocido</envase>
+  </envases>
+  <envases>
+    <codigoenvase>70</codigoenvase>
+    <envase>Otros Envases</envase>
+  </envases>
+  <envases>
+    <codigoenvase>71</codigoenvase>
+    <envase>Botella</envase>
+  </envases>
+  <envases>
+    <codigoenvase>72</codigoenvase>
+    <envase>Bote</envase>
+  </envases>
+  <envases>
+    <codigoenvase>74</codigoenvase>
+    <envase>Parche</envase>
+  </envases>
+  <envases>
+    <codigoenvase>75</codigoenvase>
+    <envase>Protector de goma Helvoet FM27/0</envase>
+  </envases>
+  <envases>
+    <codigoenvase>77</codigoenvase>
+    <envase>Sticks</envase>
+  </envases>
+  <envases>
+    <codigoenvase>78</codigoenvase>
+    <envase>Vial + Ampolla</envase>
+  </envases>
+  <envases>
+    <codigoenvase>80</codigoenvase>
+    <envase>Vial + Jeringa</envase>
+  </envases>
+  <envases>
+    <codigoenvase>82</codigoenvase>
+    <envase>Frasco + Vaso dosificador</envase>
+  </envases>
+  <envases>
+    <codigoenvase>83</codigoenvase>
+    <envase>Vial + Vial</envase>
+  </envases>
+  <envases>
+    <codigoenvase>86</codigoenvase>
+    <envase>Inhalador</envase>
+  </envases>
+  <envases>
+    <codigoenvase>87</codigoenvase>
+    <envase>Frasco+bomba dosificadora+jeringa</envase>
+  </envases>
+  <envases>
+    <codigoenvase>88</codigoenvase>
+    <envase>Frasco + Jeringa</envase>
+  </envases>
+  <envases>
+    <codigoenvase>89</codigoenvase>
+    <envase>Vial+frasco+dispositivo de administración</envase>
+  </envases>
+  <envases>
+    <codigoenvase>90</codigoenvase>
+    <envase>Frasco nebulizador</envase>
+  </envases>
+  <envases>
+    <codigoenvase>91</codigoenvase>
+    <envase>Frasco+bomba pulverizadora</envase>
+  </envases>
+  <envases>
+    <codigoenvase>92</codigoenvase>
+    <envase>Envase</envase>
+  </envases>
+  <envases>
+    <codigoenvase>93</codigoenvase>
+    <envase>Inyector precargado</envase>
+  </envases>
+  <envases>
+    <codigoenvase>94</codigoenvase>
+    <envase>RECIPIENTE CRIOGÉNICO FIJO</envase>
+  </envases>
+  <envases>
+    <codigoenvase>95</codigoenvase>
+    <envase>RECIPIENTE CRIOGÉNICO MOVIL</envase>
+  </envases>
+  <envases>
+    <codigoenvase>103</codigoenvase>
+    <envase>Disco</envase>
+  </envases>
+  <envases>
+    <codigoenvase>104</codigoenvase>
+    <envase>Envase multidosis con bomba dosificadora</envase>
+  </envases>
+  <envases>
+    <codigoenvase>107</codigoenvase>
+    <envase>Jeringa oral precargada</envase>
+  </envases>
+  <envases>
+    <codigoenvase>108</codigoenvase>
+    <envase>Aplicador oral</envase>
+  </envases>
+  <envases>
+    <codigoenvase>110</codigoenvase>
+    <envase>Blíster unidosis</envase>
+  </envases>
+  <envases>
+    <codigoenvase>113</codigoenvase>
+    <envase>Pluma</envase>
+  </envases>
+  <envases>
+    <codigoenvase>116</codigoenvase>
+    <envase>Bolsita</envase>
+  </envases>
+</aemps_prescripcion_envases>

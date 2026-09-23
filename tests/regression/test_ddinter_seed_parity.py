@@ -55,7 +55,7 @@ async def test_ddinter_seed_severity_matches_expected(case, monkeypatch):
         # El origen no se fija: un par puede llegar de DDInter, de expansión por
         # clase sobre un prospecto, o de curación propia. Lo que el gate
         # garantiza es la severidad curada, venga de donde venga.
-        assert hit["source"] in {"recetalia", "ddinter", "openfda"}, hit["source"]
+        assert hit["source"] in {"recetalia", "aemps", "ddinter", "openfda"}, hit["source"]
         assert hit["severity"] == case["severity"], (
             f"{case['drug_a']} + {case['drug_b']}: esperaba {case['severity']}, "
             f"llegó {hit['severity']} desde {hit['source']}")

@@ -88,9 +88,11 @@ class PatientProfile:
     funcion_hepatica: str | None = None
     # Fármacos a los que el paciente reaccionó, por nombre.
     alergias: list[str] = field(default_factory=list)
-    # Patologías en MeSH. Cuando exista el puente, acá llegarán traducidas
-    # desde CIE-10.
+    # Patologías en MeSH, si el llamador ya las tiene en ese vocabulario.
     patologias_mesh: list[str] = field(default_factory=list)
+    # Patologías en CIE-10, que es lo que carga un médico. Se traducen con el
+    # puente (`condition_xref`), no acá: esta clase no conoce la base.
+    patologias_icd10: list[str] = field(default_factory=list)
 
     def warnings(self) -> list[str]:
         """Incoherencias que conviene avisar en vez de resolver en silencio."""
@@ -128,4 +130,4 @@ class PatientProfile:
         return codes
 
     def has_data(self) -> bool:
-        return bool(self.mesh_codes() or self.alergias)
+        return bool(self.mesh_codes() or self.alergias or self.patologias_icd10)

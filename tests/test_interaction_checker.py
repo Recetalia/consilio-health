@@ -68,7 +68,8 @@ async def test_openfda_fallback_when_ddinter_misses(patch_clients):
 async def test_unknown_when_all_paths_miss(patch_clients):
     patch_clients["rxnorm"].side_effect = ["1", "2"]
     result = await interaction_checker.check(["A", "B"])
-    assert result["coverage_summary"] == {"recetalia": 0, "ddinter": 0, "openfda": 0, "unknown": 1}
+    assert result["coverage_summary"] == {
+        "recetalia": 0, "aemps": 0, "ddinter": 0, "openfda": 0, "unknown": 1}
     assert result["interactions"] == []
 
 

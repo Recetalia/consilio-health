@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<aemps_prescripcion_situacion_registro xmlns="http://schemas.aemps.es/prescripcion/aemps_prescripcion_situacion_registro" xsi:schemaLocation="http://schemas.aemps.es/prescripcion/aemps_prescripcion_situacion_registro http://schemas.aemps.es/prescripcion/aemps_prescripcion_situacion_registro.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <situacionesregistro>
+    <codigosituacionregistro>1</codigosituacionregistro>
+    <situacionregistro>Autorizado</situacionregistro>
+  </situacionesregistro>
+  <situacionesregistro>
+    <codigosituacionregistro>3</codigosituacionregistro>
+    <situacionregistro>Anulado</situacionregistro>
+  </situacionesregistro>
+  <situacionesregistro>
+    <codigosituacionregistro>4</codigosituacionregistro>
+    <situacionregistro>Suspenso</situacionregistro>
+  </situacionesregistro>
+</aemps_prescripcion_situacion_registro>

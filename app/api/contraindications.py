@@ -27,6 +27,7 @@ async def check_contraindications(request: Request, body: ContraindicationsReque
         funcion_hepatica=body.profile.funcion_hepatica,
         alergias=body.profile.alergias,
         patologias_mesh=body.profile.patologias_mesh,
+        patologias_icd10=body.profile.patologias_icd10,
     )
     result = await contraindication_checker.check(body.drugs, profile)
     return ContraindicationsResponse(**result)
