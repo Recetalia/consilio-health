@@ -46,29 +46,35 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  /* 15px, no 14: a 14 la pantalla entera se lee como "letra chica" y esto lo
+     va a mirar un médico entre paciente y paciente, no un desarrollador. */
+  font-size: 15px;
+  line-height: 1.55;
 }
 
 h5, h6, .col-title, .brand .name { font-family: Hind, Roboto, sans-serif; }
 
 /* ---------------- barra superior ---------------- */
 
+/* La cabecera va en el teal corporativo, como el header público de Recetalia.
+   Con todo blanco la pantalla no tenía dónde anclar la marca y se leía como un
+   formulario suelto en vez de como un producto. */
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 16px; height: 54px; padding: 0 20px;
-  background: var(--card); border-bottom: 1px solid var(--border);
+  gap: 16px; min-height: 62px; padding: 0 24px;
+  background: linear-gradient(90deg, #2EA1B1 0%, #21899a 55%, #0f766e 100%);
+  box-shadow: 0 1px 0 rgba(0,0,0,.06), 0 2px 10px rgba(15,118,110,.18);
   position: sticky; top: 0; z-index: 30;
 }
 .brand { display: flex; align-items: center; gap: 9px; }
 .brand .isotipo { display: block; flex: 0 0 auto; }
 .brand .name {
-  font-size: 20px; font-weight: 700; color: var(--text-strong);
+  font-size: 23px; font-weight: 700; color: #fff;
   letter-spacing: -.015em; line-height: 1;
 }
 .brand .tagline {
-  font-size: 12px; color: var(--text-faint);
-  padding-left: 11px; border-left: 1px solid var(--border);
+  font-size: 13px; color: rgba(255,255,255,.82);
+  padding-left: 13px; border-left: 1px solid rgba(255,255,255,.3);
 }
 @media (max-width: 720px) { .brand .tagline { display: none; } }
 .topbar-actions { display: flex; gap: 8px; }
@@ -76,25 +82,26 @@ h5, h6, .col-title, .brand .name { font-family: Hind, Roboto, sans-serif; }
 /* ---------------- ayuda ---------------- */
 
 .ayuda {
-  background: var(--card); border-bottom: 1px solid var(--border);
-  padding: 18px 20px;
+  background: #eef7f8; border-bottom: 1px solid #cfe6ea;
+  padding: 22px 24px;
 }
 .ayuda-grid {
-  max-width: 1180px; margin: 0 auto;
+  max-width: 1280px; margin: 0 auto;
   display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
   gap: 22px;
 }
 .ayuda h6 {
-  margin: 0 0 8px; font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .04em; color: var(--text-soft);
+  margin: 0 0 9px; font-size: 12px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .04em; color: var(--cta);
 }
-.ayuda ul { margin: 0; padding-left: 17px; font-size: 13px; }
+.ayuda ul { margin: 0; padding-left: 18px; font-size: 14px; }
 .ayuda li { margin-bottom: 5px; }
 .ayuda .leyenda { list-style: none; padding-left: 0; }
-.ayuda .leyenda li { display: flex; align-items: baseline; gap: 8px; }
+.ayuda .leyenda li { display: flex; align-items: flex-start; gap: 9px; }
 .dot {
-  width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px;
-  display: inline-block; position: relative; top: -1px;
+  width: 11px; height: 11px; border-radius: 50%; flex: 0 0 11px;
+  display: inline-block; position: relative; top: 1px;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.9);
 }
 .dot.major { background: var(--major); }
 .dot.moderate { background: var(--moderate); }
@@ -103,23 +110,28 @@ h5, h6, .col-title, .brand .name { font-family: Hind, Roboto, sans-serif; }
 
 /* ---------------- estructura ---------------- */
 
-main { max-width: 1180px; margin: 0 auto; padding: 20px; }
+main { max-width: 1280px; margin: 0 auto; padding: 26px 24px 8px; }
 
 .cols {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 16px; align-items: start;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 20px; align-items: start;
 }
 
 .card {
   background: var(--card); border: 1px solid var(--border);
   border-radius: var(--radius-lg); box-shadow: var(--shadow);
+  overflow: hidden;
 }
+/* La cabecera de cada tarjeta va teñida y con un filete teal arriba: sin eso
+   son cuatro rectángulos blancos sobre un fondo casi blanco y la pantalla no
+   tiene jerarquía, que es de lo que se quejaba la primera versión. */
 .card-header {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  padding: 12px 16px; border-bottom: 1px solid var(--border-soft);
+  padding: 14px 18px; background: #f3f9fa;
+  border-bottom: 1px solid #d9eaed; border-top: 3px solid var(--teal);
 }
 .card-header h5 {
-  margin: 0; font-size: 14px; font-weight: 600; color: var(--text-strong);
+  margin: 0; font-size: 16px; font-weight: 600; color: var(--cta);
 }
 /* Dentro de un `label` en versales, el aclarador tiene que salirse de las
    versales: "PATOLOGÍAS CÓDIGO CIE-10 O NOMBRE" se lee como un solo título
@@ -130,30 +142,31 @@ main { max-width: 1180px; margin: 0 auto; padding: 20px; }
 }
 label .opt::before { content: "· "; }
 .counter {
-  font-size: 11px; font-weight: 600; color: var(--cta);
-  background: #e7f3f1; border-radius: 10px; padding: 2px 9px;
+  font-size: 12px; font-weight: 600; color: #fff;
+  background: var(--teal); border-radius: 11px; padding: 3px 11px;
 }
-.card-body { padding: 14px 16px 16px; }
+.card-body { padding: 18px; }
 
-.hint { margin: 0 0 11px; font-size: 12.5px; color: var(--text-soft); }
+.hint { margin: 0 0 13px; font-size: 13.5px; color: var(--text-soft); }
 .micro-aviso {
-  margin: 6px 0 0; font-size: 11.5px; color: var(--text-faint); line-height: 1.45;
+  margin: 7px 0 0; font-size: 12.5px; color: var(--text-soft); line-height: 1.45;
+  padding-left: 10px; border-left: 2px solid #d9eaed;
 }
 
 /* ---------------- formularios ---------------- */
 
 label {
-  display: block; font-size: 10px; font-weight: 500; text-transform: uppercase;
-  letter-spacing: .05em; color: var(--text-soft); margin-bottom: 4px;
+  display: block; font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--cta); margin-bottom: 5px;
 }
 label.check {
   display: inline-flex; align-items: center; gap: 6px; margin: 0;
-  font-size: 13px; text-transform: none; letter-spacing: 0; color: var(--text);
+  font-size: 14.5px; text-transform: none; letter-spacing: 0; color: var(--text);
   font-weight: 400; cursor: pointer;
 }
 input[type="text"], input[type="number"], input[type="search"], select {
-  width: 100%; padding: 8px 11px; font: inherit; font-size: 13.5px;
-  color: var(--text); background: var(--card);
+  width: 100%; padding: 10px 13px; font: inherit; font-size: 15px;
+  color: var(--text); background: #fcfdfe;
   border: 1px solid var(--border); border-radius: var(--radius);
   outline: none; transition: border-color .12s, box-shadow .12s;
 }
@@ -173,8 +186,8 @@ input::placeholder { color: #b6c0cc; }
 .select select { position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0; }
 .select-btn {
   width: 100%; display: flex; align-items: center; justify-content: space-between;
-  gap: 8px; padding: 8px 11px; font: inherit; font-size: 13.5px; text-align: left;
-  color: var(--text); background: var(--card); cursor: pointer;
+  gap: 8px; padding: 10px 13px; font: inherit; font-size: 15px; text-align: left;
+  color: var(--text); background: #fcfdfe; cursor: pointer;
   border: 1px solid var(--border); border-radius: var(--radius);
   transition: border-color .12s, box-shadow .12s;
 }
@@ -200,7 +213,7 @@ input::placeholder { color: #b6c0cc; }
   box-shadow: var(--shadow-pop);
 }
 .select-list li {
-  padding: 7px 10px; border-radius: 4px; cursor: pointer; font-size: 13.5px;
+  padding: 9px 12px; border-radius: 4px; cursor: pointer; font-size: 14.5px;
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
 }
 .select-list li:hover, .select-list li.activo { background: var(--hover-row); }
@@ -212,13 +225,13 @@ input::placeholder { color: #b6c0cc; }
 .select.compacto .select-list { columns: 2; column-gap: 4px; }
 .select.compacto .select-list li { break-inside: avoid; }
 
-.row { margin-bottom: 12px; }
-.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.row { margin-bottom: 16px; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .field-inline { min-width: 0; }
-.field { margin-bottom: 12px; }
+.field { margin-bottom: 18px; }
 .gestacion {
-  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-  padding: 9px 11px; background: #fbfcfd; border: 1px solid var(--border-soft);
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 12px 14px; background: #f2f6fd; border: 1px solid #dbe5f8;
   border-radius: var(--radius);
 }
 /* Dentro del bloque flex el desplegable no debe estirarse a todo el ancho. */
@@ -233,9 +246,9 @@ input::placeholder { color: #b6c0cc; }
 .chips { list-style: none; margin: 0 0 9px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .chips:empty { margin: 0; }
 .chips li {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex; align-items: center; gap: 7px;
   background: #eaf6f8; color: #14606b; border: 1px solid #cde9ee;
-  border-radius: 14px; padding: 3px 5px 3px 11px; font-size: 12.5px;
+  border-radius: 15px; padding: 5px 7px 5px 13px; font-size: 14px;
 }
 .chips li button {
   border: 0; background: transparent; color: #4e8b95; cursor: pointer;
@@ -262,7 +275,7 @@ input::placeholder { color: #b6c0cc; }
   box-shadow: var(--shadow-pop);
 }
 .suggestions li {
-  padding: 7px 10px; border-radius: 4px; cursor: pointer; font-size: 13.5px;
+  padding: 9px 12px; border-radius: 4px; cursor: pointer; font-size: 14.5px;
   display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
 }
 .suggestions li[aria-selected="true"], .suggestions li:hover { background: var(--hover-row); }
@@ -283,22 +296,33 @@ input::placeholder { color: #b6c0cc; }
 
 /* ---------------- botones ---------------- */
 
-.actions { display: flex; align-items: center; gap: 12px; margin: 20px 0 0; }
+.actions { display: flex; align-items: center; gap: 14px; margin: 26px 0 0; }
 .btn-primary {
   background: var(--cta); border: 1px solid var(--cta); color: #fff;
-  border-radius: var(--radius); padding: 9px 22px;
-  font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
-  transition: background .12s;
+  border-radius: var(--radius); padding: 11px 30px;
+  font: inherit; font-size: 15.5px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 1px 2px rgba(15,118,110,.3);
+  transition: background .12s, box-shadow .12s;
 }
+.btn-primary:hover:not(:disabled) { box-shadow: 0 2px 8px rgba(15,118,110,.32); }
 .btn-primary:hover:not(:disabled) { background: var(--cta-hover); border-color: var(--cta-hover); }
-.btn-primary:disabled { background: #cfd8e3; border-color: #cfd8e3; cursor: not-allowed; }
+.btn-primary:disabled { background: #b9c6d3; border-color: #b9c6d3; box-shadow: none; cursor: not-allowed; }
 .btn-ghost {
   background: var(--card); border: 1px solid #cfd8e3; color: var(--text);
-  border-radius: var(--radius); padding: 5px 12px;
-  font: inherit; font-size: 12.5px; font-weight: 500; cursor: pointer;
+  border-radius: var(--radius); padding: 6px 14px;
+  font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
 }
 .btn-ghost:hover { background: var(--hover-row); }
 .btn-ghost[aria-expanded="true"] { background: #e7f3f1; border-color: var(--cta); color: var(--cta); }
+/* Sobre el teal de la cabecera los botones van calados, no blancos: un bloque
+   blanco ahí compite con el logo. */
+.topbar .btn-ghost {
+  background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.4); color: #fff;
+}
+.topbar .btn-ghost:hover { background: rgba(255,255,255,.26); }
+.topbar .btn-ghost[aria-expanded="true"] {
+  background: #fff; border-color: #fff; color: var(--cta);
+}
 .btn-link {
   background: none; border: 0; color: var(--link); cursor: pointer;
   font: inherit; font-size: 13px; padding: 4px 2px; text-decoration: underline;
@@ -313,8 +337,8 @@ kbd {
 /* ---------------- filtros ---------------- */
 
 .filtros {
-  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px;
-  background: var(--card); border: 1px solid var(--border);
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 18px;
+  background: #f3f9fa; border: 1px solid #d9eaed;
   border-radius: var(--radius-lg); box-shadow: var(--shadow);
   padding: 12px 16px; margin: 20px 0 12px;
 }
@@ -322,14 +346,14 @@ kbd {
 .filtro-grupo.grow { flex: 1 1 200px; min-width: 170px; }
 .filtro-grupo:last-child { flex-direction: row; align-items: center; gap: 8px; }
 .filtro-label {
-  font-size: 10px; font-weight: 500; text-transform: uppercase;
-  letter-spacing: .05em; color: var(--text-soft);
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--cta);
 }
 .pills { display: flex; flex-wrap: wrap; gap: 6px; }
 .pill {
-  display: inline-flex; align-items: center; gap: 6px; margin: 0;
-  border: 1px solid #cfd8e3; background: var(--card); border-radius: var(--radius);
-  padding: 4px 10px; font-size: 12px; font-weight: 500; color: var(--text);
+  display: inline-flex; align-items: center; gap: 7px; margin: 0;
+  border: 1px solid #b9d3d8; background: var(--card); border-radius: var(--radius);
+  padding: 6px 12px; font-size: 13px; font-weight: 500; color: var(--text);
   text-transform: none; letter-spacing: 0; cursor: pointer; user-select: none;
   transition: background .12s, border-color .12s;
 }
@@ -339,37 +363,47 @@ kbd {
 .pill.on .n { color: rgba(255,255,255,.8); }
 .pill .n { font-size: 11px; color: var(--text-faint); font-weight: 600; }
 .pill.toggle.on { background: var(--cta); border-color: var(--cta); color: #fff; }
-.filtro-texto { padding: 5px 10px; font-size: 12.5px; }
+.filtro-texto { padding: 7px 12px; font-size: 13.5px; }
 .filtro-estado {
-  margin: 0 0 12px; font-size: 12.5px; color: var(--text-soft);
+  margin: 0 0 14px; font-size: 13.5px; color: #7a5b16;
+  background: var(--moderate-bg); border: 1px solid #f3e3b8;
+  border-radius: var(--radius); padding: 8px 13px;
 }
 
 /* ---------------- resultados ---------------- */
 
 #results { margin-top: 22px; }
 .col-title {
-  margin: 0 0 10px; font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .05em; color: var(--text-soft);
+  margin: 0 0 12px; font-size: 13px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--cta);
+  display: flex; align-items: center; gap: 9px;
+}
+.col-title::before {
+  content: ""; width: 4px; height: 15px; border-radius: 2px;
+  background: var(--teal); flex: 0 0 auto;
 }
 .col { min-width: 0; }
 
+/* El filete de color no alcanzaba: sobre un fondo casi blanco, seis tarjetas
+   blancas con una rayita de 3px se leen todas igual. El fondo teñido hace que
+   la gravedad se vea desde lejos, que es la única forma en que sirve. */
 .finding {
-  background: var(--card); border: 1px solid var(--border);
-  border-left: 3px solid var(--unknown);
+  background: var(--unknown-bg); border: 1px solid var(--border);
+  border-left: 5px solid var(--unknown);
   border-radius: var(--radius); box-shadow: var(--shadow);
-  padding: 12px 14px; margin-bottom: 10px;
+  padding: 14px 16px; margin-bottom: 12px;
 }
-.finding.major    { border-left-color: var(--major); }
-.finding.moderate { border-left-color: var(--moderate); }
-.finding.minor    { border-left-color: var(--minor); }
+.finding.major    { border-left-color: var(--major);    background: var(--major-bg);    border-color: #f2d5d1; }
+.finding.moderate { border-left-color: var(--moderate); background: var(--moderate-bg); border-color: #f3e3b8; }
+.finding.minor    { border-left-color: var(--minor);    background: var(--minor-bg);    border-color: #cfe8f6; }
 
 .finding-head {
   display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 2px;
 }
-.pair { font-size: 14px; font-weight: 600; color: var(--text-strong); }
+.pair { font-size: 16px; font-weight: 600; color: var(--text-strong); }
 .badge {
-  font-size: 10.5px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .04em; color: #fff; border-radius: 10px; padding: 2px 9px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .04em; color: #fff; border-radius: 11px; padding: 3px 11px;
   background: var(--unknown);
 }
 .badge.major    { background: var(--major); }
@@ -377,31 +411,32 @@ kbd {
 .badge.minor    { background: var(--minor); }
 .badge.unknown  { background: var(--unknown); }
 
-.evidence { margin: 9px 0 0; font-size: 13.5px; color: #4a4a4a; }
+.evidence { margin: 10px 0 0; font-size: 14.5px; color: #3f4a52; }
 .evidence.sin-texto { color: var(--text-faint); font-style: italic; }
 .evidence-note { margin: 3px 0 0; font-size: 11px; color: var(--text-faint); }
 /* El manejo clínico es lo accionable del hallazgo: se separa del mecanismo
    con un filete para que se lea aunque el médico no lea el resto. */
 .manejo {
-  margin: 9px 0 0; padding: 7px 10px; font-size: 13px; color: #3c4043;
-  background: #f6f8fa; border-left: 3px solid #d0d7de; border-radius: 3px;
+  margin: 11px 0 0; padding: 10px 13px; font-size: 14px; color: #14532d;
+  background: #eefaf3; border-left: 3px solid var(--ok); border-radius: 4px;
 }
-.meta { margin: 9px 0 0; font-size: 11.5px; color: var(--text-faint); }
+.manejo strong { color: #15803d; }
+.meta { margin: 11px 0 0; font-size: 12px; color: var(--text-soft); }
 .tag-uncertain {
-  display: inline-block; font-size: 10.5px; color: #8a6d3b;
+  display: inline-block; font-size: 11.5px; color: #8a6d3b;
   background: #fcf3d8; border: 1px solid #f3e3b3;
   border-radius: 3px; padding: 1px 6px;
 }
 .tag-clase {
-  display: inline-block; font-size: 10.5px; color: #2c4a80;
+  display: inline-block; font-size: 11.5px; color: #2c4a80;
   background: #f1f5fd; border: 1px solid #d9e3f6;
   border-radius: 3px; padding: 1px 6px;
 }
 
 .empty-state {
-  background: var(--card); border: 1px dashed var(--border);
-  border-radius: var(--radius); padding: 12px 14px; margin-bottom: 10px;
-  font-size: 13px; color: var(--text-soft);
+  background: var(--card); border: 1px dashed #bcd5da;
+  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px;
+  font-size: 14px; color: var(--text-soft);
 }
 /* Una consulta que falló tiene que verse como un fallo, no como un vacío. El
    vacío tranquiliza, y acá tranquilizar sin haber evaluado nada es el modo de
@@ -415,19 +450,21 @@ kbd {
 .error-state strong { color: var(--major); }
 .error-state p { margin: 6px 0 10px; }
 .aviso-perfil {
-  background: #fdf8ec; border: 1px solid #f3e3b3; color: #7a5b16;
-  border-radius: var(--radius); padding: 9px 12px; margin-bottom: 10px;
-  font-size: 13px;
+  background: #fdf8ec; border: 1px solid #f3e3b3; border-left: 4px solid var(--moderate);
+  color: #7a5b16; border-radius: var(--radius); padding: 11px 14px;
+  margin-bottom: 12px; font-size: 14px;
 }
 
 /* ---------------- pie ---------------- */
 
 footer {
-  max-width: 1180px; margin: 10px auto 0; padding: 18px 20px 34px;
-  border-top: 1px solid var(--border);
+  margin: 34px 0 0; padding: 20px 24px 30px;
+  background: #eef2f6; border-top: 3px solid var(--teal);
 }
-.disclaimer { margin: 0; font-size: 12px; color: var(--text-soft); }
-.sources { margin: 6px 0 0; font-size: 11.5px; color: var(--text-faint); }
+footer > * { max-width: 1280px; margin-left: auto; margin-right: auto; }
+.disclaimer { margin: 0; font-size: 13px; color: var(--text); }
+.disclaimer strong { color: var(--major); }
+.sources { margin: 7px auto 0; font-size: 12.5px; color: var(--text-soft); }
 
 /* ---------------- toast ---------------- */
 

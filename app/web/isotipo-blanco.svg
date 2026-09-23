@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Consilio">
+  <!-- Versión para fondo teal: trazos blancos y lente en el verde oscuro de la
+       marca, que sobre el teal de la cabecera sigue leyéndose. -->
+  <defs>
+    <clipPath id="lente-b"><circle cx="18.5" cy="24" r="12"/></clipPath>
+  </defs>
+  <circle cx="29.5" cy="24" r="12" fill="#0f766e" clip-path="url(#lente-b)"/>
+  <g fill="none" stroke="#ffffff" stroke-width="2.8">
+    <circle cx="18.5" cy="24" r="12"/>
+    <circle cx="29.5" cy="24" r="12"/>
+  </g>
+</svg>
