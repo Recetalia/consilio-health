@@ -94,6 +94,11 @@ class ContraindicationsResponse(BaseModel):
     contraindications: list[dict] = Field(default_factory=list)
     precautions: list[dict] = Field(default_factory=list)
     allergies: list[dict] = Field(default_factory=list)
+    """Criterios de prescripción en el anciano. Casi todos vienen con
+    `condicionada=true`: la situación que los dispara —una comorbilidad, un
+    valor de laboratorio— no está en la receta, así que el hallazgo dice
+    *verificar si*, no *pasa esto*."""
+    geriatric: list[dict] = Field(default_factory=list)
     """Fármacos que no pudimos evaluar. Explícito, nunca omitido en silencio."""
     not_evaluated: list[dict] = Field(default_factory=list)
     """Incoherencias del perfil: se avisan, no se resuelven por nuestra cuenta."""

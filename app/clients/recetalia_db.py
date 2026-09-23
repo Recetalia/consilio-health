@@ -306,6 +306,32 @@ class RecetaliaDatabase:
 
     # --- alertas fármaco-paciente -----------------------------------------
 
+    async def population_alerts_for(
+        self, drug_ids: list[int], population: str = "elderly"
+    ) -> list[dict[str, Any]]:
+        """Alertas que dependen de a qué población pertenece el paciente.
+
+        Van ordenadas con las no condicionadas primero: son las únicas que el
+        motor puede afirmar. El resto sale como "verificar si…" porque la
+        situación que las dispara —una comorbilidad, un valor de laboratorio—
+        no está en la receta.
+        """
+        if not drug_ids:
+            return []
+        conn = await self._c()
+        ph = ",".join("?" * len(drug_ids))
+        async with conn.execute(
+            f"""select d.canonical as drug, p.situacion, p.recomendacion,
+                       p.condicionada, p.source, p.note
+                from drug_population_alert p
+                join drug d on d.drug_id = p.drug_id
+                where p.drug_id in ({ph}) and p.population = ?
+                order by p.condicionada, d.canonical""",
+            (*drug_ids, population),
+        ) as cur:
+            rows = await cur.fetchall()
+        return [{**dict(r), "condicionada": bool(r["condicionada"])} for r in rows]
+
     async def alerts_for(
         self, drug_ids: list[int], condition_ids: list[int]
     ) -> list[dict[str, Any]]:

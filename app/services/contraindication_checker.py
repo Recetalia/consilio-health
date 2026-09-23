@@ -33,6 +33,12 @@ NOT_A_CONDITION = {
 
 SEVERITY_ORDER = {"contraindication": 0, "precaution": 1}
 
+# El umbral con el que la AEMPS escribió sus criterios de prescripción en el
+# anciano. No se infiere de la edad: si el médico no la cargó, no hay alerta
+# geriátrica. Suponer que un paciente sin edad es joven sería el mismo error
+# que suponerlo viejo, pero en la dirección que calla.
+EDAD_ANCIANO = 65
+
 
 async def check(drug_names: list[str], profile: PatientProfile) -> dict[str, Any]:
     """Alertas para estos fármacos con este paciente."""
@@ -40,6 +46,7 @@ async def check(drug_names: list[str], profile: PatientProfile) -> dict[str, Any
         "contraindications": [],
         "precautions": [],
         "allergies": [],
+        "geriatric": [],
         "not_evaluated": [],
         "profile_warnings": profile.warnings(),
     }
@@ -64,7 +71,11 @@ async def check(drug_names: list[str], profile: PatientProfile) -> dict[str, Any
     # --- 1) alergias declaradas, sin pasar por MeSH ---
     out["allergies"] = await _match_allergies(drug_ids, profile)
 
-    # --- 2) estados y patologías ---
+    # --- 2) alertas geriátricas, que dependen de la edad y no de MeSH ---
+    if profile.edad is not None and profile.edad >= EDAD_ANCIANO:
+        out["geriatric"] = await db.population_alerts_for(list(drug_ids.values()))
+
+    # --- 3) estados y patologías ---
     codes = profile.mesh_codes()
     if not codes and not profile.patologias_icd10:
         return out

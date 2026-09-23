@@ -130,4 +130,7 @@ class PatientProfile:
         return codes
 
     def has_data(self) -> bool:
-        return bool(self.mesh_codes() or self.alergias or self.patologias_icd10)
+        # La edad sola ya alcanza: dispara los criterios de prescripción en el
+        # anciano aunque no haya ninguna patología cargada.
+        return bool(self.mesh_codes() or self.alergias or self.patologias_icd10
+                    or self.edad is not None)
