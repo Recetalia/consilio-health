@@ -88,6 +88,18 @@ def normalize(name: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 
+def _titulo(s: str | None) -> str | None:
+    """Los nombres del DNMA vienen en mayúsculas y los manuales en minúscula.
+
+    Se normaliza a capitalización de oración para que la lista no parezca un
+    grito intercalado con susurros.
+    """
+    if not s:
+        return None
+    s = s.strip()
+    return s[0].upper() + s[1:].lower() if s.isupper() or s.islower() else s
+
+
 def _like(s: str) -> str:
     """Escapa los comodines de LIKE para que un `%` tecleado no matchee todo."""
     return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
@@ -202,8 +214,19 @@ class RecetaliaDatabase:
         if len(q) < 2:
             return []
         conn = await self._c()
+        # `name_es` es para MOSTRAR: el canónico está en inglés y esta interfaz
+        # es para un médico uruguayo. Sale del alias castellano si lo hay y si
+        # no del mapa del DNMA, que trae la grafía del vademécum local —que es
+        # justamente la que el médico espera leer—. Se queda en NULL cuando no
+        # sabemos: inventar una traducción de un fármaco es peor que el inglés.
         async with conn.execute(
-            """select distinct d.drug_id, d.canonical, d.rxcui
+            """select distinct d.drug_id, d.canonical, d.rxcui,
+                      coalesce(
+                        (select es.alias from drug_alias es
+                          where es.drug_id = d.drug_id and es.lang = 'es' limit 1),
+                        (select m.sustancia_dsc from dnma_substance_map m
+                          where m.drug_id = d.drug_id limit 1)
+                      ) as name_es
                from drug_alias a
                join drug d on d.drug_id = a.drug_id
                where a.alias_norm like ? escape '\\'
@@ -213,8 +236,8 @@ class RecetaliaDatabase:
             (f"%{_like(q)}%", f"{_like(q)}%", limit),
         ) as cur:
             rows = await cur.fetchall()
-        return [{"drug_id": r["drug_id"], "name": r["canonical"], "rxcui": r["rxcui"]}
-                for r in rows]
+        return [{"drug_id": r["drug_id"], "name": r["canonical"], "rxcui": r["rxcui"],
+                 "name_es": _titulo(r["name_es"])} for r in rows]
 
     async def search_conditions(self, query: str, limit: int = 10) -> list[dict[str, Any]]:
         """Busca patologías por código CIE-10 o por nombre, para el autocompletado.

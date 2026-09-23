@@ -8,12 +8,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/ui/style.css">
+<link rel="icon" type="image/svg+xml" href="/ui/favicon.svg">
 </head>
 <body>
 
 <header class="topbar">
+  <!-- El isotipo va como imagen y la palabra como texto: un SVG dentro de un
+       `<img>` no puede cargar la tipografía de la página, así que el logotipo
+       embebido caería a Helvetica y no matchearía con el resto. `logo.svg`
+       existe igual, para usos fuera de la app. -->
   <div class="brand">
-    <span class="mark">◈</span>
+    <img src="/ui/isotipo.svg" alt="" class="isotipo" width="30" height="30">
     <span class="name">Consilio</span>
     <span class="tagline">Seguridad en la prescripción</span>
   </div>
@@ -99,11 +104,14 @@
           <div class="field-inline">
             <label for="edad">Edad</label>
             <input id="edad" type="number" min="0" max="130" placeholder="años">
+            <!-- El aviso va DENTRO del campo de edad: a ancho completo debajo
+                 de la fila quedaba pegado a la etiqueta siguiente y se leía
+                 como si describiera la función renal. -->
+            <p id="aviso-edad" class="micro-aviso" hidden>
+              Desde los 65 se aplican los criterios de prescripción en el anciano.
+            </p>
           </div>
         </div>
-        <p id="aviso-edad" class="micro-aviso" hidden>
-          A partir de los 65 se aplican los criterios de prescripción en el anciano.
-        </p>
 
         <div id="gestacion" class="row gestacion" hidden>
           <label class="check"><input id="embarazo" type="checkbox"> Embarazo</label>

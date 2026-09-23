@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <!-- Versión para 16px: fondo macizo y trazo más grueso, porque a ese tamaño
+       dos anillos finos sobre blanco se leen como una mancha. -->
+  <rect width="48" height="48" rx="10" fill="#0f766e"/>
+  <defs>
+    <clipPath id="f"><circle cx="19" cy="24" r="11"/></clipPath>
+  </defs>
+  <circle cx="29" cy="24" r="11" fill="#7fd4dd" clip-path="url(#f)"/>
+  <g fill="none" stroke="#ffffff" stroke-width="3">
+    <circle cx="19" cy="24" r="11"/>
+    <circle cx="29" cy="24" r="11"/>
+  </g>
+</svg>

@@ -31,6 +31,13 @@ const FUENTE = {
   medrt:     "MED-RT — Biblioteca Nacional de Medicina (EE.UU.)",
   recetalia: "Revisión propia de Consilio",
 };
+// Canónico (inglés, el de la base) -> nombre para mostrar (castellano). Se va
+// llenando con lo que devuelve el buscador: la base tiene 728 sustancias del
+// DNMA y 73 alias manuales, así que buena parte del vademécum uruguayo se
+// muestra en su grafía local en vez de en inglés.
+const NOMBRE_ES = {};
+const mostrar = (n) => NOMBRE_ES[n] || n;
+
 const FUENTE_CORTA = {
   aemps: "AEMPS", ddinter: "DDInter", openfda: "openFDA",
   medrt: "MED-RT", recetalia: "Consilio",
@@ -147,9 +154,13 @@ async function buscarFarmacos(q) {
                         { headers: headers() });
   if (!r.ok) { handleHttpError(r); throw "handled"; }
   const data = await r.json();
-  return (data.results || []).map((x) => ({
-    id: x.drug_id, name: x.name, rxcui: x.rxcui,
-  }));
+  return (data.results || []).map((x) => {
+    // Se muestra el nombre castellano cuando lo hay, pero se MANDA el canónico:
+    // es la clave con la que vuelven los hallazgos, y si mandáramos el de
+    // mostrar habría que re-mapear la respuesta.
+    if (x.name_es) NOMBRE_ES[x.name] = x.name_es;
+    return { id: x.drug_id, name: x.name, name_es: x.name_es, rxcui: x.rxcui };
+  });
 }
 
 async function buscarPatologias(q) {
@@ -178,6 +189,128 @@ async function buscarPatologias(q) {
   })).slice(0, 12);
 }
 
+/* ---------------- desplegable propio ----------------
+   El `<select>` nativo abre el popup del sistema operativo, que no se puede
+   estilar: en macOS aparece con tipografía enorme, resaltado azul y despegado
+   del campo. Se envuelve en un botón + lista propios.
+
+   El `<select>` NO se elimina: queda oculto como fuente de verdad del valor y
+   emite su `change` de siempre, así todo lo que ya lo escucha —el bloque de
+   gestación, la invalidación de resultados, `perfil()`— sigue funcionando sin
+   enterarse. Reemplazarlo del todo habría obligado a tocar seis lugares más. */
+
+function enhanceSelect(sel, { compacto = false } = {}) {
+  const wrap = document.createElement("div");
+  wrap.className = "select" + (compacto ? " compacto" : "");
+  sel.parentNode.insertBefore(wrap, sel);
+  wrap.appendChild(sel);
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "select-btn";
+  btn.setAttribute("aria-haspopup", "listbox");
+  btn.setAttribute("aria-expanded", "false");
+  // El lector de pantalla pierde la etiqueta al ocultar el `<select>`: se la
+  // copiamos al botón, que es lo que ahora recibe el foco.
+  const etiqueta = sel.getAttribute("aria-label") ||
+    document.querySelector(`label[for="${sel.id}"]`)?.textContent.trim();
+  if (etiqueta) btn.setAttribute("aria-label", etiqueta);
+  btn.innerHTML = '<span class="valor"></span><span class="caret"></span>';
+
+  const list = document.createElement("ul");
+  list.className = "select-list";
+  list.setAttribute("role", "listbox");
+  list.hidden = true;
+
+  wrap.append(btn, list);
+
+  const opciones = () => [...sel.options];
+
+  function pintarBoton() {
+    const o = sel.selectedOptions[0];
+    const v = btn.querySelector(".valor");
+    v.textContent = o ? o.textContent : "";
+    // Una opción cuyo value es "" es el placeholder, no una elección.
+    v.classList.toggle("vacio", !o || o.value === "");
+    btn.disabled = sel.disabled;
+  }
+
+  function pintarLista() {
+    list.innerHTML = opciones().map((o, i) => `
+      <li role="option" data-i="${i}" aria-selected="${o.selected}"
+          class="${o.selected ? "activo" : ""}">${escapeHtml(o.textContent)}</li>`).join("");
+    list.querySelectorAll("li").forEach((li) =>
+      li.addEventListener("click", () => elegir(Number(li.dataset.i))));
+  }
+
+  function abrir() {
+    if (sel.disabled) return;
+    pintarLista();
+    list.hidden = false;
+    wrap.classList.add("abierto");
+    btn.setAttribute("aria-expanded", "true");
+    const act = list.querySelector("li.activo") || list.firstElementChild;
+    act?.scrollIntoView({ block: "nearest" });
+  }
+
+  function cerrar() {
+    list.hidden = true;
+    wrap.classList.remove("abierto");
+    btn.setAttribute("aria-expanded", "false");
+  }
+
+  function elegir(i) {
+    sel.selectedIndex = i;
+    // `change` no se dispara solo al asignar por script: hay que emitirlo, y es
+    // justamente de lo que cuelga el resto de la pantalla.
+    sel.dispatchEvent(new Event("change", { bubbles: true }));
+    pintarBoton();
+    cerrar();
+    btn.focus();
+  }
+
+  function mover(paso) {
+    const items = [...list.querySelectorAll("li")];
+    if (!items.length) return;
+    const cur = items.findIndex((li) => li.classList.contains("activo"));
+    const next = Math.min(Math.max((cur < 0 ? 0 : cur) + paso, 0), items.length - 1);
+    items.forEach((li, i) => li.classList.toggle("activo", i === next));
+    items[next].scrollIntoView({ block: "nearest" });
+  }
+
+  btn.addEventListener("click", () => (list.hidden ? abrir() : cerrar()));
+  btn.addEventListener("keydown", (e) => {
+    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
+      e.preventDefault();
+      if (list.hidden) { abrir(); return; }
+      if (e.key === "ArrowDown") mover(1);
+      else if (e.key === "ArrowUp") mover(-1);
+      else {
+        const act = list.querySelector("li.activo");
+        if (act) elegir(Number(act.dataset.i));
+      }
+    } else if (e.key === "Escape") {
+      cerrar();
+    } else if (e.key.length === 1) {
+      // Tipear una letra salta a la primera opción que empieza con ella, como
+      // hace el select nativo. En la lista de 42 semanas es lo que la hace usable.
+      const i = opciones().findIndex((o) =>
+        o.textContent.trim().toLowerCase().startsWith(e.key.toLowerCase()));
+      if (i >= 0) { if (list.hidden) abrir(); mover(i - (opciones().findIndex((o) => o.selected))); }
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!wrap.contains(e.target)) cerrar();
+  });
+
+  // Cuando algo cambia el valor por código —vaciar todo, cargar el ejemplo— el
+  // botón tiene que reflejarlo. Por eso se escucha el mismo `change`.
+  sel.addEventListener("change", pintarBoton);
+  pintarBoton();
+  return { sync: pintarBoton };
+}
+
 /* ---------------- perfil ---------------- */
 
 const semanasSel = $("semanas");
@@ -188,6 +321,17 @@ for (let w = 1; w <= 42; w++) {
   semanasSel.appendChild(o);
 }
 
+// Los cuatro desplegables de la pantalla. `semanas` va en dos columnas porque
+// son 43 opciones y a una columna obliga a scrollear.
+const SELECTS = {
+  sexo: enhanceSelect($("sexo")),
+  renal: enhanceSelect($("renal")),
+  hepatica: enhanceSelect($("hepatica")),
+  semanas: enhanceSelect(semanasSel, { compacto: true }),
+};
+// `disabled` no emite ningún evento, así que el botón no se entera solo.
+const setSemanasDisabled = (v) => { semanasSel.disabled = v; SELECTS.semanas.sync(); };
+
 $("sexo").addEventListener("change", (e) => {
   // Embarazo y lactancia sólo se ofrecen con sexo femenino declarado. Si se
   // cambia a masculino se limpian, para no mandar un perfil incoherente.
@@ -197,14 +341,14 @@ $("sexo").addEventListener("change", (e) => {
     $("embarazo").checked = false;
     $("lactancia").checked = false;
     semanasSel.value = "";
-    semanasSel.disabled = true;
+    setSemanasDisabled(true);
   }
   invalidateResults();
   syncButtons();
 });
 
 $("embarazo").addEventListener("change", (e) => {
-  semanasSel.disabled = !e.target.checked;
+  setSemanasDisabled(!e.target.checked);
   if (!e.target.checked) semanasSel.value = "";
   invalidateResults();
   syncButtons();
@@ -246,11 +390,15 @@ const hayPerfil = () => {
 
 /* ---------------- estado ---------------- */
 
-let ultimo = { inter: null, contra: null };   // para re-filtrar sin re-consultar
+// `error` NO es lo mismo que `null`. Si una consulta falla y se guarda como
+// null, la pantalla dice "completá el perfil" o "agregá medicamentos": presenta
+// una caída del servidor como si faltaran datos. En una herramienta clínica ése
+// es el peor modo de fallo, porque el vacío tranquiliza.
+let ultimo = { inter: null, contra: null, interError: null, contraError: null };
 
 function invalidateResults() {
   const box = $("results");
-  ultimo = { inter: null, contra: null };
+  ultimo = { inter: null, contra: null, interError: null, contraError: null };
   if (!box.hidden) {
     box.hidden = true;
     $("results-body").innerHTML = "";
@@ -280,15 +428,16 @@ function syncButtons() {
 const meds = wireSearch({
   input: $("q"), list: $("suggestions"), target: selected, chips: $("chips"),
   onChange: syncButtons, fetchFn: buscarFarmacos,
-  renderItem: (r) => `<span class="nombre">${escapeHtml(r.name)}</span>${
+  renderItem: (r) => `<span class="nombre">${escapeHtml(r.name_es || r.name)}${
+    r.name_es ? `<span class="alias-en"> · ${escapeHtml(r.name)}</span>` : ""}</span>${
     r.rxcui ? `<span class="rxcui">RxCUI ${r.rxcui}</span>` : ""}`,
-  renderChip: (s) => escapeHtml(s.name),
+  renderChip: (s) => escapeHtml(s.name_es || s.name),
 });
 const alerg = wireSearch({
   input: $("qa"), list: $("suggestions-alergias"), target: alergias,
   chips: $("chips-alergias"), onChange: syncButtons, fetchFn: buscarFarmacos,
-  renderItem: (r) => `<span class="nombre">${escapeHtml(r.name)}</span>`,
-  renderChip: (s) => escapeHtml(s.name),
+  renderItem: (r) => `<span class="nombre">${escapeHtml(r.name_es || r.name)}</span>`,
+  renderChip: (s) => escapeHtml(s.name_es || s.name),
 });
 const patol = wireSearch({
   input: $("qp"), list: $("suggestions-patologias"), target: patologias,
@@ -310,11 +459,14 @@ $("clear").addEventListener("click", () => {
   ["q", "qa", "qp"].forEach((id) => { $(id).value = ""; });
   ["suggestions", "suggestions-alergias", "suggestions-patologias"]
     .forEach((id) => { $(id).hidden = true; });
-  ["sexo", "edad", "renal", "hepatica"].forEach((id) => { $(id).value = ""; });
+  ["sexo", "edad", "renal", "hepatica"].forEach((id) => {
+    $(id).value = "";
+    SELECTS[id]?.sync();
+  });
   $("embarazo").checked = false;
   $("lactancia").checked = false;
   semanasSel.value = "";
-  semanasSel.disabled = true;
+  setSemanasDisabled(true);
   $("gestacion").hidden = true;
   $("aviso-edad").hidden = true;
   invalidateResults();
@@ -338,6 +490,7 @@ $("btn-ejemplo").addEventListener("click", async () => {
   }
   $("edad").value = EJEMPLO.perfil.edad;
   $("renal").value = EJEMPLO.perfil.renal;
+  SELECTS.renal.sync();
   $("aviso-edad").hidden = false;
   invalidateResults();
   meds.render();
@@ -360,32 +513,36 @@ $("check").addEventListener("click", async () => {
   btn.disabled = true;
   btn.textContent = "Consultando…";
   const drugs = selected.map((s) => s.name);
-  let inter = null, contra = null;
+  let inter = null, contra = null, interError = null, contraError = null;
 
   try {
     const calls = [];
     if (drugs.length >= 2) {
       calls.push(fetch("/interactions", {
         method: "POST", headers: headers(), body: JSON.stringify({ drugs }),
-      }).then(async (r) => { inter = r.ok ? await r.json() : handleHttpError(r); }));
+      }).then(async (r) => {
+        if (r.ok) inter = await r.json();
+        else { interError = descripcionError(r); handleHttpError(r); }
+      }));
     }
     if (hayPerfil()) {
       calls.push(fetch("/contraindications", {
         method: "POST", headers: headers(),
         body: JSON.stringify({ drugs, profile: perfil() }),
-      }).then(async (r) => { contra = r.ok ? await r.json() : handleHttpError(r); }));
+      }).then(async (r) => {
+        if (r.ok) contra = await r.json();
+        else { contraError = descripcionError(r); handleHttpError(r); }
+      }));
     }
     await Promise.all(calls);
   } catch {
     toast("No se pudo consultar el servicio.");
-    btn.textContent = "Consultar";
-    syncButtons();
-    return;
+    interError = contraError = "No se pudo contactar al servicio.";
   }
   btn.textContent = "Consultar";
   syncButtons();
   // Fuera del try: un error al pintar no puede disfrazarse de error de red.
-  ultimo = { inter, contra };
+  ultimo = { inter, contra, interError, contraError };
   construirFiltros(inter, contra);
   render();
 });
@@ -415,13 +572,13 @@ function construirFiltros(inter, contra) {
 
   $("f-sev").innerHTML = Object.keys(SEV)
     .filter((s) => porSev[s])
-    .map((s) => `<button type="button" class="pill" data-sev="${s}">
+    .map((s) => `<button type="button" class="pill" aria-pressed="false" data-sev="${s}">
        <span class="dot ${s}"></span>${SEV[s].label} <span class="n">${porSev[s]}</span>
      </button>`).join("");
   $("f-sev-grupo").hidden = !$("f-sev").innerHTML;
 
   $("f-fuente").innerHTML = Object.keys(porFuente).sort()
-    .map((f) => `<button type="button" class="pill" data-fuente="${f}"
+    .map((f) => `<button type="button" class="pill" aria-pressed="false" data-fuente="${f}"
        title="${escapeAttr(FUENTE[f] || f)}">${FUENTE_CORTA[f] || f}
        <span class="n">${porFuente[f]}</span></button>`).join("");
   $("f-fuente-grupo").hidden = !$("f-fuente").innerHTML;
@@ -440,6 +597,7 @@ function construirFiltros(inter, contra) {
 function toggle(set, valor, btn) {
   if (set.has(valor)) set.delete(valor); else set.add(valor);
   btn.classList.toggle("on", set.has(valor));
+  btn.setAttribute("aria-pressed", String(set.has(valor)));
   render();
 }
 
@@ -461,7 +619,10 @@ $("f-reset").addEventListener("click", () => {
   filtro.conTexto = filtro.sinInferidas = false; filtro.texto = "";
   $("f-con-texto").checked = $("f-sin-inferidas").checked = false;
   $("f-texto").value = "";
-  document.querySelectorAll(".pill.on").forEach((p) => p.classList.remove("on"));
+  document.querySelectorAll(".pill.on").forEach((p) => {
+    p.classList.remove("on");
+    if (p.hasAttribute("aria-pressed")) p.setAttribute("aria-pressed", "false");
+  });
   render();
 });
 
@@ -493,7 +654,7 @@ function pasaFiltroPaciente(campos) {
 /* ---------------- pintado ---------------- */
 
 function render() {
-  const { inter, contra } = ultimo;
+  const { inter, contra, interError, contraError } = ultimo;
   const box = $("results");
   let html = '<div class="cols">';
   let ocultos = 0;
@@ -517,6 +678,8 @@ function render() {
         ${sin === 1 ? "combinación" : "combinaciones"} sin evidencia encontrada.</strong>
         Que no hayamos encontrado una interacción documentada no significa que no exista.</div>`;
     }
+  } else if (interError) {
+    html += cardError("No se pudieron evaluar las interacciones", interError);
   } else {
     html += '<div class="empty-state">Agregá dos o más medicamentos para cruzarlos entre sí.</div>';
   }
@@ -570,6 +733,8 @@ function render() {
              hepática, alergias declaradas, patologías por CIE-10 y, desde los 65
              años, los criterios de prescripción en el anciano.</div>`;
     }
+  } else if (contraError) {
+    html += cardError("No se pudieron evaluar las alertas contra el paciente", contraError);
   } else {
     html += '<div class="empty-state">Completá el perfil del paciente para cruzarlo contra los medicamentos.</div>';
   }
@@ -593,6 +758,27 @@ function render() {
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
+function descripcionError(r) {
+  if (r.status === 401) return "El servicio pidió una API key.";
+  if (r.status === 429) return "Demasiadas consultas seguidas.";
+  if (r.status === 503) return "El servicio no está disponible.";
+  return `El servicio respondió con un error ${r.status}.`;
+}
+
+/* Una consulta que falló NO se pinta como un resultado vacío. Es la diferencia
+   entre "no hay alertas" y "no sabemos si hay alertas", y en una receta esa
+   diferencia es todo. */
+function cardError(titulo, detalle) {
+  return `
+    <div class="error-state">
+      <strong>${escapeHtml(titulo)}</strong>
+      <p>${escapeHtml(detalle)} Los resultados de esta columna están incompletos:
+         <strong>no interpretar el vacío como ausencia de alertas.</strong></p>
+      <button type="button" class="btn-ghost" onclick="document.getElementById('check').click()">
+        Reintentar</button>
+    </div>`;
+}
+
 function cardInteraccion(i) {
   const sev = SEV[i.severity] ? i.severity : "unknown";
   // El modo de match sólo se muestra cuando la regla fue de CLASE: es menos
@@ -601,7 +787,7 @@ function cardInteraccion(i) {
   return `
     <article class="finding ${sev}">
       <div class="finding-head">
-        <span class="pair">${escapeHtml(i.drug_a)} + ${escapeHtml(i.drug_b)}</span>
+        <span class="pair">${escapeHtml(mostrar(i.drug_a))} + ${escapeHtml(mostrar(i.drug_b))}</span>
         <span class="badge ${sev}">${SEV[sev].label}</span>
         ${i.uncertain ? '<span class="tag-uncertain">inferida de texto</span>' : ""}
         ${porClase ? '<span class="tag-clase">regla de clase</span>' : ""}
@@ -611,8 +797,9 @@ function cardInteraccion(i) {
              escapeHtml(i.description)}</p>${
              i.source === "openfda"
                ? '<p class="evidence-note">Texto original del prospecto, en inglés.</p>' : ""}`
-        : `<p class="evidence sin-texto">La fuente registra el par y su gravedad,
-             pero no aporta descripción del mecanismo.</p>`}
+        : `<p class="evidence sin-texto">${sev === "unknown"
+             ? "La fuente registra el par pero no lo gradúa ni describe el mecanismo."
+             : "La fuente registra el par y su gravedad, pero no aporta descripción del mecanismo."}</p>`}
       ${i.management
         ? `<p class="manejo"><strong>Qué hacer:</strong> ${escapeHtml(i.management)}</p>`
         : ""}
@@ -628,7 +815,7 @@ function cardPaciente(c, sev) {
   return `
     <article class="finding ${sev}">
       <div class="finding-head">
-        <span class="pair">${escapeHtml(c.drug)}</span>
+        <span class="pair">${escapeHtml(mostrar(c.drug))}</span>
         <span class="badge ${sev}">${sev === "major" ? "Contraindicado" : "Precaución"}</span>
       </div>
       <p class="evidence">${escapeHtml(condEs(c.condition))}</p>
@@ -647,7 +834,7 @@ function cardGeriatrica(g) {
   return `
     <article class="finding ${cond ? "moderate" : "major"}">
       <div class="finding-head">
-        <span class="pair">${escapeHtml(g.drug)}</span>
+        <span class="pair">${escapeHtml(mostrar(g.drug))}</span>
         <span class="badge ${cond ? "moderate" : "major"}">${
           cond ? "Verificar — mayor de 65" : "Evitar — mayor de 65"}</span>
       </div>
@@ -664,7 +851,7 @@ function cardAlergia(a) {
   return `
     <article class="finding major">
       <div class="finding-head">
-        <span class="pair">${escapeHtml(a.drug)}</span>
+        <span class="pair">${escapeHtml(mostrar(a.drug))}</span>
         <span class="badge major">Alergia declarada</span>
       </div>
       <p class="evidence">El paciente declaró alergia a
@@ -683,7 +870,7 @@ $("btn-copiar").addEventListener("click", async () => {
   L.push("CONSILIO — consulta de seguridad en la prescripción");
   L.push(new Date().toLocaleString("es-UY"));
   L.push("");
-  L.push(`Medicamentos: ${selected.map((s) => s.name).join(", ") || "—"}`);
+  L.push(`Medicamentos: ${selected.map((s) => s.name_es || s.name).join(", ") || "—"}`);
   const p = perfil();
   const datos = [
     p.sexo && `sexo ${p.sexo}`, p.edad !== null && `${p.edad} años`,
@@ -698,17 +885,17 @@ $("btn-copiar").addEventListener("click", async () => {
   L.push("");
 
   (inter?.interactions || []).forEach((i) => {
-    L.push(`[${(SEV[i.severity] || SEV.unknown).label.toUpperCase()}] ${i.drug_a} + ${i.drug_b}`);
+    L.push(`[${(SEV[i.severity] || SEV.unknown).label.toUpperCase()}] ${mostrar(i.drug_a)} + ${mostrar(i.drug_b)}`);
     if (i.description) L.push(`  ${i.description}`);
     if (i.management) L.push(`  Qué hacer: ${i.management}`);
     L.push(`  Fuente: ${FUENTE[i.source] || i.source}`);
   });
   (contra?.contraindications || []).forEach((c) =>
-    L.push(`[CONTRAINDICADO] ${c.drug} — ${condEs(c.condition)}`));
+    L.push(`[CONTRAINDICADO] ${mostrar(c.drug)} — ${condEs(c.condition)}`));
   (contra?.precautions || []).forEach((c) =>
-    L.push(`[PRECAUCIÓN] ${c.drug} — ${condEs(c.condition)}`));
+    L.push(`[PRECAUCIÓN] ${mostrar(c.drug)} — ${condEs(c.condition)}`));
   (contra?.geriatric || []).forEach((g) => {
-    L.push(`[${g.condicionada ? "VERIFICAR" : "EVITAR"} >65] ${g.drug}` +
+    L.push(`[${g.condicionada ? "VERIFICAR" : "EVITAR"} >65] ${mostrar(g.drug)}` +
            (g.situacion ? ` — ${g.situacion}` : ""));
     L.push(`  Qué hacer: ${g.recomendacion}`);
   });

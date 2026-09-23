@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Consilio">
+  <!-- Dos anillos que se cruzan: la intersección ES la interacción.
+       El anillo izquierdo y el derecho son los dos medicamentos; lo que el
+       motor mira es la lente del medio, y por eso es lo único macizo. -->
+  <defs>
+    <clipPath id="lente"><circle cx="18.5" cy="24" r="12"/></clipPath>
+  </defs>
+  <circle cx="29.5" cy="24" r="12" fill="#2EA1B1" clip-path="url(#lente)"/>
+  <g fill="none" stroke="#0f766e" stroke-width="2.6">
+    <circle cx="18.5" cy="24" r="12"/>
+    <circle cx="29.5" cy="24" r="12"/>
+  </g>
+</svg>

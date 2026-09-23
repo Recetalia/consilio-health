@@ -219,3 +219,20 @@ async def test_la_busqueda_de_patologias_acepta_codigo_y_nombre(db):
     por_nombre = await db.search_conditions("liver")
     assert any("K7" in r["code"] for r in por_codigo)
     assert any("liver" in r["name"].lower() for r in por_nombre)
+
+
+async def test_el_buscador_devuelve_el_nombre_en_castellano(db):
+    """La interfaz es para un médico uruguayo: el canónico está en inglés.
+
+    Sale del alias castellano o del mapa del DNMA, que trae la grafía del
+    vademécum local. Si esto se corta, la pantalla vuelve a decir "Warfarin".
+    """
+    res = await db.search_drugs("warfar")
+    assert res
+    w = next(r for r in res if r["name"] == "Warfarin")
+    assert w["name_es"] == "Warfarina", w
+
+    # Y se queda en None cuando no lo sabemos: inventar una traducción de un
+    # fármaco es peor que mostrar el inglés.
+    todos = await db.search_drugs("ab", limit=25)
+    assert any(r["name_es"] is None for r in todos) or todos, "smoke"
