@@ -6,7 +6,7 @@
 <title>Consilio — Seguridad en la prescripción</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/ui/style.css">
 </head>
 <body>
@@ -15,66 +15,121 @@
   <div class="brand">
     <span class="mark">◈</span>
     <span class="name">Consilio</span>
+    <span class="tagline">Seguridad en la prescripción</span>
   </div>
-  <span class="tagline">Seguridad en la prescripción</span>
+  <div class="topbar-actions">
+    <button id="btn-ejemplo" class="btn-ghost" type="button"
+            title="Carga una receta de ejemplo con interacciones conocidas">
+      Probar un ejemplo
+    </button>
+    <button id="btn-ayuda" class="btn-ghost" type="button"
+            aria-expanded="false" aria-controls="ayuda">¿Qué evalúa?</button>
+  </div>
 </header>
+
+<!-- Panel de ayuda: qué se evalúa y qué no. Cerrado por defecto para no
+     estorbar a quien ya sabe, pero a un clic para quien entra por primera vez. -->
+<section id="ayuda" class="ayuda" hidden>
+  <div class="ayuda-grid">
+    <div>
+      <h6>Qué cruza</h6>
+      <ul>
+        <li><strong>Medicamento con medicamento</strong> — todas las combinaciones posibles de la receta.</li>
+        <li><strong>Medicamento con paciente</strong> — embarazo y semana de gestación, lactancia, función renal y hepática, alergias declaradas, patologías por código CIE-10, y criterios de prescripción en el anciano a partir de los 65 años.</li>
+      </ul>
+    </div>
+    <div>
+      <h6>Cómo leer la gravedad</h6>
+      <ul class="leyenda">
+        <li><span class="dot major"></span><strong>Grave</strong> — evitar la combinación o suspender uno de los dos.</li>
+        <li><span class="dot moderate"></span><strong>Moderada</strong> — valorar beneficio/riesgo y monitorizar.</li>
+        <li><span class="dot minor"></span><strong>Leve</strong> — relevancia clínica limitada.</li>
+        <li><span class="dot unknown"></span><strong>Sin graduar</strong> — la fuente registra el par pero no lo gradúa.</li>
+      </ul>
+    </div>
+    <div>
+      <h6>Qué NO hace</h6>
+      <ul>
+        <li>No controla <strong>dosis</strong> ni duración del tratamiento.</li>
+        <li>No evalúa <strong>peso, talla ni función renal por aclaramiento</strong>: la función renal entra como alterada/normal.</li>
+        <li>No detecta <strong>reactividad cruzada</strong> entre alergias: sólo el fármaco exacto declarado.</li>
+        <li>No asume simultaneidad parcial: cruza todo contra todo.</li>
+        <li><strong>No decide.</strong> Avisa y deja constancia.</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
 <main>
   <div class="cols">
 
     <section class="card">
-      <div class="card-header"><h5>Medicamentos a verificar</h5></div>
+      <div class="card-header">
+        <h5>Medicamentos a verificar</h5>
+        <span id="cnt-meds" class="counter" hidden></span>
+      </div>
       <div class="card-body">
         <p class="hint">Escribí el nombre del principio activo. Agregá dos o más para consultar interacciones entre ellos.</p>
         <ul id="chips" class="chips"></ul>
         <div class="search">
           <input id="q" type="text" autocomplete="off" spellcheck="false"
+                 aria-label="Buscar medicamento"
                  placeholder="warfarina, ibuprofeno, sildenafil…">
-          <ul id="suggestions" class="suggestions" hidden></ul>
+          <ul id="suggestions" class="suggestions" hidden role="listbox"></ul>
         </div>
       </div>
     </section>
 
     <section class="card">
-      <div class="card-header"><h5>Perfil del paciente <span class="opt">opcional</span></h5></div>
+      <div class="card-header">
+        <h5>Perfil del paciente <span class="opt">opcional</span></h5>
+        <span id="cnt-perfil" class="counter" hidden></span>
+      </div>
       <div class="card-body profile">
 
         <div class="row row-2">
-          <label for="sexo">Sexo</label>
-          <select id="sexo">
-            <option value="">—</option>
-            <option value="F">Femenino</option>
-            <option value="M">Masculino</option>
-          </select>
-
-          <label for="edad">Edad</label>
-          <input id="edad" type="number" min="0" max="130" placeholder="años">
+          <div class="field-inline">
+            <label for="sexo">Sexo</label>
+            <select id="sexo">
+              <option value="">—</option>
+              <option value="F">Femenino</option>
+              <option value="M">Masculino</option>
+            </select>
+          </div>
+          <div class="field-inline">
+            <label for="edad">Edad</label>
+            <input id="edad" type="number" min="0" max="130" placeholder="años">
+          </div>
         </div>
+        <p id="aviso-edad" class="micro-aviso" hidden>
+          A partir de los 65 se aplican los criterios de prescripción en el anciano.
+        </p>
 
         <div id="gestacion" class="row gestacion" hidden>
           <label class="check"><input id="embarazo" type="checkbox"> Embarazo</label>
           <label class="check"><input id="lactancia" type="checkbox"> Lactancia</label>
-          <select id="semanas" disabled>
+          <select id="semanas" disabled aria-label="Semana de gestación">
             <option value="">semana —</option>
           </select>
         </div>
 
-        <div class="row">
-          <label for="renal">Función renal</label>
-          <select id="renal">
-            <option value="">normal</option>
-            <option value="leve">alterada — leve</option>
-            <option value="moderada">alterada — moderada</option>
-            <option value="grave">alterada — grave</option>
-          </select>
-        </div>
-
-        <div class="row">
-          <label for="hepatica">Función hepática</label>
-          <select id="hepatica">
-            <option value="">normal</option>
-            <option value="alterada">alterada</option>
-          </select>
+        <div class="row row-2">
+          <div class="field-inline">
+            <label for="renal">Función renal</label>
+            <select id="renal">
+              <option value="">normal</option>
+              <option value="leve">alterada — leve</option>
+              <option value="moderada">alterada — moderada</option>
+              <option value="grave">alterada — grave</option>
+            </select>
+          </div>
+          <div class="field-inline">
+            <label for="hepatica">Función hepática</label>
+            <select id="hepatica">
+              <option value="">normal</option>
+              <option value="alterada">alterada</option>
+            </select>
+          </div>
         </div>
 
         <div class="field">
@@ -85,12 +140,21 @@
                    placeholder="penicilina, aspirina…">
             <ul id="suggestions-alergias" class="suggestions" hidden></ul>
           </div>
+          <p class="micro-aviso">Se compara sólo el fármaco exacto. No se infiere reactividad cruzada por clase.</p>
         </div>
 
-        <p class="nota">
-          Las patologías del paciente todavía no se pueden cargar: requieren el
-          mapeo de códigos CIE-10, que está en curso.
-        </p>
+        <div class="field">
+          <label for="qp">Patologías <span class="opt">código CIE-10 o nombre</span></label>
+          <ul id="chips-patologias" class="chips chips-patologia"></ul>
+          <div class="search">
+            <input id="qp" type="text" autocomplete="off" spellcheck="false"
+                   placeholder="N18, insuficiencia renal, K70…">
+            <ul id="suggestions-patologias" class="suggestions" hidden></ul>
+          </div>
+          <p class="micro-aviso">Se ofrecen sólo los códigos que disparan alguna alerta. Un código más
+            específico que el de la lista (N18.5 contra N18) también se resuelve.</p>
+        </div>
+
       </div>
     </section>
 
@@ -98,10 +162,46 @@
 
   <div class="actions">
     <button id="check" class="btn-primary" disabled>Consultar</button>
+    <span class="kbd-hint">o <kbd>Ctrl</kbd>+<kbd>Enter</kbd></span>
     <button id="clear" class="btn-link" hidden>Vaciar todo</button>
   </div>
 
-  <section id="results" hidden></section>
+  <section id="results" hidden>
+    <!-- Barra de filtros. Sólo aparece cuando hay resultados, y sólo muestra
+         los filtros que aplican a lo que efectivamente se encontró. -->
+    <div id="filtros" class="filtros" hidden>
+      <div class="filtro-grupo" id="f-sev-grupo">
+        <span class="filtro-label">Gravedad</span>
+        <div id="f-sev" class="pills"></div>
+      </div>
+      <div class="filtro-grupo" id="f-fuente-grupo">
+        <span class="filtro-label">Fuente</span>
+        <div id="f-fuente" class="pills"></div>
+      </div>
+      <div class="filtro-grupo">
+        <span class="filtro-label">Filtrar</span>
+        <div class="pills">
+          <label class="pill toggle"><input type="checkbox" id="f-con-texto">
+            Sólo con explicación</label>
+          <label class="pill toggle"><input type="checkbox" id="f-sin-inferidas">
+            Ocultar inferidas de texto</label>
+        </div>
+      </div>
+      <div class="filtro-grupo grow">
+        <span class="filtro-label">Buscar en resultados</span>
+        <input id="f-texto" type="search" class="filtro-texto"
+               placeholder="hemorragia, potasio, warfarina…">
+      </div>
+      <div class="filtro-grupo">
+        <button id="f-reset" class="btn-link" type="button" hidden>Quitar filtros</button>
+        <button id="btn-copiar" class="btn-ghost" type="button"
+                title="Copia el resumen al portapapeles">Copiar resumen</button>
+        <button id="btn-imprimir" class="btn-ghost" type="button">Imprimir</button>
+      </div>
+    </div>
+    <p id="filtro-estado" class="filtro-estado" hidden></p>
+    <div id="results-body"></div>
+  </section>
 </main>
 
 <footer>
@@ -115,6 +215,7 @@
 
 <div id="toast" class="toast" hidden></div>
 
+<script src="/ui/condiciones-es.js"></script>
 <script src="/ui/app.js"></script>
 </body>
 </html>

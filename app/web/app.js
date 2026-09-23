@@ -1,10 +1,13 @@
 /* Interfaz de consulta de Consilio.
    Vanilla, sin build: la app es un servicio, no un frontend, y meterle un
-   toolchain de JS para dos pantallas sería costo sin beneficio. */
+   toolchain de JS para dos pantallas sería costo sin beneficio.
+
+   `condiciones-es.js` se carga antes y aporta `condEs` y `BUSQUEDA_ES_EN`. */
 
 const $ = (id) => document.getElementById(id);
 const selected = [];           // medicamentos a recetar
 const alergias = [];           // fármacos a los que el paciente reaccionó
+const patologias = [];         // patologías CIE-10 del paciente
 
 const apiKey = () => localStorage.getItem("consilio_api_key") || "";
 const headers = () => {
@@ -28,26 +31,18 @@ const FUENTE = {
   medrt:     "MED-RT — Biblioteca Nacional de Medicina (EE.UU.)",
   recetalia: "Revisión propia de Consilio",
 };
-
-// Los descriptores de MED-RT están en inglés. Se traducen los que efectivamente
-// se pueden disparar hoy; el resto se muestra tal cual, que es preferible a una
-// traducción inventada en contexto clínico.
-const CONDICION_ES = {
-  "Pregnancy": "Embarazo",
-  "Pregnancy Trimester, First": "Embarazo — primer trimestre",
-  "Pregnancy Trimester, Second": "Embarazo — segundo trimestre",
-  "Pregnancy Trimester, Third": "Embarazo — tercer trimestre",
-  "Lactation": "Lactancia",
-  "Breast Feeding": "Lactancia",
-  "Renal Insufficiency": "Insuficiencia renal",
-  "Renal Insufficiency, Chronic": "Insuficiencia renal crónica",
-  "Kidney Diseases": "Enfermedad renal",
-  "Liver Diseases": "Enfermedad hepática",
-  "Liver Failure": "Insuficiencia hepática",
-  "Hepatic Insufficiency": "Insuficiencia hepática",
-  "Liver Cirrhosis": "Cirrosis hepática",
+const FUENTE_CORTA = {
+  aemps: "AEMPS", ddinter: "DDInter", openfda: "openFDA",
+  medrt: "MED-RT", recetalia: "Consilio",
 };
-const condEs = (n) => CONDICION_ES[n] || n;
+
+// Receta de ejemplo: cada par de acá dispara algo distinto —una grave con
+// texto, una por clase, una contra el perfil—, así se ve de qué es capaz sin
+// que el usuario tenga que adivinar qué escribir.
+const EJEMPLO = {
+  drugs: ["warfarin", "ibuprofen", "simvastatin", "clarithromycin"],
+  perfil: { edad: 72, renal: "moderada" },
+};
 
 function toast(msg, ms = 4500) {
   const t = $("toast");
@@ -57,16 +52,19 @@ function toast(msg, ms = 4500) {
   toast._t = setTimeout(() => { t.hidden = true; }, ms);
 }
 
-/* ---------------- autocompletado (reusable) ---------------- */
+/* ---------------- autocompletado (reusable) ----------------
+   `fetchFn` devuelve la lista; `toItem` la convierte en {id, name, extra}.
+   Así el mismo widget sirve para fármacos y para patologías, que vienen de
+   endpoints distintos y se muestran distinto. */
 
-function wireSearch({ input, list, target, chips, onChange }) {
+function wireSearch({ input, list, target, chips, onChange, fetchFn, renderItem, renderChip }) {
   let timer = null;
 
   input.addEventListener("input", (e) => {
     const q = e.target.value.trim();
     clearTimeout(timer);
     if (q.length < 2) { list.hidden = true; return; }
-    timer = setTimeout(() => run(q), 180);   // sin debounce, una request por tecla
+    timer = setTimeout(() => run(q), 180);
   });
 
   input.addEventListener("keydown", (e) => {
@@ -78,10 +76,11 @@ function wireSearch({ input, list, target, chips, onChange }) {
       const next = e.key === "ArrowDown"
         ? Math.min(cur + 1, items.length - 1) : Math.max(cur - 1, 0);
       items.forEach((li, i) => li.setAttribute("aria-selected", i === next));
+      items[next].scrollIntoView({ block: "nearest" });
     } else if (e.key === "Enter") {
       e.preventDefault();
       const pick = cur >= 0 ? items[cur] : items[0];
-      if (pick) add(Number(pick.dataset.id), pick.dataset.name);
+      if (pick) add(JSON.parse(pick.dataset.item));
     } else if (e.key === "Escape") {
       list.hidden = true;
     }
@@ -90,30 +89,29 @@ function wireSearch({ input, list, target, chips, onChange }) {
   async function run(q) {
     let data;
     try {
-      const r = await fetch(`/drugs/search?q=${encodeURIComponent(q)}&limit=10`,
-                            { headers: headers() });
-      if (!r.ok) { handleHttpError(r); return; }
-      data = await r.json();
-    } catch { toast("No se pudo consultar el servicio."); return; }
+      data = await fetchFn(q);
+    } catch (err) {
+      if (err !== "handled") toast("No se pudo consultar el servicio.");
+      return;
+    }
+    if (!data) return;
 
-    const fresh = (data.results || []).filter(
-      (r) => !target.some((s) => s.drug_id === r.drug_id));
+    const fresh = data.filter((r) => !target.some((s) => s.id === r.id));
     if (!fresh.length) {
       list.innerHTML = '<li class="empty">Sin resultados</li>';
       list.hidden = false;
       return;
     }
     list.innerHTML = fresh.map((r, i) => `
-      <li data-id="${r.drug_id}" data-name="${escapeAttr(r.name)}" aria-selected="${i === 0}">
-        ${escapeHtml(r.name)}${r.rxcui ? `<span class="rxcui">RxCUI ${r.rxcui}</span>` : ""}
-      </li>`).join("");
+      <li data-id="${escapeAttr(r.id)}" data-item="${escapeAttr(JSON.stringify(r))}"
+          role="option" aria-selected="${i === 0}">${renderItem(r)}</li>`).join("");
     list.querySelectorAll("li[data-id]").forEach((li) =>
-      li.addEventListener("click", () => add(Number(li.dataset.id), li.dataset.name)));
+      li.addEventListener("click", () => add(JSON.parse(li.dataset.item))));
     list.hidden = false;
   }
 
-  function add(id, name) {
-    if (!target.some((s) => s.drug_id === id)) target.push({ drug_id: id, name });
+  function add(item) {
+    if (!target.some((s) => s.id === item.id)) target.push(item);
     input.value = "";
     list.hidden = true;
     invalidateResults();
@@ -123,13 +121,13 @@ function wireSearch({ input, list, target, chips, onChange }) {
 
   function render() {
     chips.innerHTML = target.map((s) => `
-      <li>${escapeHtml(s.name)}
+      <li>${renderChip(s)}
         <button type="button" aria-label="Quitar ${escapeAttr(s.name)}"
-                data-id="${s.drug_id}">&times;</button>
+                data-id="${escapeAttr(s.id)}">&times;</button>
       </li>`).join("");
     chips.querySelectorAll("button").forEach((b) =>
       b.addEventListener("click", () => {
-        const i = target.findIndex((s) => s.drug_id === Number(b.dataset.id));
+        const i = target.findIndex((s) => String(s.id) === b.dataset.id);
         if (i >= 0) target.splice(i, 1);
         invalidateResults();
         render();
@@ -142,6 +140,42 @@ function wireSearch({ input, list, target, chips, onChange }) {
   });
 
   return { render };
+}
+
+async function buscarFarmacos(q) {
+  const r = await fetch(`/drugs/search?q=${encodeURIComponent(q)}&limit=10`,
+                        { headers: headers() });
+  if (!r.ok) { handleHttpError(r); throw "handled"; }
+  const data = await r.json();
+  return (data.results || []).map((x) => ({
+    id: x.drug_id, name: x.name, rxcui: x.rxcui,
+  }));
+}
+
+async function buscarPatologias(q) {
+  // El catálogo está en inglés. Si lo tecleado tiene un sinónimo conocido en
+  // castellano se consulta también por él: sin esto, "hepática" no encuentra
+  // "Diseases of liver", que es donde cuelgan 130 alertas.
+  const norm = q.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const alt = BUSQUEDA_ES_EN[norm] ||
+              Object.entries(BUSQUEDA_ES_EN).find(([es]) => es.startsWith(norm))?.[1];
+  const qs = alt && alt !== norm ? [q, alt] : [q];
+
+  const respuestas = await Promise.all(qs.map(async (t) => {
+    const r = await fetch(`/conditions/search?q=${encodeURIComponent(t)}&limit=10`,
+                          { headers: headers() });
+    if (!r.ok) { handleHttpError(r); throw "handled"; }
+    return (await r.json()).results || [];
+  }));
+
+  const vistos = new Set();
+  return respuestas.flat().filter((x) => {
+    if (vistos.has(x.code)) return false;
+    vistos.add(x.code);
+    return true;
+  }).map((x) => ({
+    id: x.code, name: condEs(x.name), code: x.code, alertas: x.alertas,
+  })).slice(0, 12);
 }
 
 /* ---------------- perfil ---------------- */
@@ -176,6 +210,11 @@ $("embarazo").addEventListener("change", (e) => {
   syncButtons();
 });
 
+$("edad").addEventListener("input", () => {
+  const n = Number($("edad").value);
+  $("aviso-edad").hidden = !($("edad").value && n >= 65);
+});
+
 ["edad", "lactancia", "renal", "hepatica", "semanas"].forEach((id) =>
   $(id).addEventListener("change", () => { invalidateResults(); syncButtons(); }));
 
@@ -190,22 +229,32 @@ function perfil() {
     funcion_hepatica: $("hepatica").value || null,
     alergias: alergias.map((a) => a.name),
     patologias_mesh: [],
+    patologias_icd10: patologias.map((p) => p.code),
   };
 }
 
+// La edad SÍ cuenta: desde que existen los criterios de prescripción en el
+// anciano, un perfil con sólo la edad ya genera alertas. Dejarla afuera hacía
+// que la interfaz no llamara nunca a /contraindications para un paciente de 80
+// sin ninguna otra condición cargada.
 const hayPerfil = () => {
   const p = perfil();
   return Boolean(p.embarazo || p.lactancia || p.funcion_renal ||
-                 p.funcion_hepatica || p.alergias.length);
+                 p.funcion_hepatica || p.alergias.length ||
+                 p.patologias_icd10.length || p.edad !== null);
 };
 
 /* ---------------- estado ---------------- */
 
+let ultimo = { inter: null, contra: null };   // para re-filtrar sin re-consultar
+
 function invalidateResults() {
   const box = $("results");
+  ultimo = { inter: null, contra: null };
   if (!box.hidden) {
     box.hidden = true;
-    box.innerHTML = "";
+    $("results-body").innerHTML = "";
+    $("filtros").hidden = true;
     $("sources").textContent = "";
   }
 }
@@ -214,39 +263,97 @@ function syncButtons() {
   // Con un solo medicamento no hay pares que cruzar, pero sí puede haber
   // alertas contra el paciente. Por eso alcanza con uno si hay perfil.
   $("check").disabled = selected.length < 2 && !(selected.length === 1 && hayPerfil());
-  $("clear").hidden = selected.length === 0 && alergias.length === 0;
+  $("clear").hidden = selected.length === 0 && alergias.length === 0 &&
+                      patologias.length === 0 && !hayPerfil();
+  const n = selected.length;
+  $("cnt-meds").textContent = n ? `${n} ${n === 1 ? "medicamento" : "medicamentos"}` : "";
+  $("cnt-meds").hidden = !n;
+
+  const campos = [
+    $("sexo").value, $("edad").value, $("renal").value, $("hepatica").value,
+    $("embarazo").checked ? "1" : "", $("lactancia").checked ? "1" : "",
+  ].filter(Boolean).length + alergias.length + patologias.length;
+  $("cnt-perfil").textContent = campos ? `${campos} ${campos === 1 ? "dato" : "datos"}` : "";
+  $("cnt-perfil").hidden = !campos;
 }
 
 const meds = wireSearch({
-  input: $("q"), list: $("suggestions"), target: selected,
-  chips: $("chips"), onChange: syncButtons,
+  input: $("q"), list: $("suggestions"), target: selected, chips: $("chips"),
+  onChange: syncButtons, fetchFn: buscarFarmacos,
+  renderItem: (r) => `<span class="nombre">${escapeHtml(r.name)}</span>${
+    r.rxcui ? `<span class="rxcui">RxCUI ${r.rxcui}</span>` : ""}`,
+  renderChip: (s) => escapeHtml(s.name),
 });
 const alerg = wireSearch({
   input: $("qa"), list: $("suggestions-alergias"), target: alergias,
-  chips: $("chips-alergias"), onChange: syncButtons,
+  chips: $("chips-alergias"), onChange: syncButtons, fetchFn: buscarFarmacos,
+  renderItem: (r) => `<span class="nombre">${escapeHtml(r.name)}</span>`,
+  renderChip: (s) => escapeHtml(s.name),
+});
+const patol = wireSearch({
+  input: $("qp"), list: $("suggestions-patologias"), target: patologias,
+  chips: $("chips-patologias"), onChange: syncButtons, fetchFn: buscarPatologias,
+  // Se muestra cuántas alertas cuelgan del código: es la única forma de que el
+  // médico sepa, antes de elegirlo, si ese código va a evaluar algo.
+  renderItem: (r) => `<span class="code">${escapeHtml(r.code)}</span>
+    <span class="nombre">${escapeHtml(r.name)}</span>
+    <span class="alertas">${r.alertas} ${r.alertas === 1 ? "alerta" : "alertas"}</span>`,
+  renderChip: (s) => `<span class="code">${escapeHtml(s.code)}</span> ${escapeHtml(s.name)}`,
 });
 
 $("clear").addEventListener("click", () => {
   selected.length = 0;
   alergias.length = 0;
+  patologias.length = 0;
   // También el texto tipeado: dejarlo quedaba un "penicillin" suelto en el
   // campo después de vaciar, como si siguiera cargado.
-  $("q").value = "";
-  $("qa").value = "";
-  $("suggestions").hidden = true;
-  $("suggestions-alergias").hidden = true;
+  ["q", "qa", "qp"].forEach((id) => { $(id).value = ""; });
+  ["suggestions", "suggestions-alergias", "suggestions-patologias"]
+    .forEach((id) => { $(id).hidden = true; });
   ["sexo", "edad", "renal", "hepatica"].forEach((id) => { $(id).value = ""; });
   $("embarazo").checked = false;
   $("lactancia").checked = false;
   semanasSel.value = "";
   semanasSel.disabled = true;
   $("gestacion").hidden = true;
+  $("aviso-edad").hidden = true;
+  invalidateResults();
+  meds.render(); alerg.render(); patol.render();
+});
+
+$("btn-ayuda").addEventListener("click", (e) => {
+  const abierto = $("ayuda").hidden;
+  $("ayuda").hidden = !abierto;
+  e.currentTarget.setAttribute("aria-expanded", String(abierto));
+});
+
+$("btn-ejemplo").addEventListener("click", async () => {
+  selected.length = 0;
+  for (const nombre of EJEMPLO.drugs) {
+    try {
+      const res = await buscarFarmacos(nombre);
+      const exacto = res.find((r) => r.name.toLowerCase() === nombre) || res[0];
+      if (exacto) selected.push(exacto);
+    } catch { /* si falla uno, se cargan los demás */ }
+  }
+  $("edad").value = EJEMPLO.perfil.edad;
+  $("renal").value = EJEMPLO.perfil.renal;
+  $("aviso-edad").hidden = false;
   invalidateResults();
   meds.render();
-  alerg.render();
+  syncButtons();
+  if (!selected.length) toast("No se pudo cargar el ejemplo.");
+  else $("check").focus();
 });
 
 /* ---------------- consulta ---------------- */
+
+document.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && !$("check").disabled) {
+    e.preventDefault();
+    $("check").click();
+  }
+});
 
 $("check").addEventListener("click", async () => {
   const btn = $("check");
@@ -278,22 +385,133 @@ $("check").addEventListener("click", async () => {
   btn.textContent = "Consultar";
   syncButtons();
   // Fuera del try: un error al pintar no puede disfrazarse de error de red.
-  render(inter, contra);
+  ultimo = { inter, contra };
+  construirFiltros(inter, contra);
+  render();
 });
 
-function render(inter, contra) {
+/* ---------------- filtros ----------------
+   Se arman sobre lo que efectivamente se encontró: ofrecer un filtro "Leve"
+   cuando no hay ninguna leve es prometer algo que no está. */
+
+const filtro = {
+  sev: new Set(), fuente: new Set(), conTexto: false, sinInferidas: false, texto: "",
+};
+
+function construirFiltros(inter, contra) {
+  const hallazgos = (inter?.interactions || []);
+  filtro.sev.clear(); filtro.fuente.clear();
+  filtro.conTexto = false; filtro.sinInferidas = false; filtro.texto = "";
+  $("f-con-texto").checked = false;
+  $("f-sin-inferidas").checked = false;
+  $("f-texto").value = "";
+
+  const porSev = {}, porFuente = {};
+  hallazgos.forEach((i) => {
+    const s = SEV[i.severity] ? i.severity : "unknown";
+    porSev[s] = (porSev[s] || 0) + 1;
+    porFuente[i.source] = (porFuente[i.source] || 0) + 1;
+  });
+
+  $("f-sev").innerHTML = Object.keys(SEV)
+    .filter((s) => porSev[s])
+    .map((s) => `<button type="button" class="pill" data-sev="${s}">
+       <span class="dot ${s}"></span>${SEV[s].label} <span class="n">${porSev[s]}</span>
+     </button>`).join("");
+  $("f-sev-grupo").hidden = !$("f-sev").innerHTML;
+
+  $("f-fuente").innerHTML = Object.keys(porFuente).sort()
+    .map((f) => `<button type="button" class="pill" data-fuente="${f}"
+       title="${escapeAttr(FUENTE[f] || f)}">${FUENTE_CORTA[f] || f}
+       <span class="n">${porFuente[f]}</span></button>`).join("");
+  $("f-fuente-grupo").hidden = !$("f-fuente").innerHTML;
+
+  $("f-sev").querySelectorAll("[data-sev]").forEach((b) =>
+    b.addEventListener("click", () => toggle(filtro.sev, b.dataset.sev, b)));
+  $("f-fuente").querySelectorAll("[data-fuente]").forEach((b) =>
+    b.addEventListener("click", () => toggle(filtro.fuente, b.dataset.fuente, b)));
+
+  const hayAlgo = hallazgos.length || (contra && (
+    (contra.contraindications || []).length + (contra.precautions || []).length +
+    (contra.geriatric || []).length + (contra.allergies || []).length));
+  $("filtros").hidden = !hayAlgo;
+}
+
+function toggle(set, valor, btn) {
+  if (set.has(valor)) set.delete(valor); else set.add(valor);
+  btn.classList.toggle("on", set.has(valor));
+  render();
+}
+
+["f-con-texto", "f-sin-inferidas"].forEach((id) =>
+  $(id).addEventListener("change", (e) => {
+    filtro[id === "f-con-texto" ? "conTexto" : "sinInferidas"] = e.target.checked;
+    e.target.closest(".pill").classList.toggle("on", e.target.checked);
+    render();
+  }));
+
+let tTexto = null;
+$("f-texto").addEventListener("input", (e) => {
+  clearTimeout(tTexto);
+  tTexto = setTimeout(() => { filtro.texto = e.target.value.trim().toLowerCase(); render(); }, 160);
+});
+
+$("f-reset").addEventListener("click", () => {
+  filtro.sev.clear(); filtro.fuente.clear();
+  filtro.conTexto = filtro.sinInferidas = false; filtro.texto = "";
+  $("f-con-texto").checked = $("f-sin-inferidas").checked = false;
+  $("f-texto").value = "";
+  document.querySelectorAll(".pill.on").forEach((p) => p.classList.remove("on"));
+  render();
+});
+
+const hayFiltro = () => filtro.sev.size || filtro.fuente.size ||
+                        filtro.conTexto || filtro.sinInferidas || filtro.texto;
+
+function pasaFiltro(i) {
+  const s = SEV[i.severity] ? i.severity : "unknown";
+  if (filtro.sev.size && !filtro.sev.has(s)) return false;
+  if (filtro.fuente.size && !filtro.fuente.has(i.source)) return false;
+  if (filtro.conTexto && !i.description && !i.management) return false;
+  if (filtro.sinInferidas && i.uncertain) return false;
+  if (filtro.texto) {
+    const blob = [i.drug_a, i.drug_b, i.description, i.management]
+      .filter(Boolean).join(" ").toLowerCase();
+    if (!blob.includes(filtro.texto)) return false;
+  }
+  return true;
+}
+
+function pasaFiltroPaciente(campos) {
+  // Los hallazgos contra el paciente no tienen gravedad propia ni fuente
+  // comparable, así que sólo les aplica el filtro de texto. Si se les
+  // aplicaran los demás desaparecerían sin motivo visible.
+  if (!filtro.texto) return true;
+  return campos.filter(Boolean).join(" ").toLowerCase().includes(filtro.texto);
+}
+
+/* ---------------- pintado ---------------- */
+
+function render() {
+  const { inter, contra } = ultimo;
   const box = $("results");
   let html = '<div class="cols">';
+  let ocultos = 0;
 
   /* --- columna 1: medicamento <-> medicamento --- */
   html += '<div class="col"><p class="col-title">Alertas medicamento — medicamento</p>';
   if (inter) {
-    const found = (inter.interactions || []).slice()
+    const todos = (inter.interactions || []).slice()
       .sort((a, b) => (SEV[a.severity]?.rank ?? 9) - (SEV[b.severity]?.rank ?? 9));
+    const found = todos.filter(pasaFiltro);
+    ocultos += todos.length - found.length;
     const pares = selected.length * (selected.length - 1) / 2;
     html += found.map(cardInteraccion).join("");
-    const sin = pares - found.length;
-    if (sin > 0) {
+    if (!found.length && todos.length) {
+      html += '<div class="empty-state">Ningún hallazgo coincide con los filtros.</div>';
+    }
+    const sin = pares - todos.length;
+    if (sin > 0 && !hayFiltro()) {
       // Nunca "es seguro": decimos que no encontramos evidencia.
       html += `<div class="empty-state"><strong>${sin}
         ${sin === 1 ? "combinación" : "combinaciones"} sin evidencia encontrada.</strong>
@@ -310,39 +528,60 @@ function render(inter, contra) {
     (contra.profile_warnings || []).forEach((w) => {
       html += `<div class="aviso-perfil">${escapeHtml(w)}</div>`;
     });
-    const al = (contra.allergies || []).filter((a) => a.match === "exact");
+    const al = (contra.allergies || []).filter((a) => a.match === "exact")
+      .filter((a) => pasaFiltroPaciente([a.drug, a.declared_as]));
     const noId = (contra.allergies || []).filter((a) => a.match === "unresolved");
+    const ci = (contra.contraindications || [])
+      .filter((c) => pasaFiltroPaciente([c.drug, condEs(c.condition)]));
+    const pre = (contra.precautions || [])
+      .filter((c) => pasaFiltroPaciente([c.drug, condEs(c.condition)]));
+    const geri = (contra.geriatric || [])
+      .filter((g) => pasaFiltroPaciente([g.drug, g.situacion, g.recomendacion]));
+
+    ocultos += (contra.allergies || []).filter((a) => a.match === "exact").length - al.length;
+    ocultos += (contra.contraindications || []).length - ci.length;
+    ocultos += (contra.precautions || []).length - pre.length;
+    ocultos += (contra.geriatric || []).length - geri.length;
+
     html += al.map(cardAlergia).join("");
-    html += (contra.contraindications || []).map((c) => cardPaciente(c, "major")).join("");
-    html += (contra.precautions || []).map((c) => cardPaciente(c, "moderate")).join("");
-    html += (contra.geriatric || []).map(cardGeriatrica).join("");
+    html += ci.map((c) => cardPaciente(c, "major")).join("");
+    html += pre.map((c) => cardPaciente(c, "moderate")).join("");
+    html += geri.map(cardGeriatrica).join("");
 
     // Lo que no se pudo evaluar se dice, no se omite.
-    noId.forEach((a) => {
-      html += `<div class="empty-state">No se pudo identificar
-        <strong>${escapeHtml(a.declared_as)}</strong> como medicamento, así que esa
-        alergia no se tuvo en cuenta.</div>`;
-    });
-    (contra.not_evaluated || []).forEach((n) => {
-      html += `<div class="empty-state"><strong>${escapeHtml(n.drug)}</strong>
-        no se pudo evaluar: ${escapeHtml(n.reason)}.</div>`;
-    });
+    if (!hayFiltro()) {
+      noId.forEach((a) => {
+        html += `<div class="empty-state">No se pudo identificar
+          <strong>${escapeHtml(a.declared_as)}</strong> como medicamento, así que esa
+          alergia no se tuvo en cuenta.</div>`;
+      });
+      (contra.not_evaluated || []).forEach((n) => {
+        html += `<div class="empty-state"><strong>${escapeHtml(n.drug || n.icd10)}</strong>
+          no se pudo evaluar: ${escapeHtml(n.reason)}.</div>`;
+      });
+    }
 
-    const total = al.length + (contra.contraindications || []).length +
-                  (contra.precautions || []).length + (contra.geriatric || []).length;
+    const total = al.length + ci.length + pre.length + geri.length;
     if (total === 0 && !noId.length) {
-      html += `<div class="empty-state"><strong>Sin alertas para este perfil.</strong>
-        Hoy se evalúan embarazo, lactancia, función renal y hepática, las
-        alergias declaradas y, a partir de los 65 años, los criterios de
-        prescripción en el anciano.</div>`;
+      html += hayFiltro()
+        ? '<div class="empty-state">Ningún hallazgo coincide con los filtros.</div>'
+        : `<div class="empty-state"><strong>Sin alertas para este perfil.</strong>
+             Se evalúan embarazo y semana de gestación, lactancia, función renal y
+             hepática, alergias declaradas, patologías por CIE-10 y, desde los 65
+             años, los criterios de prescripción en el anciano.</div>`;
     }
   } else {
     html += '<div class="empty-state">Completá el perfil del paciente para cruzarlo contra los medicamentos.</div>';
   }
   html += "</div></div>";
 
-  box.innerHTML = html;
+  $("results-body").innerHTML = html;
   box.hidden = false;
+
+  $("f-reset").hidden = !hayFiltro();
+  $("filtro-estado").hidden = !ocultos;
+  $("filtro-estado").textContent = ocultos
+    ? `${ocultos} ${ocultos === 1 ? "hallazgo oculto" : "hallazgos ocultos"} por los filtros.` : "";
 
   const cov = (inter && inter.coverage_summary) || {};
   const partes = Object.entries(cov).filter(([k, n]) => n > 0 && k !== "unknown")
@@ -356,12 +595,16 @@ function render(inter, contra) {
 
 function cardInteraccion(i) {
   const sev = SEV[i.severity] ? i.severity : "unknown";
+  // El modo de match sólo se muestra cuando la regla fue de CLASE: es menos
+  // específica que una de molécula y el médico tiene derecho a saberlo.
+  const porClase = (i.text_match || "").includes("clase");
   return `
     <article class="finding ${sev}">
       <div class="finding-head">
         <span class="pair">${escapeHtml(i.drug_a)} + ${escapeHtml(i.drug_b)}</span>
         <span class="badge ${sev}">${SEV[sev].label}</span>
         ${i.uncertain ? '<span class="tag-uncertain">inferida de texto</span>' : ""}
+        ${porClase ? '<span class="tag-clase">regla de clase</span>' : ""}
       </div>
       ${i.description
         ? `<p class="evidence"${i.source === "openfda" ? ' lang="en"' : ""}>${
@@ -429,6 +672,57 @@ function cardAlergia(a) {
       <p class="meta">Perfil del paciente</p>
     </article>`;
 }
+
+/* ---------------- exportar ---------------- */
+
+$("btn-imprimir").addEventListener("click", () => window.print());
+
+$("btn-copiar").addEventListener("click", async () => {
+  const { inter, contra } = ultimo;
+  const L = [];
+  L.push("CONSILIO — consulta de seguridad en la prescripción");
+  L.push(new Date().toLocaleString("es-UY"));
+  L.push("");
+  L.push(`Medicamentos: ${selected.map((s) => s.name).join(", ") || "—"}`);
+  const p = perfil();
+  const datos = [
+    p.sexo && `sexo ${p.sexo}`, p.edad !== null && `${p.edad} años`,
+    p.embarazo && (p.semanas_gestacion ? `embarazo semana ${p.semanas_gestacion}` : "embarazo"),
+    p.lactancia && "lactancia",
+    p.funcion_renal && `función renal ${p.funcion_renal}`,
+    p.funcion_hepatica && `función hepática ${p.funcion_hepatica}`,
+    p.alergias.length && `alergias: ${p.alergias.join(", ")}`,
+    patologias.length && `patologías: ${patologias.map((x) => `${x.code} ${x.name}`).join("; ")}`,
+  ].filter(Boolean);
+  L.push(`Paciente: ${datos.join(" · ") || "sin datos"}`);
+  L.push("");
+
+  (inter?.interactions || []).forEach((i) => {
+    L.push(`[${(SEV[i.severity] || SEV.unknown).label.toUpperCase()}] ${i.drug_a} + ${i.drug_b}`);
+    if (i.description) L.push(`  ${i.description}`);
+    if (i.management) L.push(`  Qué hacer: ${i.management}`);
+    L.push(`  Fuente: ${FUENTE[i.source] || i.source}`);
+  });
+  (contra?.contraindications || []).forEach((c) =>
+    L.push(`[CONTRAINDICADO] ${c.drug} — ${condEs(c.condition)}`));
+  (contra?.precautions || []).forEach((c) =>
+    L.push(`[PRECAUCIÓN] ${c.drug} — ${condEs(c.condition)}`));
+  (contra?.geriatric || []).forEach((g) => {
+    L.push(`[${g.condicionada ? "VERIFICAR" : "EVITAR"} >65] ${g.drug}` +
+           (g.situacion ? ` — ${g.situacion}` : ""));
+    L.push(`  Qué hacer: ${g.recomendacion}`);
+  });
+  L.push("");
+  L.push("Información generada automáticamente a partir de fuentes públicas.");
+  L.push("No sustituye el criterio clínico.");
+
+  try {
+    await navigator.clipboard.writeText(L.join("\n"));
+    toast("Resumen copiado al portapapeles.");
+  } catch {
+    toast("El navegador no permitió copiar. Usá Imprimir.");
+  }
+});
 
 /* ---------------- utilidades ---------------- */
 

@@ -1,32 +1,42 @@
-/* Tokens tomados de los frontends de Recetalia (medics/farmacias):
-   Roboto, fondo #f5f8fa, cards blancas con sombra suave, botón pill #7ad6cb,
-   teal de marca #2EA1B1. La idea es que un médico que usa Recetalia no sienta
-   que cambió de producto. */
+/* Consilio — interfaz de consulta.
+
+   Los tokens salen de los frontends de Recetalia para que Consilio no se vea
+   como una aplicación ajena metida adentro: fondo `#f5f8fa`, tarjetas blancas
+   con borde `#e2e8f0`, teal corporativo `#2EA1B1`, CTA `#0f766e`, Roboto para
+   el cuerpo y Hind para encabezados y tablas, radios de 6/8px y la sombra
+   suave del dashboard de gestión. */
 
 :root {
+  /* --- Recetalia --- */
   --bg:            #f5f8fa;
-  --surface:       #ffffff;
-  --surface-alt:   #f8f9fa;
+  --card:          #ffffff;
   --border:        #e2e8f0;
-  --border-strong: #dee2e6;
-  --text:          #555555;
-  --text-soft:     #616161;
-  --text-strong:   #212832;
-  --brand:         #2ea1b1;
-  --action:        #7ad6cb;
-  --action-hover:  #5db3a9;
-  --link:          #039be5;
+  --border-soft:   #eef2f7;
+  --teal:          #2EA1B1;   /* acento corporativo */
+  --cta:           #0f766e;   /* botón primario del dashboard */
+  --cta-hover:     #0c5f59;
+  --link:          #3498db;
+  --text:          #334155;
+  --text-strong:   #0f172a;
+  --text-soft:     #64748b;
+  --text-faint:    #94a3b8;
+  --hover-row:     #e9ecef;
 
-  --major:    #d9534f;
-  --major-bg: #d9534f14;
-  --moderate: #f0ad4e;
-  --moderate-bg: #f0b30a26;
-  --minor:    #18cc6c;
-  --minor-bg: #00800018;
-  --unknown:  #7c7c7c;
-  --unknown-bg: #7c7c7c14;
+  /* --- estado --- */
+  --major:         #c0392b;
+  --major-bg:      #fdf2f1;
+  --moderate:      #d98b06;
+  --moderate-bg:   #fdf8ec;
+  --minor:         #0ea5e9;
+  --minor-bg:      #eff8fd;
+  --unknown:       #94a3b8;
+  --unknown-bg:    #f6f8fa;
+  --ok:            #22a06b;
 
-  --shadow: 0 4px 8px rgba(0, 0, 0, .1);
+  --radius:        6px;
+  --radius-lg:     8px;
+  --shadow:        0 1px 3px rgba(16,24,40,.05), 0 1px 2px rgba(16,24,40,.03);
+  --shadow-pop:    0 4px 14px rgba(16,24,40,.12);
 }
 
 * { box-sizing: border-box; }
@@ -35,273 +45,335 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 15px;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
   line-height: 1.5;
 }
 
-/* --- topbar --- */
+h5, h6, .col-title, .brand .name { font-family: Hind, Roboto, sans-serif; }
+
+/* ---------------- barra superior ---------------- */
+
 .topbar {
-  height: 56px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 0 24px;
-  position: sticky;
-  top: 0;
-  z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; height: 54px; padding: 0 20px;
+  background: var(--card); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 30;
 }
-.brand { display: flex; align-items: baseline; gap: 8px; }
-.brand .mark { color: var(--brand); font-size: 20px; line-height: 1; }
+.brand { display: flex; align-items: baseline; gap: 9px; }
+.brand .mark { color: var(--teal); font-size: 19px; line-height: 1; }
 .brand .name {
-  font-size: 22px; font-weight: 500; color: var(--text-strong);
-  letter-spacing: .04em;
+  font-size: 19px; font-weight: 700; color: var(--text-strong);
+  letter-spacing: -.01em;
 }
-.tagline {
-  font-size: 13px; color: var(--text-soft); font-weight: 300;
-  border-left: 1px solid var(--border); padding-left: 16px;
+.brand .tagline {
+  font-size: 12px; color: var(--text-faint);
+  padding-left: 10px; margin-left: 2px; border-left: 1px solid var(--border);
 }
-@media (max-width: 560px) { .tagline { display: none; } }
+.topbar-actions { display: flex; gap: 8px; }
 
-main { max-width: 760px; margin: 28px auto 40px; padding: 0 16px; }
+/* ---------------- ayuda ---------------- */
 
-/* --- card --- */
+.ayuda {
+  background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 18px 20px;
+}
+.ayuda-grid {
+  max-width: 1180px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 22px;
+}
+.ayuda h6 {
+  margin: 0 0 8px; font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .04em; color: var(--text-soft);
+}
+.ayuda ul { margin: 0; padding-left: 17px; font-size: 13px; }
+.ayuda li { margin-bottom: 5px; }
+.ayuda .leyenda { list-style: none; padding-left: 0; }
+.ayuda .leyenda li { display: flex; align-items: baseline; gap: 8px; }
+.dot {
+  width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px;
+  display: inline-block; position: relative; top: -1px;
+}
+.dot.major { background: var(--major); }
+.dot.moderate { background: var(--moderate); }
+.dot.minor { background: var(--minor); }
+.dot.unknown { background: var(--unknown); }
+
+/* ---------------- estructura ---------------- */
+
+main { max-width: 1180px; margin: 0 auto; padding: 20px; }
+
+.cols {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 16px; align-items: start;
+}
+
 .card {
-  background: var(--surface);
-  border-radius: 6px;
-  box-shadow: var(--shadow);
-  margin-bottom: 20px;
-  /* Sin overflow:hidden: recortaba el desplegable de sugerencias, que es
-     absolute y se sale de la tarjeta — la segunda opción quedaba cortada al
-     ras del borde. El redondeo se mantiene en el header. */
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow);
 }
-.card-header { border-radius: 6px 6px 0 0; }
 .card-header {
-  background: var(--surface-alt);
-  border-bottom: 1px solid var(--border-strong);
-  padding: 12px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 12px 16px; border-bottom: 1px solid var(--border-soft);
 }
-.card-header h5 { margin: 0; font-size: 16px; font-weight: 500; color: var(--text-strong); }
-.card-body { padding: 20px; }
-.hint { margin: 0 0 14px; font-size: 13px; color: var(--text-soft); }
-
-/* --- buscador --- */
-.search { position: relative; }
-.search input {
-  width: 100%;
-  height: 46px;
-  padding: 0 18px;
-  font: inherit;
-  color: var(--text);
-  background: var(--surface);
-  border: 1px solid #e6e6e6;
-  border-radius: 24px;   /* los inputs PrimeNG de Recetalia son así de redondos */
-  outline: none;
-  transition: border-color .15s;
+.card-header h5 {
+  margin: 0; font-size: 14px; font-weight: 600; color: var(--text-strong);
 }
-.search input:focus { border-color: var(--action); }
-
-/* En flujo, no flotando. Como absolute tapaba el botón Consultar —con tres
-   sugerencias lo cubría entero— y al sacarle el overflow:hidden a la tarjeta
-   además desbordaba hacia afuera. En flujo empuja el botón hacia abajo, que
-   siempre queda visible, y para un formulario de un solo campo no molesta. */
-.suggestions {
-  list-style: none; margin: 6px 0 0; padding: 4px 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  max-height: 280px; overflow-y: auto;
+.card-header .opt {
+  font-size: 11px; font-weight: 400; color: var(--text-faint);
+  text-transform: none; letter-spacing: 0;
 }
-.suggestions li { padding: 9px 18px; cursor: pointer; font-size: 14px; }
-.suggestions li:hover, .suggestions li[aria-selected="true"] { background: #f1f1f1; }
-.suggestions .rxcui { float: right; color: #aaa; font-size: 11px; }
-.suggestions .empty { color: var(--text-soft); cursor: default; font-style: italic; }
-.suggestions .empty:hover { background: transparent; }
+.counter {
+  font-size: 11px; font-weight: 600; color: var(--cta);
+  background: #e7f3f1; border-radius: 10px; padding: 2px 9px;
+}
+.card-body { padding: 14px 16px 16px; }
 
-/* --- chips --- */
-.chips { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.hint { margin: 0 0 11px; font-size: 12.5px; color: var(--text-soft); }
+.micro-aviso {
+  margin: 6px 0 0; font-size: 11.5px; color: var(--text-faint); line-height: 1.45;
+}
+
+/* ---------------- formularios ---------------- */
+
+label {
+  display: block; font-size: 10px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--text-soft); margin-bottom: 4px;
+}
+label.check {
+  display: inline-flex; align-items: center; gap: 6px; margin: 0;
+  font-size: 13px; text-transform: none; letter-spacing: 0; color: var(--text);
+  font-weight: 400; cursor: pointer;
+}
+input[type="text"], input[type="number"], input[type="search"], select {
+  width: 100%; padding: 8px 11px; font: inherit; font-size: 13.5px;
+  color: var(--text); background: var(--card);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  outline: none; transition: border-color .12s, box-shadow .12s;
+}
+input:focus, select:focus {
+  border-color: var(--teal); box-shadow: 0 0 0 3px rgba(46,161,177,.14);
+}
+input::placeholder { color: #b6c0cc; }
+
+.row { margin-bottom: 12px; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field-inline { min-width: 0; }
+.field { margin-bottom: 12px; }
+.gestacion {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 9px 11px; background: #fbfcfd; border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+}
+.gestacion select { width: auto; min-width: 118px; padding: 5px 9px; font-size: 12.5px; }
+/* `[hidden]` pierde por especificidad contra `.row{display:flex}`: sin esto el
+   bloque de gestación queda siempre visible. */
+[hidden] { display: none !important; }
+
+/* ---------------- chips ---------------- */
+
+.chips { list-style: none; margin: 0 0 9px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .chips:empty { margin: 0; }
 .chips li {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: #eef6f5; color: #2a6e69;
-  border: 1px solid #cfe8e4;
-  border-radius: 20px;
-  padding: 5px 8px 5px 14px;
-  font-size: 14px;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #eaf6f8; color: #14606b; border: 1px solid #cde9ee;
+  border-radius: 14px; padding: 3px 5px 3px 11px; font-size: 12.5px;
 }
-.chips button {
-  border: none; background: transparent; cursor: pointer;
-  color: #6aa8a2; font-size: 16px; line-height: 1; padding: 0 4px;
+.chips li button {
+  border: 0; background: transparent; color: #4e8b95; cursor: pointer;
+  font-size: 15px; line-height: 1; padding: 0 4px; border-radius: 50%;
 }
-.chips button:hover { color: var(--major); }
+.chips li button:hover { color: var(--major); background: rgba(192,57,43,.09); }
+.chips-alergia li { background: #fdf1f0; color: #8d2f24; border-color: #f6d9d5; }
+.chips-alergia li button { color: #b07068; }
+.chips-patologia li { background: #f1f5fd; color: #2c4a80; border-color: #d9e3f6; }
+.chips-patologia li button { color: #6d85b5; }
+.chips li .code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px; opacity: .72;
+}
 
-/* min-height deja lugar para que el desplegable no tape el botón. */
-.actions { margin-top: 20px; min-height: 44px; display: flex; align-items: center; gap: 14px; }
+/* ---------------- autocompletado ---------------- */
+
+.search { position: relative; }
+.suggestions {
+  list-style: none; margin: 4px 0 0; padding: 4px;
+  position: absolute; left: 0; right: 0; z-index: 20; max-height: 286px;
+  overflow-y: auto; background: var(--card);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow-pop);
+}
+.suggestions li {
+  padding: 7px 10px; border-radius: 4px; cursor: pointer; font-size: 13.5px;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+}
+.suggestions li[aria-selected="true"], .suggestions li:hover { background: var(--hover-row); }
+.suggestions li.empty { color: var(--text-faint); cursor: default; font-style: italic; }
+.suggestions li.empty:hover { background: transparent; }
+.suggestions .rxcui, .suggestions .alertas {
+  font-size: 10.5px; color: var(--text-faint); white-space: nowrap;
+}
+.suggestions .code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px; font-weight: 600; color: var(--teal);
+  min-width: 62px; flex: 0 0 auto;
+}
+.suggestions .nombre { flex: 1 1 auto; min-width: 0; }
+
+/* ---------------- botones ---------------- */
+
+.actions { display: flex; align-items: center; gap: 12px; margin: 18px 0 4px; }
 .btn-primary {
-  background: var(--action); border: 1px solid var(--action); color: #fff;
-  border-radius: 25px; padding: 10px 26px;
-  font: 500 15px Roboto, sans-serif; cursor: pointer;
-  transition: background .15s;
+  background: var(--cta); border: 1px solid var(--cta); color: #fff;
+  border-radius: var(--radius); padding: 9px 22px;
+  font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: background .12s;
 }
-.btn-primary:hover:not(:disabled) { background: var(--action-hover); border-color: var(--action-hover); }
-.btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary:hover:not(:disabled) { background: var(--cta-hover); border-color: var(--cta-hover); }
+.btn-primary:disabled { background: #cfd8e3; border-color: #cfd8e3; cursor: not-allowed; }
+.btn-ghost {
+  background: var(--card); border: 1px solid #cfd8e3; color: var(--text);
+  border-radius: var(--radius); padding: 5px 12px;
+  font: inherit; font-size: 12.5px; font-weight: 500; cursor: pointer;
+}
+.btn-ghost:hover { background: var(--hover-row); }
+.btn-ghost[aria-expanded="true"] { background: #e7f3f1; border-color: var(--cta); color: var(--cta); }
 .btn-link {
-  background: none; border: none; color: var(--link);
-  font: 400 14px Roboto, sans-serif; cursor: pointer; padding: 0;
+  background: none; border: 0; color: var(--link); cursor: pointer;
+  font: inherit; font-size: 13px; padding: 4px 2px; text-decoration: underline;
 }
-.btn-link:hover { text-decoration: underline; }
+.kbd-hint { font-size: 11.5px; color: var(--text-faint); }
+kbd {
+  font-family: ui-monospace, Menlo, monospace; font-size: 10.5px;
+  background: #eef2f7; border: 1px solid var(--border); border-bottom-width: 2px;
+  border-radius: 3px; padding: 1px 4px; color: var(--text-soft);
+}
 
-/* --- resultados --- */
-.result-group { margin-bottom: 20px; }
-.group-title {
-  font-size: 12px; font-weight: 500; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--text-soft);
-  margin: 0 0 10px 2px;
+/* ---------------- filtros ---------------- */
+
+.filtros {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow);
+  padding: 12px 16px; margin: 20px 0 12px;
 }
+.filtro-grupo { display: flex; flex-direction: column; gap: 6px; }
+.filtro-grupo.grow { flex: 1 1 200px; min-width: 170px; }
+.filtro-grupo:last-child { flex-direction: row; align-items: center; gap: 8px; }
+.filtro-label {
+  font-size: 10px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--text-soft);
+}
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; margin: 0;
+  border: 1px solid #cfd8e3; background: var(--card); border-radius: var(--radius);
+  padding: 4px 10px; font-size: 12px; font-weight: 500; color: var(--text);
+  text-transform: none; letter-spacing: 0; cursor: pointer; user-select: none;
+  transition: background .12s, border-color .12s;
+}
+.pill:hover { background: var(--hover-row); }
+.pill input { display: none; }
+.pill.on { background: var(--cta); border-color: var(--cta); color: #fff; }
+.pill.on .n { color: rgba(255,255,255,.8); }
+.pill .n { font-size: 11px; color: var(--text-faint); font-weight: 600; }
+.pill.toggle.on { background: var(--cta); border-color: var(--cta); color: #fff; }
+.filtro-texto { padding: 5px 10px; font-size: 12.5px; }
+.filtro-estado {
+  margin: 0 0 12px; font-size: 12.5px; color: var(--text-soft);
+}
+
+/* ---------------- resultados ---------------- */
+
+#results { margin-top: 4px; }
+.col-title {
+  margin: 0 0 10px; font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--text-soft);
+}
+.col { min-width: 0; }
+
 .finding {
-  background: var(--surface);
-  border-radius: 6px;
-  box-shadow: var(--shadow);
-  border-left: 4px solid var(--unknown);
-  padding: 14px 18px;
-  margin-bottom: 10px;
+  background: var(--card); border: 1px solid var(--border);
+  border-left: 3px solid var(--unknown);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 12px 14px; margin-bottom: 10px;
 }
-.finding.major    { border-left-color: var(--major);    background: var(--major-bg); }
-.finding.moderate { border-left-color: var(--moderate); background: var(--moderate-bg); }
-.finding.minor    { border-left-color: var(--minor);    background: var(--minor-bg); }
-.finding.unknown  { border-left-color: var(--unknown);  background: var(--unknown-bg); }
+.finding.major    { border-left-color: var(--major); }
+.finding.moderate { border-left-color: var(--moderate); }
+.finding.minor    { border-left-color: var(--minor); }
 
-.finding-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.pair { font-weight: 500; color: var(--text-strong); font-size: 15px; }
+.finding-head {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 2px;
+}
+.pair { font-size: 14px; font-weight: 600; color: var(--text-strong); }
 .badge {
-  font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .05em;
-  padding: 2px 9px; border-radius: 11px; color: #fff;
+  font-size: 10.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .04em; color: #fff; border-radius: 10px; padding: 2px 9px;
+  background: var(--unknown);
 }
 .badge.major    { background: var(--major); }
 .badge.moderate { background: var(--moderate); }
 .badge.minor    { background: var(--minor); }
 .badge.unknown  { background: var(--unknown); }
 
-.evidence { margin: 9px 0 0; font-size: 14px; color: #4a4a4a; }
-.evidence.sin-texto { color: #8a8a8a; font-style: italic; }
-.evidence-note { margin: 3px 0 0; font-size: 11px; color: #9aa0a6; }
+.evidence { margin: 9px 0 0; font-size: 13.5px; color: #4a4a4a; }
+.evidence.sin-texto { color: var(--text-faint); font-style: italic; }
+.evidence-note { margin: 3px 0 0; font-size: 11px; color: var(--text-faint); }
 /* El manejo clínico es lo accionable del hallazgo: se separa del mecanismo
    con un filete para que se lea aunque el médico no lea el resto. */
 .manejo {
   margin: 9px 0 0; padding: 7px 10px; font-size: 13px; color: #3c4043;
   background: #f6f8fa; border-left: 3px solid #d0d7de; border-radius: 3px;
 }
-.meta { margin: 9px 0 0; font-size: 12px; color: var(--text-soft); }
-.meta .dot { margin: 0 6px; }
+.meta { margin: 9px 0 0; font-size: 11.5px; color: var(--text-faint); }
 .tag-uncertain {
-  display: inline-block; font-size: 11px; color: #8a6d3b;
+  display: inline-block; font-size: 10.5px; color: #8a6d3b;
   background: #fcf3d8; border: 1px solid #f3e3b3;
+  border-radius: 3px; padding: 1px 6px;
+}
+.tag-clase {
+  display: inline-block; font-size: 10.5px; color: #2c4a80;
+  background: #f1f5fd; border: 1px solid #d9e3f6;
   border-radius: 3px; padding: 1px 6px;
 }
 
 .empty-state {
-  background: var(--surface); border-radius: 6px; box-shadow: var(--shadow);
-  padding: 18px; font-size: 14px; color: var(--text-soft);
+  background: var(--card); border: 1px dashed var(--border);
+  border-radius: var(--radius); padding: 12px 14px; margin-bottom: 10px;
+  font-size: 13px; color: var(--text-soft);
 }
-.empty-state strong { color: var(--text-strong); font-weight: 500; }
-
-/* --- footer --- */
-footer {
-  max-width: 760px; margin: 0 auto; padding: 0 16px 48px;
-  font-size: 12px; color: var(--text-soft);
-}
-.disclaimer { border-top: 1px solid var(--border); padding-top: 16px; margin: 0; }
-.sources { margin: 8px 0 0; color: #9aa0a6; font-size: 11px; }
-
-/* --- toast --- */
-.toast {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-  background: var(--text-strong); color: #fff;
-  padding: 11px 20px; border-radius: 6px; font-size: 14px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.25); z-index: 50;
-}
-
-/* --- dos columnas: formulario arriba, resultados abajo --- */
-.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
-@media (max-width: 800px) { .cols { grid-template-columns: 1fr; } }
-
-main { max-width: 1000px; }
-footer { max-width: 1000px; }
-
-.col-title {
-  font-size: 12px; font-weight: 500; letter-spacing: .06em;
-  text-transform: uppercase; color: var(--text-soft);
-  margin: 0 0 10px 2px;
-}
-.card-header .opt {
-  font-size: 11px; font-weight: 400; color: var(--text-soft);
-  text-transform: uppercase; letter-spacing: .05em; margin-left: 8px;
-}
-
-/* --- perfil --- */
-.profile .row {
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;
-}
-.profile label { font-size: 13px; color: var(--text-soft); min-width: 96px; }
-.profile select, .profile input[type="number"] {
-  font: inherit; font-size: 14px; color: var(--text);
-  height: 36px; padding: 0 10px;
-  border: 1px solid #e6e6e6; border-radius: 18px; background: var(--surface);
-  outline: none;
-}
-.profile input[type="number"] { width: 90px; }
-.profile select:focus, .profile input:focus { border-color: var(--action); }
-.profile .check {
-  display: inline-flex; align-items: center; gap: 6px;
-  min-width: 0; color: var(--text); font-size: 14px; cursor: pointer;
-}
-.profile .check input { width: 16px; height: 16px; accent-color: var(--action); }
-.profile .gestacion {
-  background: #f7fbfb; border: 1px solid #e3f0ee; border-radius: 8px;
-  padding: 10px 12px;
-}
-.profile .field { margin-top: 4px; }
-.profile .field > label { display: block; margin-bottom: 8px; }
-.chips-alergia li { background: #fdeeee; color: #8a3b3b; border-color: #f3d4d4; }
-.chips-alergia button { color: #c08a8a; }
-.profile .nota {
-  margin: 14px 0 0; font-size: 12px; color: #9aa0a6;
-  border-top: 1px solid var(--border); padding-top: 10px;
-}
-
-/* --- acciones, ahora fuera de las cards --- */
-main > .actions { margin: 4px 0 24px; }
-
-/* --- aviso de perfil incoherente --- */
 .aviso-perfil {
-  background: #fff8e6; border: 1px solid #f3e3b3; border-left: 4px solid var(--moderate);
-  border-radius: 6px; padding: 10px 14px; margin-bottom: 10px;
-  font-size: 13px; color: #8a6d3b;
+  background: #fdf8ec; border: 1px solid #f3e3b3; color: #7a5b16;
+  border-radius: var(--radius); padding: 9px 12px; margin-bottom: 10px;
+  font-size: 13px;
 }
 
-/* El atributo `hidden` del navegador es `display:none` con especificidad 0, así
-   que cualquier regla de clase que setee display se lo come. Pasó con el bloque
-   de embarazo: `.profile .row{display:flex}` lo mantenía visible siempre. */
-[hidden] { display: none !important; }
+/* ---------------- pie ---------------- */
 
-/* --- alineación del perfil --- */
-.profile .row {
-  display: grid; grid-template-columns: 110px 1fr; gap: 10px;
-  align-items: center; margin-bottom: 12px;
+footer {
+  max-width: 1180px; margin: 10px auto 0; padding: 18px 20px 34px;
+  border-top: 1px solid var(--border);
 }
-.profile .row.gestacion { grid-template-columns: 1fr; gap: 8px; }
-.profile .row.gestacion .check { min-width: 0; }
-.profile label { min-width: 0; }
-.profile select { width: 100%; }
-.profile input[type="number"] { width: 100%; max-width: 110px; }
+.disclaimer { margin: 0; font-size: 12px; color: var(--text-soft); }
+.sources { margin: 6px 0 0; font-size: 11.5px; color: var(--text-faint); }
 
-/* Cards de la misma altura: si no, queda un hueco blanco grande bajo la más
-   corta y el conjunto se lee desprolijo. */
-main > .cols { align-items: stretch; }
-main > .cols > .card { display: flex; flex-direction: column; }
-main > .cols > .card .card-body { flex: 1; }
+/* ---------------- toast ---------------- */
 
-.profile .row.row-2 { grid-template-columns: 110px 1fr 56px 1fr; }
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+  background: #1c222a; color: #fff; padding: 10px 18px; font-size: 13px;
+  border-radius: var(--radius); box-shadow: var(--shadow-pop); z-index: 60;
+  max-width: 90vw;
+}
+
+/* ---------------- impresión ---------------- */
+
+@media print {
+  .topbar-actions, .actions, .filtros, .search, .card-header .counter,
+  #ayuda, .kbd-hint { display: none !important; }
+  body { background: #fff; font-size: 11pt; }
+  .card, .finding { box-shadow: none; break-inside: avoid; }
+  .topbar { position: static; border-bottom: 2px solid var(--teal); }
+  main { max-width: none; padding: 0; }
+}

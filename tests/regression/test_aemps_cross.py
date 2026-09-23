@@ -173,3 +173,49 @@ async def test_todas_las_fuentes_de_la_base_estan_en_el_contrato():
     assert en_base <= admitidas, (
         f"la base tiene fuentes que el contrato no admite: {en_base - admitidas}. "
         "El endpoint devuelve 500 en cuanto aparezca un hallazgo de esa fuente.")
+
+
+async def test_un_combinado_no_se_atribuye_a_un_ingrediente(db):
+    """`A10BD05` es metformina + pioglitazona, y su regla habla de la segunda.
+
+    Colapsarla a Metformina producía el absurdo "evitar su utilización… hay
+    alternativas más seguras como metformina". Un producto combinado no se
+    resuelve a uno de sus ingredientes por la primera palabra: la regla suele
+    ser sobre el OTRO.
+    """
+    from app.services import contraindication_checker as cc
+    from app.services.patient_profile import PatientProfile
+    r = await cc.check(["metformin"], PatientProfile(edad=75))
+    for g in r["geriatric"]:
+        assert "metformina" not in (g["recomendacion"] or "").lower(), (
+            "una alerta sobre metformina no puede recomendar metformina: "
+            f"vino de {g.get('note')}")
+
+
+def test_el_detector_de_combinados():
+    import sys
+    sys.path.insert(0, "scripts")
+    from cross_aemps_interactions import es_combinacion
+    assert es_combinacion("metformina y pioglitazona")
+    assert es_combinacion("Ibuprofeno, combinaciones")
+    assert es_combinacion("Amoxicilina e inhibidores de la betalactamasa")
+    assert not es_combinacion("Metformina")
+    assert not es_combinacion("Acido acetilsalicilico")
+    assert not es_combinacion("Warfarina")
+
+
+# --- búsqueda de patologías (el input de CIE-10 de la interfaz) -------------
+
+async def test_la_busqueda_de_patologias_solo_ofrece_lo_que_evalua(db):
+    """Ofrecer un código que no dispara nada es prometer una evaluación falsa."""
+    res = await db.search_conditions("N18")
+    assert res, "N18 tiene que estar: es el anclaje de la insuficiencia renal"
+    assert all(r["alertas"] >= 0 for r in res)
+    assert any(r["code"].startswith("N18") for r in res)
+
+
+async def test_la_busqueda_de_patologias_acepta_codigo_y_nombre(db):
+    por_codigo = await db.search_conditions("K70")
+    por_nombre = await db.search_conditions("liver")
+    assert any("K7" in r["code"] for r in por_codigo)
+    assert any("liver" in r["name"].lower() for r in por_nombre)

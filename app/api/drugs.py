@@ -24,3 +24,20 @@ async def search_drugs(
     limit: int = Query(10, ge=1, le=25),
 ):
     return {"results": await recetalia_db.client.search_drugs(q, limit)}
+
+
+@router.get("/conditions/search")
+@limiter.limit(SEARCH_RATE)
+async def search_conditions(
+    request: Request,
+    q: str = Query(..., min_length=2, max_length=100),
+    limit: int = Query(10, ge=1, le=25),
+):
+    """Autocompletado de patologías, por código CIE-10 o por nombre.
+
+    Devuelve sólo los anclajes del puente —los códigos que efectivamente
+    disparan alguna alerta—, con `alertas` = cuántas. Un código que no dispara
+    nada no se ofrece: ponerlo en la lista sería prometer una evaluación que no
+    va a ocurrir.
+    """
+    return {"results": await recetalia_db.client.search_conditions(q, limit)}

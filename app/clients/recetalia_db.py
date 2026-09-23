@@ -216,6 +216,39 @@ class RecetaliaDatabase:
         return [{"drug_id": r["drug_id"], "name": r["canonical"], "rxcui": r["rxcui"]}
                 for r in rows]
 
+    async def search_conditions(self, query: str, limit: int = 10) -> list[dict[str, Any]]:
+        """Busca patologías por código CIE-10 o por nombre, para el autocompletado.
+
+        Devuelve sólo los **anclajes** del puente: los 552 códigos a los que hay
+        alguna alerta colgada. Ofrecerle al médico un catálogo de 70.000 códigos
+        de los cuales 69.500 no disparan nada sería prometer una evaluación que
+        no existe.
+
+        El médico puede igual escribir un código más específico que el anclaje
+        (`N18.5` contra `N18`): eso lo resuelve `condition_ids_for_icd10` por
+        truncación. Acá se le muestra dónde va a caer.
+        """
+        q = query.strip()
+        if len(q) < 2:
+            return []
+        conn = await self._c()
+        code_q = q.upper().replace(" ", "")
+        async with conn.execute(
+            """select c.condition_id, c.code, c.name,
+                      (select count(*) from condition_xref x
+                        join drug_condition_alert a on a.condition_id = x.to_id
+                       where x.from_id = c.condition_id) as alertas
+               from condition c
+               where c.code_system like 'icd10%'
+                 and (c.code like ? escape '\\' or c.name like ? escape '\\')
+               order by case when c.code like ? escape '\\' then 0 else 1 end,
+                        alertas desc, c.code
+               limit ?""",
+            (f"{_like(code_q)}%", f"%{_like(q)}%", f"{_like(code_q)}%", limit),
+        ) as cur:
+            rows = await cur.fetchall()
+        return [dict(r) for r in rows]
+
     async def drug_id_by_dnma(self, sustancia_id: str) -> int | None:
         conn = await self._c()
         async with conn.execute(

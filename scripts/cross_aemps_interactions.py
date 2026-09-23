@@ -77,6 +77,21 @@ _LEXICO_SAL = {
 }
 
 
+# Un ATC de producto combinado —`metformina y pioglitazona`, `ibuprofeno,
+# combinaciones`— NO se puede colapsar a uno de sus ingredientes por la primera
+# palabra: la regla suele hablar del OTRO. Medido: `A10BD05` (metformina y
+# pioglitazona) caía en Metformina y producía el absurdo "evitar su utilización…
+# hay alternativas más seguras como metformina".
+_COMBINACION = re.compile(
+    r"\b(y|e|and|con)\b|combinacion|combinaciones|asociad|inhibidores de",
+    re.IGNORECASE)
+
+
+def es_combinacion(nombre: str) -> bool:
+    n = unicodedata.normalize("NFKD", nombre).encode("ascii", "ignore").decode()
+    return bool(_COMBINACION.search(n))
+
+
 def desc_limpia(v: str) -> str:
     return _CODE_PREFIX.sub("", v).strip()
 
@@ -162,6 +177,10 @@ class Resolver:
 
     def _laxos(self, nombre: str) -> set[int]:
         """Candidatos de menor confianza. Todos pasan después por el ATC."""
+        # Un producto combinado no se resuelve a un ingrediente: ver la nota de
+        # `_COMBINACION`. Se prefiere no tener la regla a tenerla mal atribuida.
+        if es_combinacion(nombre):
+            return set()
         variantes = [nombre]
         if " de " in nombre.lower():                  # `cloruro de potasio`
             a, b = nombre.lower().split(" de ", 1)
