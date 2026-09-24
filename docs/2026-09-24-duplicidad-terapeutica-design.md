@@ -42,35 +42,69 @@ multi-código, que ningún prefijo ATC ve. Sustancias del mismo producto nunca s
 comparan entre sí (el médico no puede separarlas).
 
 ### Capa 2 — clase terapéutica con cupo
-- Clase = grupo AEMPS, identificado por su `atc_a` ancla; `desc` es su nombre.
-  Miembros = expansión de `atc_a` ∪ expansión de cada `atc_b` del grupo.
+- **Clase = ATC4 del ancla** (`atc_a[:5]`; el código entero si es N3). Nombre de
+  la clase: el del diccionario ATC de la AEMPS. Miembros = expansión de `atc_a`
+  ∪ expansión de cada `atc_b` de las reglas de esa clase.
   Expansión: N5 → molécula por nombre; N3/N4 → prefijo sobre `drug.atc`.
-  Los códigos de combinado (p. ej. `C09BA`) no mapean a sustancias sueltas y se
-  ignoran: el combinado entra a la clase por sus ingredientes.
+- **Se descarta toda regla con un código de combinado** en cualquiera de sus
+  lados (nombre ATC que `es_combinacion()` detecta), y al expandir por prefijo se
+  ignoran los códigos de combinado que `drug.atc` trae por ingrediente.
+
+  Medido 2026-09-24 sobre la base real (script ad hoc con `Resolver`):
+  - Agrupar por `desc` junta enalapril y amlodipino en "INHIBIDORES DE LA ECA Y
+    BLOQUEANTES DE CANALES DE CALCIO" → IECA + ACA alertaría. Es el falso
+    positivo canónico. Esos grupos están anclados en ATC de combinado.
+  - Con `drug.atc` sin filtrar, la hidroclorotiazida entra a los ARA II vía
+    `C09DX` (RxClass le asigna los ATC de los combinados que la contienen) →
+    losartán + HCTZ alertaría.
+  - Con clase por `desc` hay 143 grupos, 114 con ≥2 miembros; las reglas
+    resuelven: clase 1.000 · molécula 757 · sin resolver 1.024 · sin-clase 284 ·
+    ambiguo 57. La cifra con el modelo final la imprime el ETL.
+  - Sin excepción alguna, IECA + ACA + tiazida queda en tres clases distintas
+    (C09AA, C08CA, C03AA) y no alerta. AAS + clopidogrel tampoco: clopidogrel no
+    está en ninguna regla de la AEMPS.
 - Al chequear: por clase, contar **productos distintos** con algún miembro. Si
   supera el cupo (default 1) → alerta, severidad moderada.
 - Si todos los productos de la alerta de clase ya están cubiertos por una alerta
   de capa 1 de la misma sustancia, la de clase no se emite (no duplicar el aviso).
 
 ### Capa 3 — cupos y excepciones curados
-`data/duplicidad_cupos.json`, en git, curado a mano. Por clase:
+`data/duplicidad_cupos.json`, en git, curado a mano:
 
 ```json
-{ "B01AC": { "cupo": 2, "motivo": "doble antiagregación post-stent",
-             "referencia": "ESC 2023 SCA" },
-  "J01C":  { "desactivada": true, "motivo": "grupo demasiado amplio: ..." } }
+{ "clases": {
+    "<class_id>": { "cupo": 2, "motivo": "...", "referencia": "...", "validado": false },
+    "<class_id>": { "desactivada": true, "motivo": "...", "validado": false } },
+  "excepciones": [
+    { "clase": "<class_id>", "grupos": [["<drug.canonical>", "..."], ["..."]],
+      "motivo": "...", "referencia": "...", "validado": false } ] }
 ```
 
-Y excepciones por grupos de sustancias dentro de una clase, bajo la clave
-`"excepciones"`: `{ "clase": "A10A", "grupos": [["insulina glargina", ...],
-["insulina aspart", ...]], "motivo": "basal + bolo" }` — un producto de cada grupo
-no cuenta como duplicidad; dos del mismo grupo sí.
-Una alerta suprimida por cupo/excepción va a `duplicities_suppressed` con el
-`motivo` y la `referencia`.
+- `cupo`: cuántos productos distintos de la clase se permiten (default 1).
+- `desactivada`: la clase no alerta nunca (grupo demasiado amplio).
+- `excepciones`: dentro de la clase, un producto de cada grupo no cuenta como
+  duplicidad; dos del mismo grupo sí. Los grupos van por `drug.canonical` para
+  no depender de la resolución de nombres.
 
-**Primer lote**: el de `cerrar-los-rojos.md:255-257` más lo que salga de revisar
-los 144 grupos. ⚠️ Lo valida alguien con criterio farmacéutico antes de
-producción; hasta entonces el JSON lleva `"validado": false` por entrada.
+Una alerta suprimida por cupo, desactivación o excepción va a
+`duplicities_suppressed` con `motivo` y `referencia`.
+
+**Primer lote: vacío, y a propósito.** Con clase = ATC4 y los combinados
+descartados, los casos de `cerrar-los-rojos.md:255-257` ya caen en clases
+distintas (IECA/ACA/tiazida; LABA R03AC / LAMA R03BB; insulina rápida A10AB /
+basal A10AE) o fuera de las reglas (AAS + clopidogrel). Poner un cupo 2 en B01AC
+"por la doble antiagregación" suprimiría AAS + triflusal, que sí es duplicidad.
+Cada entrada futura sale de un caso real que falle, y lleva `"validado": false`
+hasta que la revise alguien con criterio farmacéutico.
+
+### Resolución de nombres en castellano
+Recetalia manda sustancias del DNMA, en castellano. Medido: `diclofenaco` no
+resuelve por `drug_alias`; `amlodipino` sólo por `dnma_substance_map`. Sin
+resolver no hay duplicidad posible (ni interacción). `drug_id_by_name` suma dos
+respaldos, en orden: `dnma_substance_map` por nombre normalizado, y luego el
+**esqueleto** INN castellano↔inglés de `cross_aemps_interactions.skeleton`,
+aceptado sólo si apunta a un único fármaco. El esqueleto se mueve a
+`app/nlp/nombres.py` y el script lo importa de ahí.
 
 ### Fuera de alcance (segunda vuelta)
 Capa de mecanismo sobre RxClass (MoA/EPC): se decide con los casos de prueba en
@@ -114,9 +148,9 @@ Si viene sólo `drugs`, cada nombre es un producto. La respuesta suma:
 
 `tests/regression/casos_duplicidad.json`: casos clínicos con esperado
 (alerta / suprimida / nada). Mínimo: paracetamol + paracetamol/codeína → capa 1;
-ibuprofeno + diclofenaco → clase; diazepam + lorazepam → clase; enalapril +
-amlodipino + hidroclorotiazida → nada; AAS + clopidogrel → suprimida (cupo 2);
-insulina glargina + aspart → suprimida. Un script imprime aciertos/fallos por
+ibuprofeno + diclofenaco → clase; diazepam + lorazepam → clase; omeprazol + pantoprazol → clase; losartán + hidroclorotiazida → nada; enalapril +
+amlodipino + hidroclorotiazida → nada; AAS + clopidogrel → nada;
+sertralina + fluoxetina → clase; AAS + triflusal → clase (dos anti-COX: el cupo 2 de la doble antiagregación NO va en B01AC entero). Un script imprime aciertos/fallos por
 capa: es la primera métrica que va a correr la routine semanal.
 
 ## Errores
