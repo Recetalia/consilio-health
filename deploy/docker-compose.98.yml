@@ -1,0 +1,44 @@
+# Consilio en el `.98` (PRE/DEV), detrás del nginx que ya corre ahí.
+#
+# Va en /opt/recetalia/consilio/ y se levanta con su propio compose, no con el
+# de `deploy-recetalia`: Consilio es un producto aparte y su ciclo de release no
+# es el de Recetalia.
+#
+# ⚠️ NO publica puertos al host. El único camino de entrada es el nginx, por la
+# red `medicinainteligente-net`. Publicar 8000 dejaría el servicio accesible por
+# IP salteando TLS — y con la licencia de la base sin resolver, de más.
+
+services:
+  consilio:
+    build:
+      context: .
+      target: runtime
+      args:
+        # Sin torch. Ver el comentario del Dockerfile: son 3 GB para una ruta
+        # de respaldo, y el disco de este server está al 84%.
+        WITH_ML: "0"
+    image: consilio:dev
+    container_name: consilio
+    volumes:
+      # La base de conocimiento se monta, no se hornea. Decisión legal además
+      # de práctica. En `ro` porque el runtime sólo lee: escribe el ETL.
+      - ./data:/app/data:ro
+    environment:
+      # Obligatoria: el middleware deja pasar todo si no está seteada.
+      - API_KEY=${API_KEY:?definí API_KEY en .env, si no el servicio queda abierto}
+      - INTERACTION_DB_PATH=/app/data/recetalia_interactions.db
+      - CONSILIO_SEARCH_RATE=${CONSILIO_SEARCH_RATE:-300/minute}
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health', timeout=5).status==200 else 1)"]
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - medicinainteligente-net
+
+networks:
+  medicinainteligente-net:
+    external: true

@@ -7,14 +7,27 @@ WORKDIR /app
 # Copy dependency files first for layer caching
 COPY pyproject.toml uv.lock .python-version ./
 
+# WITH_ML=1 trae torch + transformers + el modelo zero-shot: unos 3 GB de
+# imagen. Sólo hacen falta para clasificar la severidad de un prospecto de
+# openFDA consultado EN VIVO, o sea para pares que no están en nuestra base;
+# los 4.433 que sí están ya vienen clasificados por el ETL. Sin el modelo,
+# `severity_classifier` cae a un fallback por regex y marca el hallazgo como
+# `uncertain`, que es lo que ya hace ante cualquier error.
+#
+# Por eso el default es 0: en un host con el disco ajustado, 3 GB de torch
+# para una ruta de respaldo es un mal negocio. `--build-arg WITH_ML=1` lo trae.
+ARG WITH_ML=0
+
 # Install dependencies only (locked, no project code yet).
-# --extra ml pulls torch + transformers: the image must carry the severity
-# classifier even though it is optional for local development.
-RUN uv sync --no-install-project --no-dev --extra ml
+RUN if [ "$WITH_ML" = "1" ]; then \
+      uv sync --no-install-project --no-dev --extra ml; \
+    else \
+      uv sync --no-install-project --no-dev; \
+    fi
 
 # Copy application code and install the project
 COPY app/ app/
-RUN uv sync --no-dev --extra ml
+RUN if [ "$WITH_ML" = "1" ]; then uv sync --no-dev --extra ml; else uv sync --no-dev; fi
 
 # --- Application base stage ---
 FROM python:3.12-slim AS app-base
@@ -45,8 +58,13 @@ ENV INTERACTION_DB_PATH=/app/data/recetalia_interactions.db
 # In local dev, docker-compose mounts a volume over /app/models.
 # The OpenMed NER model was dropped with /analyze (Recetalia fork): this service
 # only resolves interactions, it does not read prescription text.
-RUN python -c "from transformers import pipeline; \
-    pipeline('zero-shot-classification', model='MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli')"
+ARG WITH_ML=0
+RUN if [ "$WITH_ML" = "1" ]; then \
+      python -c "from transformers import pipeline; \
+        pipeline('zero-shot-classification', model='MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli')"; \
+    else \
+      echo "[build] sin modelo ML: severity_classifier cae a regex y marca uncertain"; \
+    fi
 
 # App code comes last — most frequently changing layer
 COPY --from=builder /app/app /app/app

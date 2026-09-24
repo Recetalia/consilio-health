@@ -59,3 +59,6 @@ data/aemps/DICCIONARIO_LABORATORIOS.xml
 data/icd10/*.txt
 data/icd10/*.pdf
 data/icd10/*.zip
+
+# Artefactos de despliegue que llevan secretos o binarios
+deploy/.env
