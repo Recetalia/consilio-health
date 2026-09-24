@@ -62,3 +62,8 @@ data/icd10/*.zip
 
 # Artefactos de despliegue que llevan secretos o binarios
 deploy/.env
+
+# Ontología MONDO cruda: 102,6 MB, por encima del límite de 100 MB de GitHub.
+# No la usa nadie — el puente CIE-10↔MeSH terminó construyéndose con UMLS
+# (scripts/build_condition_xref.py). Se purgó de la historia el 2026-09-24.
+data/mondo/
