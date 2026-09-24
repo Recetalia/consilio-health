@@ -47,8 +47,17 @@ comparan entre sí (el médico no puede separarlas).
   ∪ expansión de cada `atc_b` de las reglas de esa clase.
   Expansión: N5 → molécula por nombre; N3/N4 → prefijo sobre `drug.atc`.
 - **Se descarta toda regla con un código de combinado** en cualquiera de sus
-  lados (nombre ATC que `es_combinacion()` detecta), y al expandir por prefijo se
-  ignoran los códigos de combinado que `drug.atc` trae por ingrediente.
+  lados, y al expandir por prefijo se ignoran los códigos de combinado que
+  `drug.atc` trae por ingrediente.
+
+  Qué es "código de combinado": N5 → `es_combinacion(nombre)`. N3/N4 → el
+  nombre dice combinación (regex estricto, **sin** `inhibidores de`) **y** la
+  mayoría de sus N5 hijos son combinaciones. Medido sobre los 629 códigos N3/N4
+  de reglas + `drug.atc`: `es_combinacion` sola marca 197 (IBP, IECA monofármaco,
+  insulinas, AINEs: falsos); sólo el criterio de hijos marca 60 con falsos como
+  N02BE Anilidas (paracetamol). Los dos juntos dejan los combinados reales
+  (C09BA/BB/DA/DB, C07BB/FB, C03EA/EB, G03AA, J01CR, N02AJ, M01BA…) y tres
+  falsos (N04BA, B03BB, M03BB) que van a una lista explícita.
 
   Medido 2026-09-24 sobre la base real (script ad hoc con `Resolver`):
   - Agrupar por `desc` junta enalapril y amlodipino en "INHIBIDORES DE LA ECA Y
@@ -130,7 +139,8 @@ Si viene sólo `drugs`, cada nombre es un producto. La respuesta suma:
                    "count": 2, "cupo": 1, "severity": "major|moderate",
                    "source": "aemps|consilio", "rule": "N02BE" } ],
 "duplicities_suppressed": [ { ...mismos campos, "motivo": "...", "referencia": "..." } ],
-"duplicity_not_evaluated": ["sustancia sin clase"]
+"duplicity_not_evaluated": ["sustancia no resuelta"],
+"duplicity_warnings": ["la base no tiene clases cargadas"]
 ```
 
 ## Componentes
@@ -150,11 +160,10 @@ Si viene sólo `drugs`, cada nombre es un producto. La respuesta suma:
 (alerta / suprimida / nada). Mínimo: paracetamol + paracetamol/codeína → capa 1;
 ibuprofeno + diclofenaco → clase; diazepam + lorazepam → clase; omeprazol + pantoprazol → clase; losartán + hidroclorotiazida → nada; enalapril +
 amlodipino + hidroclorotiazida → nada; AAS + clopidogrel → nada;
-sertralina + fluoxetina → clase; AAS + triflusal → clase (dos anti-COX: el cupo 2 de la doble antiagregación NO va en B01AC entero). Un script imprime aciertos/fallos por
+sertralina + fluoxetina → clase; ranitidina + famotidina → clase (triflusal no está en la base). Un script imprime aciertos/fallos por
 capa: es la primera métrica que va a correr la routine semanal.
 
 ## Errores
 
 Sustancia no resuelta → `duplicity_not_evaluated`, nunca se omite en silencio.
-Base sin `drug_class` (ETL no corrido) → `duplicities` vacío más un aviso en
-`coverage_summary`, no 500.
+Base sin `drug_class` (ETL no corrido) → `duplicities` vacío más un aviso en `duplicity_warnings`, no 500.
