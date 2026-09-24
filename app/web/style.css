@@ -23,14 +23,19 @@
   --hover-row:     #e9ecef;
 
   /* --- estado --- */
+  /* Los `-bg` son los fondos de las tarjetas de hallazgo. Medidos contra el
+     fondo de página #f5f8fa: al 4% de saturación —que es donde estaban— la
+     tarjeta "sin graduar" era indistinguible del fondo y la gravedad la
+     comunicaba sólo el filete lateral. Si el color tiene que leerse desde
+     lejos, tiene que ser color. */
   --major:         #c0392b;
-  --major-bg:      #fdf2f1;
+  --major-bg:      #fbe7e4;
   --moderate:      #d98b06;
-  --moderate-bg:   #fdf8ec;
+  --moderate-bg:   #fdf2d9;
   --minor:         #0ea5e9;
-  --minor-bg:      #eff8fd;
-  --unknown:       #94a3b8;
-  --unknown-bg:    #f6f8fa;
+  --minor-bg:      #e4f1fb;
+  --unknown:       #7c8b9c;
+  --unknown-bg:    #e9eef3;
   --ok:            #22a06b;
 
   --radius:        6px;
@@ -112,10 +117,20 @@ h5, h6, .col-title, .brand .name { font-family: Hind, Roboto, sans-serif; }
 
 main { max-width: 1280px; margin: 0 auto; padding: 26px 24px 8px; }
 
+/* `align-items: start` dejaba la tarjeta de medicamentos (238px) flotando
+   sobre un hueco de 300px al lado de la de perfil (544px). Estirar las dos a
+   la misma altura se ve mejor que el hueco, y el resumen de abajo ocupa el
+   sobrante con algo útil. */
 .cols {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-  gap: 20px; align-items: start;
+  gap: 20px; align-items: stretch;
 }
+.cols > .card { display: flex; flex-direction: column; }
+.cols > .card > .card-body { flex: 1 1 auto; display: flex; flex-direction: column; }
+/* En los resultados NO se estiran: dos columnas de tarjetas con alturas
+   distintas no tienen por qué emparejarse. */
+#results .cols { align-items: start; }
+#results .cols > .col { display: block; }
 
 .card {
   background: var(--card); border: 1px solid var(--border);
@@ -148,8 +163,14 @@ label .opt::before { content: "· "; }
 .card-body { padding: 18px; }
 
 .hint { margin: 0 0 13px; font-size: 13.5px; color: var(--text-soft); }
+/* Ocupa el sobrante de la tarjeta y dice qué va a pasar al consultar. */
+.resumen-cruce {
+  margin-top: auto; padding-top: 14px; border-top: 1px dashed #d9eaed;
+  font-size: 13.5px; color: var(--text-soft);
+}
+.resumen-cruce strong { color: var(--cta); font-size: 15px; }
 .micro-aviso {
-  margin: 7px 0 0; font-size: 12.5px; color: var(--text-soft); line-height: 1.45;
+  margin: 7px 0 0; font-size: 13px; color: var(--text-soft); line-height: 1.45;
   padding-left: 10px; border-left: 2px solid #d9eaed;
 }
 
@@ -221,9 +242,25 @@ input::placeholder { color: #b6c0cc; }
 .select-list li[aria-selected="true"]::after {
   content: "✓"; font-size: 12px; color: var(--cta);
 }
-/* La lista de semanas es larga: en dos columnas se ve entera sin scrollear. */
-.select.compacto .select-list { columns: 2; column-gap: 4px; }
-.select.compacto .select-list li { break-inside: avoid; }
+/* La lista de semanas son 43 opciones y a una columna obliga a scrollear.
+   ⚠️ NO usar `columns: 2`: con una altura tope el multicolumn no reparte en dos
+   columnas, crea tantas como necesite y desborda a lo ancho — medido, quedaba
+   `scrollWidth 719` contra `clientWidth 134`, con 35 de las 43 opciones
+   alcanzables sólo por scroll horizontal. Grid de dos columnas y scroll
+   vertical, que es lo que se quería. */
+.select.compacto .select-list {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 4px; max-height: 300px;
+  /* La lista se despega del ancho del botón: a 136px dos columnas quedan
+     ilegibles y cada opción parte en dos renglones. */
+  right: auto; width: 268px;
+}
+.select.compacto .select-list li {
+  justify-content: flex-start; gap: 6px; white-space: nowrap;
+}
+/* Sin esto el tilde se ancla al borde derecho de una celda angosta y cae en el
+   canalón, pareciendo que marca la opción de al lado. */
+.select.compacto .select-list li[aria-selected="true"]::after { margin-left: auto; }
 
 .row { margin-bottom: 16px; }
 .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -235,7 +272,7 @@ input::placeholder { color: #b6c0cc; }
   border-radius: var(--radius);
 }
 /* Dentro del bloque flex el desplegable no debe estirarse a todo el ancho. */
-.gestacion .select { width: auto; min-width: 136px; }
+.gestacion .select { width: auto; min-width: 152px; }
 .gestacion .select-btn { padding: 5px 9px; font-size: 12.5px; }
 /* `[hidden]` pierde por especificidad contra `.row{display:flex}`: sin esto el
    bloque de gestación queda siempre visible. */
@@ -388,14 +425,14 @@ kbd {
    blancas con una rayita de 3px se leen todas igual. El fondo teñido hace que
    la gravedad se vea desde lejos, que es la única forma en que sirve. */
 .finding {
-  background: var(--unknown-bg); border: 1px solid var(--border);
+  background: var(--unknown-bg); border: 1px solid #ccd6e0;
   border-left: 5px solid var(--unknown);
   border-radius: var(--radius); box-shadow: var(--shadow);
   padding: 14px 16px; margin-bottom: 12px;
 }
-.finding.major    { border-left-color: var(--major);    background: var(--major-bg);    border-color: #f2d5d1; }
-.finding.moderate { border-left-color: var(--moderate); background: var(--moderate-bg); border-color: #f3e3b8; }
-.finding.minor    { border-left-color: var(--minor);    background: var(--minor-bg);    border-color: #cfe8f6; }
+.finding.major    { border-left-color: var(--major);    background: var(--major-bg);    border-color: #eec2bb; }
+.finding.moderate { border-left-color: var(--moderate); background: var(--moderate-bg); border-color: #edd497; }
+.finding.minor    { border-left-color: var(--minor);    background: var(--minor-bg);    border-color: #b9daf1; }
 
 .finding-head {
   display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 2px;
@@ -421,7 +458,7 @@ kbd {
   background: #eefaf3; border-left: 3px solid var(--ok); border-radius: 4px;
 }
 .manejo strong { color: #15803d; }
-.meta { margin: 11px 0 0; font-size: 12px; color: var(--text-soft); }
+.meta { margin: 11px 0 0; font-size: 12.5px; color: var(--text-soft); }
 .tag-uncertain {
   display: inline-block; font-size: 11.5px; color: #8a6d3b;
   background: #fcf3d8; border: 1px solid #f3e3b3;

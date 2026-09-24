@@ -30,6 +30,7 @@ const FUENTE = {
   openfda:   "openFDA — prospecto oficial de la FDA",
   medrt:     "MED-RT — Biblioteca Nacional de Medicina (EE.UU.)",
   recetalia: "Revisión propia de Consilio",
+  perfil: "Dato cargado en el perfil del paciente",
 };
 // Canónico (inglés, el de la base) -> nombre para mostrar (castellano). Se va
 // llenando con lo que devuelve el buscador: la base tiene 728 sustancias del
@@ -40,7 +41,7 @@ const mostrar = (n) => NOMBRE_ES[n] || n;
 
 const FUENTE_CORTA = {
   aemps: "AEMPS", ddinter: "DDInter", openfda: "openFDA",
-  medrt: "MED-RT", recetalia: "Consilio",
+  medrt: "MED-RT", recetalia: "Consilio", perfil: "Perfil",
 };
 
 // Receta de ejemplo: cada par de acá dispara algo distinto —una grave con
@@ -417,6 +418,18 @@ function syncButtons() {
   $("cnt-meds").textContent = n ? `${n} ${n === 1 ? "medicamento" : "medicamentos"}` : "";
   $("cnt-meds").hidden = !n;
 
+  const pares = n * (n - 1) / 2;
+  const r = $("resumen-cruce");
+  r.hidden = n < 1;
+  if (n >= 2) {
+    r.innerHTML = `Se van a cruzar <strong>${pares}</strong>
+      ${pares === 1 ? "combinación" : "combinaciones"} entre sí,
+      y cada medicamento contra el perfil del paciente.`;
+  } else if (n === 1) {
+    r.innerHTML = `Con un solo medicamento no hay combinaciones que cruzar.
+      Agregá otro, o completá el perfil para cruzarlo contra el paciente.`;
+  }
+
   const campos = [
     $("sexo").value, $("edad").value, $("renal").value, $("hepatica").value,
     $("embarazo").checked ? "1" : "", $("lactancia").checked ? "1" : "",
@@ -547,6 +560,22 @@ $("check").addEventListener("click", async () => {
   render();
 });
 
+/* Los hallazgos contra el paciente no traen `severity`, pero sí tienen una:
+   una contraindicación pesa como una interacción grave y una precaución como
+   una moderada. Sin esto el filtro de gravedad sólo cubría una de las dos
+   columnas, y filtrar por "Grave" dejaba tarjetas ámbar a la vista. */
+const SEV_PACIENTE = {
+  alergia: "major",
+  contraindication: "major",
+  precaution: "moderate",
+  // El criterio geriátrico condicionado no afirma nada todavía: es moderado.
+  geriatrica: (g) => (g.condicionada ? "moderate" : "major"),
+};
+const sevPaciente = (tipo, item) => {
+  const v = SEV_PACIENTE[tipo];
+  return typeof v === "function" ? v(item) : v;
+};
+
 /* ---------------- filtros ----------------
    Se arman sobre lo que efectivamente se encontró: ofrecer un filtro "Leve"
    cuando no hay ninguna leve es prometer algo que no está. */
@@ -557,6 +586,16 @@ const filtro = {
 
 function construirFiltros(inter, contra) {
   const hallazgos = (inter?.interactions || []);
+  // Las dos columnas alimentan los mismos contadores: un filtro que dice
+  // "Grave 3" y deja cuatro tarjetas rojas en pantalla no se entiende.
+  const delPaciente = [
+    ...(contra?.allergies || []).filter((a) => a.match === "exact")
+      .map((a) => ({ severity: "major", source: "perfil" })),
+    ...(contra?.contraindications || []).map((c) => ({ severity: "major", source: c.source })),
+    ...(contra?.precautions || []).map((c) => ({ severity: "moderate", source: c.source })),
+    ...(contra?.geriatric || []).map((g) => ({
+      severity: sevPaciente("geriatrica", g), source: g.source })),
+  ];
   filtro.sev.clear(); filtro.fuente.clear();
   filtro.conTexto = false; filtro.sinInferidas = false; filtro.texto = "";
   $("f-con-texto").checked = false;
@@ -564,7 +603,7 @@ function construirFiltros(inter, contra) {
   $("f-texto").value = "";
 
   const porSev = {}, porFuente = {};
-  hallazgos.forEach((i) => {
+  [...hallazgos, ...delPaciente].forEach((i) => {
     const s = SEV[i.severity] ? i.severity : "unknown";
     porSev[s] = (porSev[s] || 0) + 1;
     porFuente[i.source] = (porFuente[i.source] || 0) + 1;
@@ -643,10 +682,12 @@ function pasaFiltro(i) {
   return true;
 }
 
-function pasaFiltroPaciente(campos) {
-  // Los hallazgos contra el paciente no tienen gravedad propia ni fuente
-  // comparable, así que sólo les aplica el filtro de texto. Si se les
-  // aplicaran los demás desaparecerían sin motivo visible.
+function pasaFiltroPaciente(campos, sev, fuente) {
+  if (filtro.sev.size && !filtro.sev.has(sev)) return false;
+  if (filtro.fuente.size && !filtro.fuente.has(fuente)) return false;
+  // "Sólo con explicación" y "ocultar inferidas" son propiedades de una
+  // interacción: no se les aplican, porque acá siempre hay texto y nada se
+  // infiere de prosa libre.
   if (!filtro.texto) return true;
   return campos.filter(Boolean).join(" ").toLowerCase().includes(filtro.texto);
 }
@@ -692,14 +733,15 @@ function render() {
       html += `<div class="aviso-perfil">${escapeHtml(w)}</div>`;
     });
     const al = (contra.allergies || []).filter((a) => a.match === "exact")
-      .filter((a) => pasaFiltroPaciente([a.drug, a.declared_as]));
+      .filter((a) => pasaFiltroPaciente([a.drug, a.declared_as], "major", "perfil"));
     const noId = (contra.allergies || []).filter((a) => a.match === "unresolved");
     const ci = (contra.contraindications || [])
-      .filter((c) => pasaFiltroPaciente([c.drug, condEs(c.condition)]));
+      .filter((c) => pasaFiltroPaciente([c.drug, condEs(c.condition)], "major", c.source));
     const pre = (contra.precautions || [])
-      .filter((c) => pasaFiltroPaciente([c.drug, condEs(c.condition)]));
-    const geri = (contra.geriatric || [])
-      .filter((g) => pasaFiltroPaciente([g.drug, g.situacion, g.recomendacion]));
+      .filter((c) => pasaFiltroPaciente([c.drug, condEs(c.condition)], "moderate", c.source));
+    const geri = (contra.geriatric || []).filter((g) =>
+      pasaFiltroPaciente([g.drug, g.situacion, g.recomendacion],
+                         sevPaciente("geriatrica", g), g.source));
 
     ocultos += (contra.allergies || []).filter((a) => a.match === "exact").length - al.length;
     ocultos += (contra.contraindications || []).length - ci.length;
