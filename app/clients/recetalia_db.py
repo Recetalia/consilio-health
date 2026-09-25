@@ -323,41 +323,79 @@ class RecetaliaDatabase:
         ) as cur:
             return {r["drug_id"]: r["canonical"] for r in await cur.fetchall()}
 
-    async def search_drugs(self, query: str, limit: int = 10) -> list[dict[str, Any]]:
-        """Busca fármacos por prefijo de alias, para el autocompletado.
+    # `name_es` es para MOSTRAR: el canónico está en inglés y esta interfaz es
+    # para un médico uruguayo. Precedencia (ver `docs/2026-09-25-castellano-y-
+    # colores.md`): alias `es` curado a mano (`source` distinto de 'aemps') >
+    # DNMA (grafía del vademécum uruguayo, la que el médico espera leer) >
+    # alias `es` de la AEMPS. Se queda en NULL cuando no sabemos: inventar una
+    # traducción de un fármaco es peor que el inglés.
+    _NAME_ES_SQL = """coalesce(
+                        (select es.alias from drug_alias es
+                          where es.drug_id = d.drug_id and es.lang = 'es'
+                            and es.source <> 'aemps' limit 1),
+                        (select m.sustancia_dsc from dnma_substance_map m
+                          where m.drug_id = d.drug_id limit 1),
+                        (select es.alias from drug_alias es
+                          where es.drug_id = d.drug_id and es.lang = 'es'
+                            and es.source = 'aemps' limit 1)
+                      )"""
 
-        Ordena por si el alias empieza con lo tecleado antes que por si sólo lo
-        contiene: quien escribe "war" espera warfarina primero, no
-        clorhidrato de algo-war.
+    async def search_drugs(self, query: str, limit: int = 10) -> list[dict[str, Any]]:
+        """Busca fármacos por prefijo de alias o de sustancia DNMA, para el
+        autocompletado.
+
+        Ordena por si el término empieza con lo tecleado antes que por si sólo
+        lo contiene: quien escribe "war" espera warfarina primero, no
+        clorhidrato de algo-war. El DNMA hoy sólo alimentaba `name_es` (para
+        mostrar); acá se suma como fuente de BÚSQUEDA, así que "amlodipino"
+        encuentra el fármaco aunque no tenga (todavía) alias en castellano.
+        Se combina en Python, sobre el índice que ya arma `_indice_respaldo`,
+        para no pagar dos veces `normalize()` en SQL ni duplicar fármacos que
+        matchean por las dos vías.
         """
         q = normalize(query)
         if len(q) < 2:
             return []
         conn = await self._c()
-        # `name_es` es para MOSTRAR: el canónico está en inglés y esta interfaz
-        # es para un médico uruguayo. Sale del alias castellano si lo hay y si
-        # no del mapa del DNMA, que trae la grafía del vademécum local —que es
-        # justamente la que el médico espera leer—. Se queda en NULL cuando no
-        # sabemos: inventar una traducción de un fármaco es peor que el inglés.
         async with conn.execute(
-            """select distinct d.drug_id, d.canonical, d.rxcui,
-                      coalesce(
-                        (select es.alias from drug_alias es
-                          where es.drug_id = d.drug_id and es.lang = 'es' limit 1),
-                        (select m.sustancia_dsc from dnma_substance_map m
-                          where m.drug_id = d.drug_id limit 1)
-                      ) as name_es
-               from drug_alias a
-               join drug d on d.drug_id = a.drug_id
-               where a.alias_norm like ? escape '\\'
-               order by case when a.alias_norm like ? escape '\\' then 0 else 1 end,
-                        length(d.canonical), d.canonical
-               limit ?""",
-            (f"%{_like(q)}%", f"{_like(q)}%", limit),
+            f"""select d.drug_id, d.canonical, d.rxcui, {self._NAME_ES_SQL} as name_es,
+                       min(case when a.alias_norm like ? escape '\\' then 0 else 1 end) as rank
+                  from drug_alias a
+                  join drug d on d.drug_id = a.drug_id
+                 where a.alias_norm like ? escape '\\'
+                 group by d.drug_id, d.canonical, d.rxcui, name_es""",
+            (f"{_like(q)}%", f"%{_like(q)}%"),
         ) as cur:
             rows = await cur.fetchall()
-        return [{"drug_id": r["drug_id"], "name": r["canonical"], "rxcui": r["rxcui"],
-                 "name_es": _titulo(r["name_es"])} for r in rows]
+        # drug_id -> (rank, canonical, rxcui, name_es)
+        candidatos: dict[int, tuple[int, str, str | None, str | None]] = {
+            r["drug_id"]: (r["rank"], r["canonical"], r["rxcui"], r["name_es"]) for r in rows
+        }
+
+        idx = await self._indice_respaldo()
+        dnma_rank: dict[int, int] = {}
+        for norm, drug_id in idx["dnma"].items():
+            if drug_id in candidatos or q not in norm:
+                continue
+            r = 0 if norm.startswith(q) else 1
+            if drug_id not in dnma_rank or r < dnma_rank[drug_id]:
+                dnma_rank[drug_id] = r
+
+        if dnma_rank:
+            ph = ",".join("?" * len(dnma_rank))
+            async with conn.execute(
+                f"""select d.drug_id, d.canonical, d.rxcui, {self._NAME_ES_SQL} as name_es
+                      from drug d where d.drug_id in ({ph})""",
+                tuple(dnma_rank),
+            ) as cur:
+                for r in await cur.fetchall():
+                    candidatos[r["drug_id"]] = (
+                        dnma_rank[r["drug_id"]], r["canonical"], r["rxcui"], r["name_es"])
+
+        ordenados = sorted(
+            candidatos.items(), key=lambda kv: (kv[1][0], len(kv[1][1]), kv[1][1]))[:limit]
+        return [{"drug_id": did, "name": canonical, "rxcui": rxcui, "name_es": _titulo(name_es)}
+                for did, (_, canonical, rxcui, name_es) in ordenados]
 
     async def search_conditions(self, query: str, limit: int = 10) -> list[dict[str, Any]]:
         """Busca patologías por código CIE-10 o por nombre, para el autocompletado.

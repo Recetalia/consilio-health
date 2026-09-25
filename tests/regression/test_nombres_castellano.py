@@ -146,6 +146,55 @@ async def test_amlodipino_recetado_no_queda_sin_evaluar(db):
     assert not any(e.get("drug") == "amlodipino" for e in r["not_evaluated"]), r["not_evaluated"]
 
 
+async def test_search_nitroglicerina_encuentra_el_canonico_en_castellano(db):
+    """`docs/2026-09-25-castellano-y-colores.md`: nombres oficiales de la
+    AEMPS + búsqueda multilingüe. 'Nitroglycerin' no tenía alias `es` ni
+    DNMA antes del ETL; ahora lo consigue por esqueleto contra la AEMPS."""
+    r = await db.search_drugs("nitroglicerina")
+    hit = next((x for x in r if x["name"] == "Nitroglycerin"), None)
+    assert hit, f"no encontró Nitroglycerin: {r}"
+    assert hit["name_es"] == "Nitroglicerina"
+
+
+async def test_search_amlodipino_encuentra_amlodipine(db):
+    r = await db.search_drugs("amlodipino")
+    assert any(x["name"] == "Amlodipine" for x in r), r
+
+
+async def test_search_amlodipine_tambien_encuentra_amlodipine(db):
+    r = await db.search_drugs("amlodipine")
+    assert any(x["name"] == "Amlodipine" for x in r), r
+
+
+async def test_search_acarbo_da_name_es_acarbosa(db):
+    r = await db.search_drugs("acarbo")
+    hit = next((x for x in r if x["name"] == "Acarbose"), None)
+    assert hit, f"no encontró Acarbose: {r}"
+    assert hit["name_es"] == "Acarbosa"
+
+
+async def test_search_warfarin_sigue_mostrando_la_grafia_dnma(db):
+    """Precedencia: alias `es` curado > DNMA > AEMPS. Warfarin ya tiene un
+    alias `es` curado a mano ('warfarina'), así que aunque la AEMPS también
+    lo nombre no debería cambiar nada; y aunque no lo tuviera, el DNMA gana
+    a la AEMPS."""
+    r = await db.search_drugs("warfarin")
+    hit = next((x for x in r if x["name"] == "Warfarin"), None)
+    assert hit, f"no encontró Warfarin: {r}"
+    assert hit["name_es"] == "Warfarina"
+
+
+async def test_search_no_asigna_alias_aemps_a_vitamina_de_una_letra(db):
+    """'Vitamin A'/'Vitamin E' colisionan por esqueleto ('a'/'e' son tokens
+    de 1 caracter, que el ETL descarta): no tienen que mostrar un name_es
+    inventado ni prestado del homónimo."""
+    for q, canonical in (("vitamin a", "Vitamin A"), ("vitamin e", "Vitamin E")):
+        r = await db.search_drugs(q)
+        hit = next((x for x in r if x["name"] == canonical), None)
+        assert hit, f"no encontró {canonical}: {r}"
+        assert hit["name_es"] is None, hit
+
+
 async def test_homonimo_sin_tokens_cortos_sigue_sin_resolver(tmp_path):
     from app.clients.recetalia_db import RecetaliaDatabase
 

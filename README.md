@@ -89,6 +89,7 @@ python -m scripts.build_condition_xref                    # puente CIE-10 ↔ Me
 PYTHONPATH=scripts python scripts/cross_aemps_interactions.py   # interacciones AEMPS (mecanismo y manejo)
 PYTHONPATH=scripts python scripts/cross_aemps_geriatria.py      # alertas geriátricas AEMPS
 PYTHONPATH=scripts python scripts/cross_aemps_duplicidad.py     # clases de duplicidad AEMPS
+python -m scripts.enrich_nombres_aemps                          # nombres oficiales en castellano (AEMPS)
 ```
 
 Métrica de duplicidad: `.venv/bin/python scripts/eval_duplicidad.py` (sale 1 si falla un caso).
