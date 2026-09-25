@@ -388,6 +388,33 @@ class RecetaliaDatabase:
             rows = await cur.fetchall()
         return [{**dict(r), "condicionada": bool(r["condicionada"])} for r in rows]
 
+    async def classes_for(
+        self, drug_ids: list[int]
+    ) -> dict[int, list[tuple[str, str, str]]] | None:
+        """Clases de duplicidad por fármaco: (class_id, class_desc, rol).
+
+        `None` si la tabla no existe. `None` y `{}` no son lo mismo: el primero
+        es "no se evaluó" (ETL sin correr) y el llamador lo tiene que decir; el
+        segundo es "se evaluó y ningún fármaco tiene clase".
+        """
+        if not drug_ids:
+            return {}
+        conn = await self._c()
+        ph = ",".join("?" * len(drug_ids))
+        try:
+            async with conn.execute(
+                f"select drug_id, class_id, class_desc, rol from drug_class "
+                f"where drug_id in ({ph}) order by class_id", tuple(drug_ids)
+            ) as cur:
+                rows = await cur.fetchall()
+        except aiosqlite.OperationalError:
+            return None
+        out: dict[int, list[tuple[str, str, str]]] = {}
+        for r in rows:
+            out.setdefault(r["drug_id"], []).append(
+                (r["class_id"], r["class_desc"], r["rol"]))
+        return out
+
     async def alerts_for(
         self, drug_ids: list[int], condition_ids: list[int]
     ) -> list[dict[str, Any]]:

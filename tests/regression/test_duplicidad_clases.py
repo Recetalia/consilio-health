@@ -85,3 +85,25 @@ def test_ieca_aca_y_tiazida_no_comparten_clase(cx):
 
 def test_la_tiazida_no_entra_a_los_ara2_por_el_atc_del_combinado(cx):
     assert not (clases(cx, "Losartan") & clases(cx, "Hydrochlorothiazide"))
+
+
+@pytest.fixture
+async def db():
+    if not DB_PATH.exists():
+        pytest.skip("falta la base")
+    from app.clients import recetalia_db
+    await recetalia_db.client.close()
+    recetalia_db.client.db_path = str(DB_PATH)
+    yield recetalia_db.client
+    await recetalia_db.client.close()
+
+
+async def test_classes_for(db):
+    d = await db.drug_id_by_name("diazepam")
+    out = await db.classes_for([d])
+    assert out is not None
+    assert ("N05BA", "ancla") in {(c, rol) for c, _, rol in out[d]}, out
+
+
+async def test_classes_for_vacio(db):
+    assert await db.classes_for([]) == {}
