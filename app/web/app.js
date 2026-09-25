@@ -726,8 +726,13 @@ $("btn-ejemplo").addEventListener("click", async () => {
   invalidateResults();
   meds.render();
   syncButtons();
-  if (!selected.length) toast(t("toast_ejemplo_error"));
-  else $("check").focus();
+  if (!selected.length) { toast(t("toast_ejemplo_error")); return; }
+  // Igual que el ejemplo con paciente: se consulta de una. Con el perfil vacío
+  // sólo se cruzan los medicamentos entre sí; no se llama a /contraindications.
+  if (!$("check").disabled) {
+    await consultar();
+    $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 });
 
 /* Ejemplo con paciente: un caso que dispara a la vez las cuatro familias de
