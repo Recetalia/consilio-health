@@ -21,7 +21,7 @@ const SEV = {
   major:    { label: "Grave",       rank: 0 },
   moderate: { label: "Moderada",    rank: 1 },
   minor:    { label: "Leve",        rank: 2 },
-  unknown:  { label: "Sin graduar", rank: 3 },
+  unknown:  { label: "Revisar",     rank: 3 },
 };
 
 const FUENTE = {
@@ -47,9 +47,11 @@ const FUENTE_CORTA = {
 
 // Receta de ejemplo: cada par de acá dispara algo distinto —una grave con
 // texto, una por clase, una contra el perfil—, así se ve de qué es capaz sin
-// que el usuario tenga que adivinar qué escribir.
+// que el usuario tenga que adivinar qué escribir. Se busca por el nombre en
+// castellano (mismo endpoint que el autocompletado) para que las píldoras
+// no aparezcan en inglés al cargar el ejemplo.
 const EJEMPLO = {
-  drugs: ["warfarin", "ibuprofen", "simvastatin", "clarithromycin"],
+  drugs: ["warfarina", "ibuprofeno", "simvastatina", "claritromicina"],
   perfil: { edad: 72, renal: "moderada" },
 };
 
@@ -498,7 +500,12 @@ $("btn-ejemplo").addEventListener("click", async () => {
   for (const nombre of EJEMPLO.drugs) {
     try {
       const res = await buscarFarmacos(nombre);
-      const exacto = res.find((r) => r.name.toLowerCase() === nombre) || res[0];
+      // El match exacto se busca en los dos idiomas: `nombre` acá está en
+      // castellano, pero `r.name` es el canónico (a veces inglés) y sólo
+      // `r.name_es` puede tener la grafía local.
+      const exacto = res.find((r) =>
+        r.name.toLowerCase() === nombre ||
+        (r.name_es || "").toLowerCase() === nombre) || res[0];
       if (exacto) selected.push(exacto);
     } catch { /* si falla uno, se cargan los demás */ }
   }
@@ -875,7 +882,7 @@ function cardInteraccion(i) {
              i.source === "openfda"
                ? '<p class="evidence-note">Texto original del prospecto, en inglés.</p>' : ""}`
         : `<p class="evidence sin-texto">${sev === "unknown"
-             ? "La fuente registra el par pero no lo gradúa ni describe el mecanismo."
+             ? "Interacción registrada sin gravedad asignada: revisar el prospecto."
              : "La fuente registra el par y su gravedad, pero no aporta descripción del mecanismo."}</p>`}
       ${i.management
         ? `<p class="manejo"><strong>Qué hacer:</strong> ${escapeHtml(i.management)}</p>`
