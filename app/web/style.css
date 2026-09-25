@@ -539,6 +539,10 @@ footer {
 footer > * { max-width: 1280px; margin-left: auto; margin-right: auto; }
 .disclaimer { margin: 0; font-size: 13px; color: var(--text); }
 .disclaimer strong { color: var(--major); }
+/* Firma de quien lo construye. Igual en los dos idiomas: es un lema, no un texto de la UI. */
+.powered { margin-top: 10px; font-size: 12px; color: var(--text-soft); }
+.powered a { color: var(--azul); font-weight: 600; text-decoration: none; }
+.powered a:hover { color: var(--azul-profundo); text-decoration: underline; }
 .sources { margin: 7px auto 0; font-size: 12.5px; color: var(--text-soft); }
 
 /* ---------------- toast ---------------- */
