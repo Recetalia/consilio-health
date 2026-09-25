@@ -116,6 +116,10 @@ def _titulo(s: str | None) -> str | None:
     if not s:
         return None
     s = s.strip()
+    # Una sigla en mayúsculas se deja como está: el DNMA registra el ácido
+    # acetilsalicílico como "AAS", y capitalizarlo daba "Aas".
+    if s.isupper() and s.isalpha() and len(s) <= 4:
+        return s
     return s[0].upper() + s[1:].lower() if s.isupper() or s.islower() else s
 
 
