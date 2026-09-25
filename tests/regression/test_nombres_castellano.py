@@ -122,6 +122,30 @@ def _base_temporal_homonimo(tmp_path) -> str:
     return str(path)
 
 
+async def test_alergia_diclofenaco_matchea_diclofenac_recetado(db):
+    """La alergia se declara en castellano ('diclofenaco') y el fármaco
+    recetado llega en inglés ('Diclofenac'): tienen que resolver al mismo
+    drug_id y salir como alerta de alergia exacta, no como 'unresolved'."""
+    from app.services import contraindication_checker as cc
+    from app.services.patient_profile import PatientProfile
+
+    r = await cc.check(["Diclofenac"], PatientProfile(alergias=["diclofenaco"]))
+    exactas = [a for a in r["allergies"] if a["match"] == "exact"]
+    assert exactas, f"no matcheó: {r['allergies']}"
+    assert exactas[0]["drug"] == "Diclofenac"
+    assert exactas[0]["declared_as"] == "diclofenaco"
+
+
+async def test_amlodipino_recetado_no_queda_sin_evaluar(db):
+    """'amlodipino' sólo resolvía por `dnma_substance_map` (medido 2026-09-24,
+    ver docstring del módulo). Antes de ese fix quedaba en `not_evaluated`."""
+    from app.services import contraindication_checker as cc
+    from app.services.patient_profile import PatientProfile
+
+    r = await cc.check(["amlodipino"], PatientProfile())
+    assert not any(e.get("drug") == "amlodipino" for e in r["not_evaluated"]), r["not_evaluated"]
+
+
 async def test_homonimo_sin_tokens_cortos_sigue_sin_resolver(tmp_path):
     from app.clients.recetalia_db import RecetaliaDatabase
 

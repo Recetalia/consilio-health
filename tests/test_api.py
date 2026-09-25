@@ -222,6 +222,28 @@ class TestInteractionsEndpoint:
         ]})
         assert resp.status_code == 422
 
+    def test_validation_rejects_more_than_50_drugs(self, client):
+        """Sin tope, `drugs` puede llegar con 1.000 sustancias derivadas de
+        `products` y disparar ~500.000 pares en interaction_checker. El mock
+        de `check` es defensivo: si la validación no corta, no queremos que
+        el test dispare 500.000 pares de verdad."""
+        with patch("app.api.interactions.interaction_checker.check", new=AsyncMock()):
+            resp = client.post("/interactions", json={
+                "drugs": [f"drug{i}" for i in range(51)]})
+        assert resp.status_code == 422
+
+    def test_validation_rejects_more_than_50_distinct_substances_from_products(self, client):
+        # 3 productos muy por debajo del tope de `products` (50): lo que
+        # tiene que cortar acá es el tope de sustancias DISTINTAS derivadas
+        # (17*3 = 51), no el de productos.
+        productos = [
+            {"id": f"p{i}", "substances": [f"sustancia{i}_{j}" for j in range(17)]}
+            for i in range(3)
+        ]
+        with patch("app.api.interactions.interaction_checker.check", new=AsyncMock()):
+            resp = client.post("/interactions", json={"products": productos})
+        assert resp.status_code == 422
+
 
 class TestHealthEndpoint:
     def test_health_returns_ok(self, client):

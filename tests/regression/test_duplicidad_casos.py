@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from app.services.duplicity_checker import chequear, cumple
+from app.services.duplicity_checker import AVISO_SIN_CUPOS, chequear, cumple
 
 DB_PATH = Path(os.environ.get("INTERACTION_DB_PATH", "data/recetalia_interactions.db"))
 CASOS = json.load(open(Path(__file__).parent / "casos_duplicidad.json", encoding="utf-8"))
@@ -35,6 +35,20 @@ async def test_caso(db, caso):
     assert not out["duplicity_not_evaluated"], f"no resolvieron: {out['duplicity_not_evaluated']}"
     ok, motivo = cumple(out, caso["esperado"])
     assert ok, motivo
+
+
+async def test_capa_1_no_depende_del_archivo_de_cupos(db, monkeypatch):
+    """Si `duplicidad_cupos.json` falta (o el path apunta a la nada), la capa 1
+    (misma sustancia) tiene que seguir alertando, y `duplicity_warnings` avisa
+    que los cupos y excepciones curados no se cargaron."""
+    monkeypatch.setenv("CONSILIO_DUPLICIDAD_CUPOS", "/no/existe/de-verdad.json")
+    productos = [{"id": "p1", "substances": ["paracetamol"]},
+                 {"id": "p2", "substances": ["paracetamol"]}]
+    out = await chequear(db, productos)
+    assert not out["duplicity_not_evaluated"], f"no resolvieron: {out['duplicity_not_evaluated']}"
+    [d] = out["duplicities"]
+    assert d["layer"] == "substance"
+    assert AVISO_SIN_CUPOS in out["duplicity_warnings"]
 
 
 async def test_interactions_endpoint_devuelve_duplicidad(monkeypatch):

@@ -152,6 +152,12 @@ def test_cargar_cupos_real_tiene_las_claves_esperadas():
     assert isinstance(data["excepciones"], list)
 
 
+def test_cargar_cupos_archivo_inexistente_no_rompe():
+    # la capa 1 no puede depender de este archivo: si falta, cargar_cupos
+    # devuelve el default en vez de dejar propagar FileNotFoundError.
+    assert cargar_cupos("/no/existe/de-verdad.json") == SIN_CUPOS
+
+
 # --- rol ancla/miembro y deduplicación por conjunto de productos -------------
 
 # prednisona (9) y dexametasona (10) son MIEMBRO de H02AA (la clase amplia que

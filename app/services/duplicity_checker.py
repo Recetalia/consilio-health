@@ -42,6 +42,10 @@ DEFAULT_CUPOS_PATH = os.path.join(
 
 AVISO_SIN_CLASES = ("La base no tiene clases de duplicidad cargadas: sólo se "
                     "evaluó la misma sustancia en dos productos.")
+AVISO_SIN_CUPOS = ("No se cargaron los cupos y excepciones curados: la duplicidad de "
+                   "clase puede alertar combinaciones intencionales.")
+
+_CUPOS_VACIOS: dict[str, Any] = {"clases": {}, "excepciones": []}
 
 
 @dataclass(frozen=True)
@@ -53,20 +57,34 @@ class Producto:
 
 
 @lru_cache(maxsize=None)
-def _leer_cupos(path: str) -> dict[str, Any]:
+def _leer_cupos(path: str) -> tuple[dict[str, Any], bool]:
     """Lectura de disco, cacheada por ruta. `cargar_cupos` devuelve una copia
-    de este resultado para que nadie mute el cache compartido."""
-    with open(path, encoding="utf-8") as f:
-        data = json.load(f)
-    return {"clases": data.get("clases", {}), "excepciones": data.get("excepciones", [])}
+    del dato para que nadie mute el cache compartido.
+
+    Si el archivo falta o el JSON es inválido, la capa 1 (misma sustancia) no
+    puede depender de esto: se cachea `_CUPOS_VACIOS` para esa ruta (mismo
+    mecanismo de cache, no uno nuevo) y el `bool` le avisa a `chequear` que
+    hay que agregar `AVISO_SIN_CUPOS`."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return dict(_CUPOS_VACIOS), False
+    return {"clases": data.get("clases", {}), "excepciones": data.get("excepciones", [])}, True
 
 
-def cargar_cupos(path: str | None = None) -> dict[str, Any]:
+def _cargar_cupos_con_estado(path: str | None) -> tuple[dict[str, Any], bool]:
     # la ruta se resuelve en cada llamada (no al importar el módulo) para que
     # `CONSILIO_DUPLICIDAD_CUPOS` pueda cambiar entre tests o entre requests.
     if path is None:
         path = os.environ.get("CONSILIO_DUPLICIDAD_CUPOS", DEFAULT_CUPOS_PATH)
-    return copy.deepcopy(_leer_cupos(path))
+    data, ok = _leer_cupos(path)
+    return copy.deepcopy(data), ok
+
+
+def cargar_cupos(path: str | None = None) -> dict[str, Any]:
+    data, _ = _cargar_cupos_con_estado(path)
+    return data
 
 
 def evaluar(
@@ -228,7 +246,13 @@ async def chequear(db: Any, productos: list[dict[str, Any]],
     drug_ids = sorted({d for p in resueltos for d in p.drug_ids if d is not None})
     clases = await db.classes_for(drug_ids)
     canonicos = await db.canonicals_for(drug_ids)
-    return evaluar(resueltos, clases, cupos or cargar_cupos(), canonicos)
+    cupos_ok = True
+    if cupos is None:
+        cupos, cupos_ok = _cargar_cupos_con_estado(None)
+    out = evaluar(resueltos, clases, cupos, canonicos)
+    if not cupos_ok:
+        out["duplicity_warnings"].append(AVISO_SIN_CUPOS)
+    return out
 
 
 def cumple(out: dict[str, Any], esperado: dict[str, Any] | None) -> tuple[bool, str]:

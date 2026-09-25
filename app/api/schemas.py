@@ -19,9 +19,12 @@ class ProductIn(BaseModel):
 
 
 class InteractionsRequest(BaseModel):
+    # Tope defensivo: `drugs` derivado de `products` puede acumular hasta 20
+    # sustancias por 50 productos (1.000). Sin tope, eso dispara 1.000
+    # llamadas a RxNorm y ~500.000 pares en interaction_checker.
     drugs: list[Annotated[str, StringConstraints(min_length=1, max_length=200,
                                                  strip_whitespace=True)]] = Field(
-        default_factory=list, examples=[["ibuprofen", "warfarin"]])
+        default_factory=list, max_length=50, examples=[["ibuprofen", "warfarin"]])
     products: list[ProductIn] | None = Field(None, max_length=50)
 
     @model_validator(mode="after")
@@ -35,6 +38,10 @@ class InteractionsRequest(BaseModel):
                 vistos: list[str] = []
                 for p in self.products:
                     vistos += [s for s in p.substances if s not in vistos]
+                # No pasa por el `max_length` del campo: se arma acá, después
+                # de parsear, y una reasignación no vuelve a validar el campo.
+                if len(vistos) > 50:
+                    raise ValueError("demasiadas sustancias: máximo 50 distintas")
                 self.drugs = vistos
             if len(self.products) < 2 and len(self.drugs) < 2:
                 raise ValueError("hacen falta al menos dos productos o dos sustancias")
