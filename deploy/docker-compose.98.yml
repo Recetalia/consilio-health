@@ -38,7 +38,12 @@ services:
     restart: unless-stopped
     networks:
       - medicinainteligente-net
+      # La API de Recetalia (recetalia-api-rest) lo llama por nombre, sin salir a
+      # internet ni pasar por Cloudflare: http://consilio:8000.
+      - recetalia_recetalia-net
 
 networks:
   medicinainteligente-net:
+    external: true
+  recetalia_recetalia-net:
     external: true
