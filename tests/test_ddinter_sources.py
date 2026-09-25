@@ -4,17 +4,9 @@ from scripts import ddinter_sources
 
 
 def test_csv_filenames_match_atc_categories():
-    # DDInter publishes one CSV per ATC top-level category.
-    expected = {
-        "ddinter_downloads_code_A.csv",
-        "ddinter_downloads_code_B.csv",
-        "ddinter_downloads_code_D.csv",
-        "ddinter_downloads_code_H.csv",
-        "ddinter_downloads_code_L.csv",
-        "ddinter_downloads_code_P.csv",
-        "ddinter_downloads_code_R.csv",
-        "ddinter_downloads_code_V.csv",
-    }
+    # DDInter publishes one CSV per ATC top-level category: all 14.
+    # C/G/J/M/N/S were once thought unavailable; they are (measured 2026-09-25).
+    expected = {f"ddinter_downloads_code_{c}.csv" for c in "ABCDGHJLMNPRSV"}
     assert set(ddinter_sources.CSV_FILENAMES) == expected
 
 
