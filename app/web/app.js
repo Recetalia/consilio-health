@@ -585,7 +585,10 @@ const filtro = {
 };
 
 function construirFiltros(inter, contra) {
-  const hallazgos = (inter?.interactions || []);
+  const hallazgos = [
+    ...(inter?.interactions || []),
+    ...(inter?.duplicities || []),
+  ];
   // Las dos columnas alimentan los mismos contadores: un filtro que dice
   // "Grave 3" y deja cuatro tarjetas rojas en pantalla no se entiende.
   const delPaciente = [
@@ -709,11 +712,34 @@ function render() {
     ocultos += todos.length - found.length;
     const pares = selected.length * (selected.length - 1) / 2;
     html += found.map(cardInteraccion).join("");
-    if (!found.length && todos.length) {
+    const dups = (inter.duplicities || []).filter((d) =>
+      pasaFiltroPaciente([d.class_desc, ...(d.substances || [])], d.severity, d.source));
+    ocultos += (inter.duplicities || []).length - dups.length;
+    html += dups.map((d) => cardDuplicidad(d, false)).join("");
+    // Lo suprimido se muestra plegado: se evaluó y se decidió no alertar.
+    const sup = inter.duplicities_suppressed || [];
+    if (sup.length && !hayFiltro()) {
+      html += `<details class="suprimidas"><summary>${sup.length}
+        ${sup.length === 1 ? "duplicidad no alertada" : "duplicidades no alertadas"}
+        por una excepción curada</summary>${sup.map((d) => cardDuplicidad(d, true)).join("")}</details>`;
+    }
+    if (!hayFiltro()) {
+      (inter.duplicity_not_evaluated || []).forEach((n) => {
+        html += `<div class="empty-state"><strong>${escapeHtml(n)}</strong> no se pudo
+          identificar, así que no se evaluó su duplicidad.</div>`;
+      });
+      (inter.duplicity_warnings || []).forEach((w) => {
+        html += `<div class="aviso-perfil">${escapeHtml(w)}</div>`;
+      });
+    }
+    // "Ningún hallazgo" y "sin evidencia" hablan de interacciones e-vs-e; si
+    // ya hay una duplicidad visible en la misma columna, decir "no encontramos
+    // nada" al lado se contradice. Se gatean también con `dups.length`.
+    if (!found.length && !dups.length && todos.length) {
       html += '<div class="empty-state">Ningún hallazgo coincide con los filtros.</div>';
     }
     const sin = pares - todos.length;
-    if (sin > 0 && !hayFiltro()) {
+    if (sin > 0 && !hayFiltro() && !dups.length) {
       // Nunca "es seguro": decimos que no encontramos evidencia.
       html += `<div class="empty-state"><strong>${sin}
         ${sin === 1 ? "combinación" : "combinaciones"} sin evidencia encontrada.</strong>
@@ -853,6 +879,32 @@ function cardInteraccion(i) {
     </article>`;
 }
 
+/* Duplicidad terapéutica. Dice qué regla la disparó —misma sustancia o clase de
+   la AEMPS— y, si se suprimió, por qué: la procedencia es lo que VIDAL no da. */
+function cardDuplicidad(d, suprimida) {
+  const sev = suprimida ? "minor" : (SEV[d.severity] ? d.severity : "moderate");
+  const titulo = d.layer === "substance"
+    ? "Misma sustancia en dos productos"
+    : `Duplicidad de clase: ${escapeHtml(d.class_desc || d.class_id)}`;
+  const detalle = d.layer === "substance"
+    ? `${escapeHtml(d.substances.map(mostrar).join(", "))} aparece en ${d.count} productos distintos.`
+    : `${d.count} productos de la misma clase (${escapeHtml(d.substances.map(mostrar).join(", "))});
+       el máximo sin alerta es ${d.cupo}.`;
+  return `
+    <article class="finding ${sev}">
+      <div class="finding-head">
+        <span class="pair">${titulo}</span>
+        <span class="badge ${sev}">${suprimida ? "No alertada" : "Duplicidad"}</span>
+      </div>
+      <p class="evidence">${detalle}</p>
+      ${suprimida ? `<p class="manejo"><strong>Por qué no se alertó:</strong>
+          ${escapeHtml(d.motivo || "")}${d.referencia ? ` (${escapeHtml(d.referencia)})` : ""}
+          ${d.validado ? "" : " — excepción pendiente de validación farmacéutica."}</p>` : ""}
+      <p class="meta">${d.layer === "substance" ? "Regla propia de Consilio"
+        : `${FUENTE.aemps} — grupo ${escapeHtml(d.class_id)}`}</p>
+    </article>`;
+}
+
 function cardPaciente(c, sev) {
   return `
     <article class="finding ${sev}">
@@ -931,6 +983,10 @@ $("btn-copiar").addEventListener("click", async () => {
     if (i.description) L.push(`  ${i.description}`);
     if (i.management) L.push(`  Qué hacer: ${i.management}`);
     L.push(`  Fuente: ${FUENTE[i.source] || i.source}`);
+  });
+  (inter?.duplicities || []).forEach((d) => {
+    L.push(`[DUPLICIDAD] ${d.layer === "substance" ? "misma sustancia" : d.class_desc}: ` +
+           d.substances.map(mostrar).join(", "));
   });
   (contra?.contraindications || []).forEach((c) =>
     L.push(`[CONTRAINDICADO] ${mostrar(c.drug)} — ${condEs(c.condition)}`));
