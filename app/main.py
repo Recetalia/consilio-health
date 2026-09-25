@@ -22,6 +22,7 @@ limiter = Limiter(key_func=_get_real_client_ip)
 
 from app.api.admin import router as admin_router
 from app.api.contraindications import router as contraindications_router
+from app.api.data import router as data_router
 from app.api.drugs import router as drugs_router
 from app.api.health import router as health_router
 from app.api.interactions import router as interactions_router
@@ -77,6 +78,7 @@ app.include_router(health_router)
 app.include_router(interactions_router)
 app.include_router(drugs_router)
 app.include_router(contraindications_router)
+app.include_router(data_router)
 
 # Interfaz de consulta. Se sirve desde el mismo proceso: Consilio es un producto
 # standalone, no una API a la que haya que construirle un frontend aparte.

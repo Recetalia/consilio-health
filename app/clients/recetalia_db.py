@@ -144,6 +144,7 @@ class RecetaliaDatabase:
         self._conn: aiosqlite.Connection | None = None
         self._lock = asyncio.Lock()
         self._respaldo: dict | None = None
+        self._summary: dict | None = None
 
     async def connect(self) -> None:
         if self._conn is not None:
@@ -164,6 +165,7 @@ class RecetaliaDatabase:
             await self._conn.close()
             self._conn = None
         self._respaldo = None
+        self._summary = None
 
     async def _c(self) -> aiosqlite.Connection:
         if self._conn is None:
@@ -721,6 +723,97 @@ class RecetaliaDatabase:
             if row:
                 out[(system, code)] = row["condition_id"]
         return out
+
+    # --- resumen de la base (sección "Los datos") -------------------------
+
+    async def meta_values(self, keys: list[str]) -> dict[str, str | None]:
+        """Valores de `meta` para esas keys. Una key ausente queda en `None`:
+        una fecha de actualización que no está no se reemplaza por otra."""
+        out: dict[str, str | None] = {k: None for k in keys}
+        if not keys:
+            return out
+        conn = await self._c()
+        ph = ",".join("?" * len(keys))
+        async with conn.execute(
+            f"select key, value from meta where key in ({ph})", tuple(keys),
+        ) as cur:
+            for r in await cur.fetchall():
+                out[r["key"]] = r["value"]
+        return out
+
+    async def _count(self, sql: str) -> int:
+        conn = await self._c()
+        async with conn.execute(sql) as cur:
+            row = await cur.fetchone()
+        return int(row[0] or 0) if row else 0
+
+    async def _group_count(self, sql: str) -> dict[str, int]:
+        conn = await self._c()
+        async with conn.execute(sql) as cur:
+            return {r[0]: int(r[1]) for r in await cur.fetchall()}
+
+    async def data_counts(self) -> dict[str, Any]:
+        """Cantidades de la base, para mostrar qué cubre.
+
+        Se cachea por instancia: la base se abre `immutable=1` (ver
+        `_readonly_immutable_uri`), así que no cambia hasta reiniciar, y el
+        conteo de pares distintos recorre las ~240 mil filas de `interaction`.
+        """
+        if self._summary is not None:
+            return self._summary
+        drugs_total = await self._count("select count(*) from drug")
+        # Mismo criterio que `enrich_nombres_aemps._con_nombre_es`: se muestra
+        # algo en castellano si hay alias `es` (de cualquier fuente) o mapa DNMA.
+        drugs_es = await self._count(
+            "select count(*) from (select drug_id from drug_alias where lang='es' "
+            "union select drug_id from dnma_substance_map where drug_id is not null)")
+        alerts = await self._group_count(
+            "select kind, count(*) from drug_condition_alert group by kind")
+        self._summary = {
+            "drugs": {
+                "total": drugs_total,
+                "with_spanish_name": drugs_es,
+                "spanish_name_pct": round(100 * drugs_es / drugs_total, 1) if drugs_total else 0.0,
+                "with_rxcui": await self._count(
+                    "select count(*) from drug where rxcui is not null"),
+            },
+            "interactions": {
+                "total": await self._count("select count(*) from interaction"),
+                # Un mismo par puede venir de varias fuentes: esto es lo que el
+                # médico percibe como "combinaciones cubiertas".
+                "distinct_pairs": await self._count(
+                    "select count(*) from (select distinct drug_a_id, drug_b_id "
+                    "from interaction)"),
+                "by_source": await self._group_count(
+                    "select source, count(*) from interaction group by source"),
+                "by_severity": await self._group_count(
+                    "select severity, count(*) from interaction group by severity"),
+            },
+            "duplicity": {
+                "classes": await self._count(
+                    "select count(distinct class_id) from drug_class"),
+                "class_memberships": await self._count("select count(*) from drug_class"),
+            },
+            "condition_alerts": {
+                "total": sum(alerts.values()),
+                "contraindications": alerts.get("contraindication", 0),
+                "precautions": alerts.get("precaution", 0),
+            },
+            "geriatric_criteria": await self._count(
+                "select count(*) from drug_population_alert where population='elderly'"),
+            "conditions": {
+                "total": await self._count("select count(*) from condition"),
+                "icd10": await self._count(
+                    "select count(*) from condition where code_system like 'icd10%'"),
+                "icd10_links": await self._count("select count(*) from condition_xref"),
+            },
+            "dnma": {
+                "substances": await self._count("select count(*) from dnma_substance_map"),
+                "mapped": await self._count(
+                    "select count(*) from dnma_substance_map where drug_id is not null"),
+            },
+        }
+        return self._summary
 
 
 client = RecetaliaDatabase()

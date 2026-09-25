@@ -27,8 +27,11 @@ from starlette.middleware.base import BaseHTTPMiddleware
 logger = logging.getLogger(__name__)
 
 # Rutas sin autenticación: las necesita el orquestador para saber si el
-# contenedor está vivo, y no exponen datos.
-PUBLIC_PATHS = {"/health", "/health/data", "/openapi.json", "/docs", "/redoc", "/"}
+# contenedor está vivo, y no exponen datos. `/data/summary` alimenta la sección
+# pública "Los datos": sólo conteos agregados y fechas de actualización, nada
+# que responda a una consulta clínica.
+PUBLIC_PATHS = {"/health", "/health/data", "/data/summary",
+                "/openapi.json", "/docs", "/redoc", "/"}
 # Los estáticos de la interfaz no llevan key: son HTML, CSS y JS, no datos. La
 # key la exigen igual los endpoints que la interfaz consume.
 PUBLIC_PREFIXES = ("/ui/",)
