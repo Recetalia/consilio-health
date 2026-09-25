@@ -29,6 +29,11 @@ const CONDICION_ES = {
   /* --- riñón --- */
   "Renal Insufficiency": "Insuficiencia renal",
   "Renal Insufficiency, Chronic": "Insuficiencia renal crónica",
+  // CIE-10 (CMS): los anclajes de N18 que ofrece el autocompletado, y el
+  // título de N18.5, que usa el ejemplo con paciente.
+  "Chronic kidney disease (CKD)": "Enfermedad renal crónica (ERC)",
+  "Chronic kidney disease, unspecified": "Enfermedad renal crónica, no especificada",
+  "Chronic kidney disease, stage 5": "Enfermedad renal crónica, estadio 5",
   "Kidney Diseases": "Enfermedad renal",
   "Kidney Failure, Chronic": "Insuficiencia renal crónica terminal",
   "Acute Kidney Injury": "Insuficiencia renal aguda",

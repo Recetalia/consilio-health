@@ -528,23 +528,187 @@ $("clear").addEventListener("click", () => {
   meds.render(); alerg.render(); patol.render();
 });
 
-$("btn-ayuda").addEventListener("click", (e) => {
-  const abierto = $("ayuda").hidden;
-  $("ayuda").hidden = !abierto;
-  e.currentTarget.setAttribute("aria-expanded", String(abierto));
+// "¿Qué evalúa?" y "Los datos" son dos paneles bajo la cabecera; abrir uno
+// cierra el otro, para no apilar dos pantallas de texto sobre el formulario.
+function abrirPanel(id, abrir) {
+  const btn = { ayuda: $("btn-ayuda"), datos: $("btn-datos") };
+  for (const k of Object.keys(btn)) {
+    const on = k === id ? abrir : false;
+    $(k).hidden = !on;
+    btn[k].setAttribute("aria-expanded", String(on));
+  }
+  if (id === "datos" && abrir) cargarDatos();
+}
+
+$("btn-ayuda").addEventListener("click", () => abrirPanel("ayuda", $("ayuda").hidden));
+$("btn-datos").addEventListener("click", () => abrirPanel("datos", $("datos").hidden));
+$("btn-ver-datos").addEventListener("click", () => {
+  abrirPanel("datos", true);
+  $("datos").scrollIntoView({ behavior: "smooth", block: "start" });
 });
+$("btn-cerrar-datos").addEventListener("click", () => {
+  abrirPanel("datos", false);
+  $("btn-datos").focus();
+});
+
+/* ---------------- sección "Los datos" ----------------
+   Todo número y toda fecha salen de GET /data/summary (pública, sin key).
+   Se pide una sola vez: la base es inmutable mientras corre el servicio. */
+
+let DATOS = null;
+let datosPedidos = false;
+
+async function cargarDatos() {
+  if (datosPedidos) return;
+  datosPedidos = true;
+  try {
+    const r = await fetch("/data/summary", { headers: headers() });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    DATOS = await r.json();
+    renderDatos();
+  } catch (err) {
+    datosPedidos = false;   // se puede reintentar cerrando y abriendo
+    $("datos-stats").innerHTML =
+      `<p class="datos-cargando">${escapeHtml(t("datos_error", { detalle: err.message }))}</p>`;
+  }
+}
+
+const fmtNum = (n) => new Intl.NumberFormat(t("locale")).format(n ?? 0);
+const fmtPct = (p) => new Intl.NumberFormat(t("locale"),
+  { style: "percent", maximumFractionDigits: 1 }).format((p ?? 0) / 100);
+// `null` NO se reemplaza por otra fecha: se dice que no hay.
+const fmtFecha = (iso) => {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return isNaN(d) ? null : d.toLocaleDateString(t("locale"),
+    { day: "numeric", month: "long", year: "numeric" });
+};
+
+// Qué fuente, con qué licencia y dónde. Las cantidades y fechas se completan
+// con la respuesta del endpoint.
+const FUENTES_DATOS = [
+  { k: "ddinter", nombre: "DDInter 2.0", licencia: () => "CC BY-NC-SA 4.0",
+    url: "https://ddinter2.scbdd.com/",
+    cant: (d) => t("f_cant_ddinter", { n: fmtNum(d.interactions.by_source.ddinter) }) },
+  { k: "aemps", nombre: "AEMPS", licencia: () => t("lic_aemps"),
+    url: "https://www.aemps.gob.es/",
+    cant: (d) => t("f_cant_aemps", {
+      ix: fmtNum(d.interactions.by_source.aemps), clases: fmtNum(d.duplicity.classes),
+      geri: fmtNum(d.geriatric_criteria) }) },
+  { k: "openfda", nombre: "openFDA", licencia: () => t("lic_openfda"),
+    url: "https://open.fda.gov/",
+    cant: (d) => t("f_cant_openfda", { n: fmtNum(d.interactions.by_source.openfda) }) },
+  { k: "medrt", nombre: "MED-RT", licencia: () => t("lic_nlm"),
+    url: "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MED-RT/",
+    cant: (d) => t("f_cant_medrt", { n: fmtNum(d.condition_alerts.total) }) },
+  { k: "rxnorm", nombre: "RxNorm", licencia: () => t("lic_nlm"),
+    url: "https://www.nlm.nih.gov/research/umls/rxnorm/",
+    cant: (d) => t("f_cant_rxnorm", { n: fmtNum(d.drugs.with_rxcui) }) },
+  { k: "dnma", nombre: () => t("f_nombre_dnma"), licencia: () => t("lic_dnma"),
+    url: "https://www.gub.uy/ministerio-salud-publica/",
+    cant: (d) => t("f_cant_dnma", { mapped: fmtNum(d.dnma.mapped), total: fmtNum(d.dnma.substances) }) },
+  { k: "icd10_bridge", aporta: "puente", nombre: () => t("f_nombre_puente"),
+    licencia: () => t("lic_puente"), url: null,
+    cant: (d) => t("f_cant_puente", {
+      codigos: fmtNum(d.conditions.icd10), links: fmtNum(d.conditions.icd10_links) }) },
+];
+
+function renderDatos() {
+  const d = DATOS;
+  if (!d) return;
+  const ix = d.interactions;
+  const nFuentes = Object.values(ix.by_source).filter((n) => n > 0).length;
+  const tiles = [
+    { n: ix.distinct_pairs, l: t("stat_pares_l"),
+      s: t("stat_pares_s", { total: fmtNum(ix.total), n: nFuentes }), hero: true },
+    { n: d.drugs.total, l: t("stat_farmacos_l"),
+      s: t("stat_farmacos_s", { pct: fmtPct(d.drugs.spanish_name_pct) }) },
+    { n: d.duplicity.classes, l: t("stat_dup_l"),
+      s: t("stat_dup_s", { miembros: fmtNum(d.duplicity.class_memberships),
+                           exc: fmtNum(d.duplicity.curated_exceptions) }) },
+    { n: d.geriatric_criteria, l: t("stat_geri_l"), s: t("stat_geri_s") },
+    { n: d.condition_alerts.total, l: t("stat_pat_l"),
+      s: t("stat_pat_s", { ci: fmtNum(d.condition_alerts.contraindications),
+                           pre: fmtNum(d.condition_alerts.precautions),
+                           cie: fmtNum(d.conditions.icd10) }) },
+  ];
+  $("datos-stats").innerHTML = tiles.map((x) => `
+    <div class="stat${x.hero ? " stat-hero" : ""}">
+      <span class="stat-n">${fmtNum(x.n)}</span>
+      <span class="stat-l">${escapeHtml(x.l)}</span>
+      <span class="stat-s">${escapeHtml(x.s)}</span>
+    </div>`).join("");
+
+  // Distribución por gravedad: barra apilada con los colores de gravedad de
+  // toda la app, y leyenda con número y porcentaje (el color nunca va solo).
+  const orden = ["major", "moderate", "minor", "unknown"];
+  const total = orden.reduce((a, k) => a + (ix.by_severity[k] || 0), 0);
+  if (total) {
+    const pct = (k) => (100 * (ix.by_severity[k] || 0)) / total;
+    $("datos-sev").innerHTML = `
+      <h3 class="datos-h3">${escapeHtml(t("sev_dist_h"))}</h3>
+      <div class="sev-bar" role="img" aria-label="${escapeAttr(t("sev_dist_aria"))}">
+        ${orden.filter((k) => ix.by_severity[k]).map((k) => `
+          <span class="seg ${k}" style="flex-grow:${pct(k)}"
+                title="${escapeAttr(`${SEV[k].label}: ${fmtNum(ix.by_severity[k])} (${fmtPct(pct(k))})`)}"></span>`).join("")}
+      </div>
+      <ul class="sev-leyenda">
+        ${orden.map((k) => `<li><span class="dot ${k}"></span>
+          <strong>${escapeHtml(SEV[k].label)}</strong>
+          <span class="num">${fmtNum(ix.by_severity[k] || 0)}</span>
+          <span class="pct">${fmtPct(pct(k))}</span></li>`).join("")}
+      </ul>`;
+    $("datos-sev").hidden = false;
+  }
+
+  $("datos-fuentes").innerHTML = FUENTES_DATOS.map((f) => {
+    const src = d.sources[f.k] || {};
+    const fecha = fmtFecha(src.updated_at);
+    const nombre = typeof f.nombre === "function" ? f.nombre() : f.nombre;
+    const version = f.k === "ddinter" && src.release
+      ? `<span class="fuente-version">${escapeHtml(t("datos_version", { v: src.release }))}</span>` : "";
+    return `
+      <article class="fuente-card">
+        <header>
+          <h4>${escapeHtml(nombre)}</h4>${version}
+        </header>
+        <p class="fuente-aporta">${escapeHtml(t(`f_aporta_${f.aporta || f.k}`))}</p>
+        <p class="fuente-cant">${escapeHtml(f.cant(d))}</p>
+        <dl>
+          <dt>${escapeHtml(t("datos_licencia"))}</dt><dd>${escapeHtml(f.licencia())}</dd>
+        </dl>
+        <div class="fuente-pie">
+          <span class="fuente-fecha${fecha ? "" : " sin-fecha"}">${escapeHtml(
+            fecha ? t("datos_actualizado", { fecha }) : t("datos_sin_fecha"))}</span>
+          ${f.url ? `<a href="${escapeAttr(f.url)}" target="_blank" rel="noopener">${escapeHtml(t("datos_sitio"))} ↗</a>` : ""}
+        </div>
+      </article>`;
+  }).join("");
+
+  const b = d.sources.build || {};
+  const fb = fmtFecha(b.timestamp);
+  $("datos-build").textContent = fb && b.sha ? t("datos_build", { fecha: fb, sha: b.sha }) : "";
+}
+
+// Link directo a la sección (para difundir): /#datos la abre al cargar.
+if (location.hash === "#datos") abrirPanel("datos", true);
+
+// Busca por nombre en castellano (mismo endpoint que el autocompletado) y se
+// queda con el match exacto, en los dos idiomas: `nombre` está en castellano,
+// pero `r.name` es el canónico (a veces inglés) y sólo `r.name_es` puede
+// tener la grafía local.
+async function resolverFarmaco(nombre) {
+  const res = await buscarFarmacos(nombre);
+  return res.find((r) =>
+    r.name.toLowerCase() === nombre ||
+    (r.name_es || "").toLowerCase() === nombre) || res[0] || null;
+}
 
 $("btn-ejemplo").addEventListener("click", async () => {
   selected.length = 0;
   for (const nombre of EJEMPLO.drugs) {
     try {
-      const res = await buscarFarmacos(nombre);
-      // El match exacto se busca en los dos idiomas: `nombre` acá está en
-      // castellano, pero `r.name` es el canónico (a veces inglés) y sólo
-      // `r.name_es` puede tener la grafía local.
-      const exacto = res.find((r) =>
-        r.name.toLowerCase() === nombre ||
-        (r.name_es || "").toLowerCase() === nombre) || res[0];
+      const exacto = await resolverFarmaco(nombre);
       if (exacto) selected.push(exacto);
     } catch { /* si falla uno, se cargan los demás */ }
   }
@@ -559,6 +723,70 @@ $("btn-ejemplo").addEventListener("click", async () => {
   else $("check").focus();
 });
 
+/* Ejemplo con paciente: un caso que dispara a la vez las cuatro familias de
+   alertas contra el paciente y la receta. Verificado contra la API
+   (2026-09-25, base con build adf0337):
+     - contraindicación: metformina con insuficiencia renal (MED-RT, vía N18.5);
+     - alergia: amoxicilina declarada y recetada (coincidencia exacta);
+     - criterios en el anciano (AEMPS): diazepam, lorazepam e ibuprofeno;
+     - duplicidad: diazepam + lorazepam, clase N05BA (AEMPS);
+     - interacciones DDInter: metformina + ibuprofeno moderada, y nueve pares
+       "revisar".
+   La función renal va en "grave" por coherencia con un estadio 5; hoy no
+   agrega alertas propias (la contraindicación ya sale de la patología). */
+const EJEMPLO_PACIENTE = {
+  drugs: ["metformina", "diazepam", "lorazepam", "amoxicilina", "ibuprofeno"],
+  alergias: ["amoxicilina"],
+  // El autocompletado sólo ofrece los anclajes del puente (N18, N18.9): N18.5
+  // no aparece en la lista aunque el backend lo resuelve por prefijo. Se carga
+  // con su título oficial CIE-10 (CMS) y, si alguna vez el catálogo lo
+  // ofrece, se usa lo que devuelva el buscador.
+  patologia: { code: "N18.5", name: "Chronic kidney disease, stage 5" },
+  perfil: { sexo: "F", edad: 78, renal: "grave" },
+};
+
+$("btn-ejemplo-paciente").addEventListener("click", async () => {
+  $("clear").click();   // mismo estado que "Vaciar todo": nada del caso anterior
+
+  const cargar = async (nombres, destino) => {
+    for (const nombre of nombres) {
+      try {
+        const r = await resolverFarmaco(nombre);
+        if (r) destino.push(r);
+      } catch { /* si falla uno, se cargan los demás */ }
+    }
+  };
+  await cargar(EJEMPLO_PACIENTE.drugs, selected);
+  await cargar(EJEMPLO_PACIENTE.alergias, alergias);
+
+  const p = EJEMPLO_PACIENTE.patologia;
+  try {
+    const res = await buscarPatologias(p.code);
+    patologias.push(res.find((r) => r.code === p.code) || { id: p.code, ...p });
+  } catch {
+    patologias.push({ id: p.code, ...p });
+  }
+
+  const pf = EJEMPLO_PACIENTE.perfil;
+  $("sexo").value = pf.sexo;
+  $("sexo").dispatchEvent(new Event("change"));   // muestra embarazo/lactancia
+  SELECTS.sexo.sync();
+  $("edad").value = pf.edad;
+  $("aviso-edad").hidden = false;
+  $("renal").value = pf.renal;
+  SELECTS.renal.sync();
+
+  invalidateResults();
+  meds.render(); alerg.render(); patol.render();
+  syncButtons();
+  if (!selected.length) { toast(t("toast_ejemplo_paciente_error")); return; }
+  // Se consulta de una: el punto del ejemplo es ver las alertas, no el formulario.
+  if (!$("check").disabled) {
+    await consultar();
+    $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+
 /* ---------------- consulta ---------------- */
 
 document.addEventListener("keydown", (e) => {
@@ -568,7 +796,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-$("check").addEventListener("click", async () => {
+async function consultar() {
   const btn = $("check");
   btn.disabled = true;
   btn.textContent = t("btn_consultando");
@@ -605,7 +833,8 @@ $("check").addEventListener("click", async () => {
   ultimo = { inter, contra, interError, contraError };
   construirFiltros(inter, contra);
   render();
-});
+}
+$("check").addEventListener("click", consultar);
 
 /* Los hallazgos contra el paciente no traen `severity`, pero sí tienen una:
    una contraindicación pesa como una interacción grave y una precaución como
@@ -1110,6 +1339,7 @@ const escapeAttr = escapeHtml;
    y, si ya hay una consulta hecha, los filtros y las tarjetas de resultado. */
 function onLangChange() {
   actualizarTextoSemanas();
+  renderDatos();
   meds.render(); alerg.render(); patol.render();
   syncButtons();
   if (ultimo.inter || ultimo.contra) {

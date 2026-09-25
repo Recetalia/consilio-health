@@ -554,11 +554,168 @@ footer > * { max-width: 1280px; margin-left: auto; margin-right: auto; }
   max-width: 90vw;
 }
 
+/* ---------------- cabecera en pantallas chicas ----------------
+   Con cuatro botones más el selector de idioma, la fila no entra en un
+   celular: las acciones bajan a una segunda línea y se reparten el ancho. */
+@media (max-width: 860px) {
+  .topbar { flex-wrap: wrap; padding: 10px 16px; row-gap: 10px; }
+  .topbar-actions { flex-wrap: wrap; width: 100%; }
+  .topbar-actions .btn-ghost { flex: 1 1 auto; padding: 7px 10px; }
+  .datos { scroll-margin-top: 140px; }
+}
+
+.ayuda-mas { max-width: 1280px; margin: 16px auto 0; }
+.ayuda-mas .btn-link { font-weight: 600; }
+
+/* ---------------- sección "Los datos" ----------------
+   Es la cara de marketing del producto: banda en el navy de marca con los
+   números grandes, y abajo, sobre el fondo claro, las fichas de fuente. El
+   rosa de Medicina Inteligente sólo como acento (eyebrow y filete de "qué no
+   evalúa"), para no competir con los colores de gravedad. */
+.datos { background: var(--bg); border-bottom: 1px solid #cbdcf3; scroll-margin-top: 62px; }
+.datos-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+.datos-hero {
+  background: linear-gradient(135deg, var(--navy) 0%, #1a3563 55%, var(--azul-profundo) 100%);
+  color: var(--text-on-navy); padding: 38px 0 34px;
+}
+.datos-eyebrow {
+  margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: #e6b3c3;
+}
+.datos-hero h2 {
+  margin: 0; font-family: "Space Grotesk", Manrope, sans-serif;
+  font-size: clamp(26px, 3.4vw, 38px); line-height: 1.12; font-weight: 700;
+  letter-spacing: -.02em; color: #fff; max-width: 760px;
+}
+.datos-lead {
+  margin: 12px 0 26px; max-width: 720px; font-size: 16px;
+  color: rgba(255,255,255,.84);
+}
+.datos-cargando { margin: 0; color: rgba(255,255,255,.8); }
+
+.stats {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.stat {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 18px 18px 16px; border-radius: var(--radius-lg);
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
+}
+.stat-hero { background: #fff; border-color: #fff; }
+.stat-n {
+  font-family: "Space Grotesk", Manrope, sans-serif; font-weight: 700;
+  font-size: clamp(30px, 3.2vw, 40px); line-height: 1.05; letter-spacing: -.02em;
+  color: #fff; font-variant-numeric: tabular-nums;
+}
+.stat-hero .stat-n { color: var(--azul-profundo); }
+.stat-l { font-size: 14px; font-weight: 600; color: #fff; line-height: 1.3; }
+.stat-hero .stat-l { color: var(--navy); }
+.stat-s { font-size: 12.5px; color: rgba(255,255,255,.72); line-height: 1.4; }
+.stat-hero .stat-s { color: var(--text-soft); }
+
+.datos-body { padding-top: 28px; padding-bottom: 30px; }
+.datos-h3 {
+  margin: 0 0 12px; font-family: "Space Grotesk", Manrope, sans-serif;
+  font-size: 18px; font-weight: 700; color: var(--navy); letter-spacing: -.01em;
+}
+
+/* Barra apilada de gravedad: 2px de fondo entre segmentos, extremos
+   redondeados, y la leyenda con número y porcentaje al lado. */
+.sev-dist { margin-bottom: 30px; }
+.sev-bar {
+  display: flex; gap: 2px; height: 14px; border-radius: 4px; overflow: hidden;
+  background: var(--card);
+}
+.sev-bar .seg { flex-basis: 0; min-width: 3px; }
+.sev-bar .seg.major { background: var(--major); }
+.sev-bar .seg.moderate { background: var(--moderate); }
+.sev-bar .seg.minor { background: var(--minor); }
+.sev-bar .seg.unknown { background: var(--unknown); }
+.sev-leyenda {
+  list-style: none; margin: 10px 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 13.5px;
+}
+.sev-leyenda li { display: flex; align-items: center; gap: 7px; }
+.sev-leyenda strong { color: var(--text-strong); font-weight: 600; }
+.sev-leyenda .num { color: var(--text-strong); font-variant-numeric: tabular-nums; }
+.sev-leyenda .pct { color: var(--text-faint); font-variant-numeric: tabular-nums; }
+
+.fuentes-grid {
+  display: grid; gap: 14px; margin-bottom: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+}
+.fuente-card {
+  display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid var(--border);
+  border-top: 3px solid var(--azul); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow); padding: 16px 18px 14px;
+}
+.fuente-card header { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.fuente-card h4 {
+  margin: 0; font-family: "Space Grotesk", Manrope, sans-serif;
+  font-size: 17px; font-weight: 700; color: var(--navy);
+}
+.fuente-version { font-size: 11.5px; color: var(--text-faint); white-space: nowrap; }
+.fuente-aporta { margin: 8px 0 10px; font-size: 13.5px; color: var(--text); flex: 1 1 auto; }
+.fuente-cant {
+  margin: 0 0 10px; font-size: 14px; font-weight: 700; color: var(--azul-profundo);
+  font-variant-numeric: tabular-nums;
+}
+.fuente-card dl { margin: 0 0 12px; display: flex; gap: 6px; font-size: 12.5px; }
+.fuente-card dt { color: var(--text-faint); }
+.fuente-card dt::after { content: ":"; }
+.fuente-card dd { margin: 0; color: var(--text); font-weight: 600; }
+.fuente-card .fuente-pie {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+  gap: 6px 12px; padding-top: 10px; border-top: 1px solid var(--border-soft);
+  font-size: 12.5px;
+}
+.fuente-fecha { color: var(--text-soft); }
+.fuente-fecha::before {
+  content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+  background: #2e9e6a; margin-right: 6px; position: relative; top: -1px;
+}
+.fuente-fecha.sin-fecha { color: var(--text-faint); font-style: italic; }
+.fuente-fecha.sin-fecha::before { background: var(--text-faint); }
+.fuente-card a { color: var(--azul); font-weight: 600; text-decoration: none; }
+.fuente-card a:hover { color: var(--azul-profundo); text-decoration: underline; }
+
+.datos-dos {
+  display: grid; gap: 16px; margin-bottom: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+.datos-bloque {
+  background: var(--bg-seccion); border-radius: var(--radius-lg);
+  padding: 18px 20px; border-left: 4px solid var(--azul);
+}
+.datos-bloque.todavia { border-left-color: #b0697f; }
+.datos-bloque ul { margin: 0; padding-left: 18px; font-size: 14px; }
+.datos-bloque li { margin-bottom: 7px; }
+.datos-bloque li strong { color: var(--text-strong); }
+
+.datos-disclaimer { padding: 12px 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+.datos-pie {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  margin-top: 14px;
+}
+.datos-build { margin: 0; font-size: 12px; color: var(--text-faint); }
+
+@media (max-width: 560px) {
+  .datos-inner { padding: 0 16px; }
+  .datos-hero { padding: 28px 0 24px; }
+  .stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-hero { grid-column: 1 / -1; }
+  .stat { padding: 14px; }
+  .datos-dos { grid-template-columns: 1fr; }
+  .fuentes-grid { grid-template-columns: 1fr; }
+}
+
 /* ---------------- impresión ---------------- */
 
 @media print {
   .topbar-actions, .actions, .filtros, .search, .card-header .counter,
-  #ayuda, .kbd-hint { display: none !important; }
+  #ayuda, #datos, .kbd-hint { display: none !important; }
   body { background: #fff; font-size: 11pt; }
   .card, .finding { box-shadow: none; break-inside: avoid; }
   .topbar { position: static; border-bottom: 2px solid var(--azul); }
