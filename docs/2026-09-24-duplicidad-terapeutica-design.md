@@ -72,6 +72,10 @@ comparan entre sí (el médico no puede separarlas).
   - Sin excepción alguna, IECA + ACA + tiazida queda en tres clases distintas
     (C09AA, C08CA, C03AA) y no alerta. AAS + clopidogrel tampoco: clopidogrel no
     está en ninguna regla de la AEMPS.
+  - Con el modelo final (ETL, 2026-09-24, `scripts/cross_aemps_duplicidad.py --dry-run`):
+    - `=== 661 membresías · 354 fármacos · 76 clases (68 con ≥2 miembros) ===`
+    - `Reglas descartadas por combinado: 807 de 1593`
+    - `Resolución de códigos: {'molecula': 571, 'clase': 560, 'sin-resolver': 354, 'ambiguo': 48, 'molecula-laxa': 33, 'clase-unica': 6}`
 - Al chequear: por clase, contar **productos distintos** con algún miembro. Si
   supera el cupo (default 1) → alerta, severidad moderada.
 - Si todos los productos de la alerta de clase ya están cubiertos por una alerta
