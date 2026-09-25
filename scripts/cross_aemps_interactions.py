@@ -47,19 +47,17 @@ import sqlite3
 import unicodedata
 from datetime import datetime, timezone
 
+import sys
+
+# `app/` no está en el path cuando se corre `python scripts/...`.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+from app.nlp.nombres import skeleton  # noqa: E402  (re-exportado: lo usan otros scripts)
+
 logger = logging.getLogger("cross_aemps")
 
 # El diccionario repite el código dentro de la descripción, y no siempre con el
 # mismo separador: hay `A03FA03 - Domperidona` y `B01AF01- Rivaroxaban`.
 _CODE_PREFIX = re.compile(r"^\s*[A-Z]\d{2}[A-Z]{0,2}\d{0,2}\s*-\s*")
-
-# Correspondencias sistemáticas entre el INN castellano y el inglés. Se aplican
-# a los DOS lados, así que no importa cuál de las dos grafías es la "correcta":
-# importa que las dos caigan en la misma.
-_SKEL_SUBS = (
-    ("ph", "f"), ("th", "t"), ("ch", "c"), ("qu", "c"), ("ou", "u"),
-    ("ae", "e"), ("oe", "e"), ("y", "i"), ("k", "c"), ("w", "v"),
-)
 
 # Los nombres de sales no son INN: `cloruro de potasio` y `potassium chloride`
 # no se diferencian por un sufijo sino por la palabra entera, así que el
@@ -94,27 +92,6 @@ def es_combinacion(nombre: str) -> bool:
 
 def desc_limpia(v: str) -> str:
     return _CODE_PREFIX.sub("", v).strip()
-
-
-def skeleton(s: str) -> str:
-    """Forma común a la grafía castellana e inglesa de un mismo INN.
-
-    `Domperidona` y `Domperidone` → `domperidon`.
-    `Disopiramida` y `Disopyramide` → `disopiramid`.
-    """
-    s = unicodedata.normalize("NFKD", s.lower()).encode("ascii", "ignore").decode()
-    s = re.sub(r"\(.*?\)", " ", s)
-    s = re.sub(r"[^a-z ]+", " ", s).strip()
-    for a, b in _SKEL_SUBS:
-        s = s.replace(a, b)
-    s = re.sub(r"(.)\1+", r"\1", s)
-    palabras = []
-    for w in s.split():
-        w = re.sub(r"e$", "", w)
-        w = re.sub(r"[ao]$", "", w)
-        if w:
-            palabras.append(w)
-    return " ".join(palabras)
 
 
 def severidad(recomendacion: str) -> str:
