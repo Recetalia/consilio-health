@@ -17,14 +17,15 @@ de falsos positivos.
 """
 from __future__ import annotations
 
+import copy
 import json
 import os
 from dataclasses import dataclass
 from functools import lru_cache
 from typing import Any
 
-CUPOS_PATH = os.environ.get("CONSILIO_DUPLICIDAD_CUPOS", os.path.join(
-    os.path.dirname(__file__), "..", "..", "data", "duplicidad_cupos.json"))
+DEFAULT_CUPOS_PATH = os.path.join(
+    os.path.dirname(__file__), "..", "..", "data", "duplicidad_cupos.json")
 
 AVISO_SIN_CLASES = ("La base no tiene clases de duplicidad cargadas: sólo se "
                     "evaluó la misma sustancia en dos productos.")
@@ -38,11 +39,21 @@ class Producto:
     route: str | None = None
 
 
-@lru_cache(maxsize=1)
-def cargar_cupos(path: str = CUPOS_PATH) -> dict[str, Any]:
+@lru_cache(maxsize=None)
+def _leer_cupos(path: str) -> dict[str, Any]:
+    """Lectura de disco, cacheada por ruta. `cargar_cupos` devuelve una copia
+    de este resultado para que nadie mute el cache compartido."""
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
     return {"clases": data.get("clases", {}), "excepciones": data.get("excepciones", [])}
+
+
+def cargar_cupos(path: str | None = None) -> dict[str, Any]:
+    # la ruta se resuelve en cada llamada (no al importar el módulo) para que
+    # `CONSILIO_DUPLICIDAD_CUPOS` pueda cambiar entre tests o entre requests.
+    if path is None:
+        path = os.environ.get("CONSILIO_DUPLICIDAD_CUPOS", DEFAULT_CUPOS_PATH)
+    return copy.deepcopy(_leer_cupos(path))
 
 
 def evaluar(
@@ -54,11 +65,17 @@ def evaluar(
     out: dict[str, Any] = {"duplicities": [], "duplicities_suppressed": [],
                            "duplicity_not_evaluated": [], "duplicity_warnings": []}
 
+    orden: dict[str, int] = {}
+    for p in productos:
+        if p.id in orden:
+            raise ValueError(f"id de producto repetido: {p.id!r}")
+        orden[p.id] = len(orden)
+
     no_resueltas: list[str] = []
     # drug_id -> {product_id: nombre con que llegó}
     por_droga: dict[int, dict[str, str]] = {}
     for p in productos:
-        for nombre, did in zip(p.sustancias, p.drug_ids):
+        for nombre, did in zip(p.sustancias, p.drug_ids, strict=True):
             if did is None:
                 if nombre not in no_resueltas:
                     no_resueltas.append(nombre)
@@ -92,16 +109,21 @@ def evaluar(
         if len(miembros) < 2:
             continue
         drogas = {d for m in miembros.values() for d in m}
-        if len(drogas) == 1:
-            continue  # es la misma sustancia: ya la dijo la capa 1
+        productos_clase = set(miembros)
+        # si un solo drug_id ya cubre (por capa 1) a TODOS los productos de la
+        # clase, la alerta de clase no suma información: es el mismo aviso.
+        if any(productos_clase <= set(por_droga[d]) for d in drogas):
+            continue
         cfg = cupos["clases"].get(cid, {})
-        cupo = int(cfg.get("cupo", 1))
+        desactivada = bool(cfg.get("desactivada"))
+        cupo = None if desactivada else int(cfg.get("cupo", 1))
+        products_en_orden = sorted(miembros, key=lambda pid: orden[pid])
         alerta = dict(
-            layer="class", class_id=cid, class_desc=desc, products=list(miembros),
+            layer="class", class_id=cid, class_desc=desc, products=products_en_orden,
             substances=sorted({n for m in miembros.values() for n in m.values()}),
             count=len(miembros), cupo=cupo, severity="moderate", source="aemps", rule=cid)
 
-        if cfg.get("desactivada") or len(miembros) <= cupo:
+        if desactivada or (cupo is not None and len(miembros) <= cupo):
             motivo = cfg
         else:
             motivo = _excepcion(cid, miembros, cupos["excepciones"], canonicos)

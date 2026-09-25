@@ -1,5 +1,7 @@
 """Evaluador de duplicidad, sin base: productos resueltos + membresías + cupos."""
-from app.services.duplicity_checker import Producto, evaluar
+import pytest
+
+from app.services.duplicity_checker import Producto, cargar_cupos, evaluar
 
 SIN_CUPOS = {"clases": {}, "excepciones": []}
 CANON = {1: "Acetaminophen", 2: "Codeine", 3: "Diazepam", 4: "Lorazepam",
@@ -84,3 +86,67 @@ def test_sin_tabla_de_clases_avisa_y_hace_capa_1():
     out = evaluar([P("p1", ("paracetamol", 1)), P("p2", ("paracetamol", 1))], None, SIN_CUPOS, CANON)
     assert out["duplicities"][0]["layer"] == "substance"
     assert out["duplicity_warnings"]
+
+
+# --- correcciones de revisión -------------------------------------------------
+
+def test_capa1_que_cubre_toda_la_clase_evita_la_alerta_de_capa_2():
+    # p1 es un combinado diazepam+lorazepam, p2 sólo diazepam: el diazepam
+    # (capa 1) ya cubre a los dos productos de la clase N05BA, no hace falta
+    # repetir la alerta de clase.
+    out = evaluar([P("p1", ("diazepam", 3), ("lorazepam", 4)), P("p2", ("diazepam", 3))],
+                  CLASES, SIN_CUPOS, CANON)
+    assert len(out["duplicities"]) == 1
+    assert out["duplicities"][0]["layer"] == "substance"
+    assert out["duplicities"][0]["products"] == ["p1", "p2"]
+
+
+def test_ids_de_producto_repetidos_lanza_valueerror():
+    with pytest.raises(ValueError, match="id de producto repetido"):
+        evaluar([P("p1", ("diazepam", 3)), P("p1", ("lorazepam", 4))], CLASES, SIN_CUPOS, CANON)
+
+
+def test_products_de_clase_en_orden_de_entrada():
+    # did=4 (lorazepam) aparece primero en p1 y p3; did=3 (diazepam) en p2.
+    # El orden de los productos en la alerta debe ser el de entrada, no el
+    # de primera aparición de cada droga.
+    out = evaluar([P("p1", ("lorazepam", 4)), P("p2", ("diazepam", 3)), P("p3", ("lorazepam", 4))],
+                  CLASES, SIN_CUPOS, CANON)
+    [d] = [x for x in out["duplicities"] if x["layer"] == "class"]
+    assert d["products"] == ["p1", "p2", "p3"]
+
+
+def test_clase_desactivada_suprime_con_cupo_none():
+    cupos = {"clases": {"N05BA": {"desactivada": True, "motivo": "amplia",
+                                  "validado": False}}, "excepciones": []}
+    out = evaluar([P("p1", ("diazepam", 3)), P("p2", ("lorazepam", 4))], CLASES, cupos, CANON)
+    [s] = out["duplicities_suppressed"]
+    assert s["cupo"] is None
+
+
+def test_cupo_2_con_3_productos_sigue_alertando():
+    cupos = {"clases": {"N05BA": {"cupo": 2, "motivo": "m", "referencia": "r",
+                                  "validado": False}}, "excepciones": []}
+    out = evaluar([P("p1", ("diazepam", 3)), P("p2", ("lorazepam", 4)), P("p3", ("diazepam", 3))],
+                  CLASES, cupos, CANON)
+    [d] = [x for x in out["duplicities"] if x["layer"] == "class"]
+    assert d["count"] == 3 and d["cupo"] == 2
+    assert out["duplicities_suppressed"] == []
+
+
+def test_excepcion_no_cubre_producto_fuera_de_los_grupos():
+    # detemir no figura en ningún grupo de la excepción: no se suprime.
+    cupos = {"clases": {}, "excepciones": [{
+        "clase": "A10AB", "grupos": [["Insulin glargine"], ["Insulin aspart"]],
+        "motivo": "basal + bolo", "referencia": "x", "validado": False}]}
+    out = evaluar([P("p1", ("glargina", 6)), P("p2", ("aspart", 7)), P("p3", ("detemir", 8))],
+                  CLASES, cupos, CANON)
+    [d] = [x for x in out["duplicities"] if x["layer"] == "class"]
+    assert d["class_id"] == "A10AB"
+    assert out["duplicities_suppressed"] == []
+
+
+def test_cargar_cupos_real_tiene_las_claves_esperadas():
+    data = cargar_cupos()
+    assert isinstance(data["clases"], dict)
+    assert isinstance(data["excepciones"], list)

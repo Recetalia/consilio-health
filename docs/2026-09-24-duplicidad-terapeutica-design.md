@@ -166,4 +166,4 @@ capa: es la primera métrica que va a correr la routine semanal.
 ## Errores
 
 Sustancia no resuelta → `duplicity_not_evaluated`, nunca se omite en silencio.
-Base sin `drug_class` (ETL no corrido) → `duplicities` vacío más un aviso en `duplicity_warnings`, no 500.
+Base sin `drug_class` (ETL no corrido) → `duplicities` trae sólo lo de la capa 1 (misma sustancia), más un aviso en `duplicity_warnings`, no 500.
