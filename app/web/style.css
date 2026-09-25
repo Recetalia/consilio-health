@@ -491,6 +491,16 @@ kbd {
   color: #7a5b16; border-radius: var(--radius); padding: 11px 14px;
   margin-bottom: 12px; font-size: 14px;
 }
+/* Plegado por defecto: es lo evaluado y descartado, no lo que hay que leer primero. */
+details.suprimidas {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 4px 14px; margin-bottom: 12px;
+}
+details.suprimidas summary {
+  cursor: pointer; padding: 10px 0; font-size: 14px; color: var(--text-soft);
+}
+details.suprimidas[open] summary { border-bottom: 1px solid var(--border-soft); margin-bottom: 8px; }
+details.suprimidas .finding:last-child { margin-bottom: 10px; }
 
 /* ---------------- pie ---------------- */
 
