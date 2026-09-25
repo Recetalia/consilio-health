@@ -1,4 +1,5 @@
 {
+  "_nota": "Cupos y excepciones de duplicidad curados a mano. Ver docs/2026-09-24-duplicidad-terapeutica-design.md, Capa 3. Cada entrada sale de un caso real que falle, con validado=false hasta que la revise alguien con criterio farmacéutico.",
   "clases": {},
   "excepciones": [
     {
