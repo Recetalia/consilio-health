@@ -215,3 +215,25 @@ Sustancia no resuelta → `duplicity_not_evaluated`, nunca se omite en silencio.
 Base sin `drug_class` (ETL no corrido) → `duplicities` trae sólo lo de la capa 1 (misma sustancia), más un aviso en `duplicity_warnings`, no 500.
 Ids de producto repetidos → `ValueError` (la API responde 422).
 `substances` y `drug_ids` de largos distintos en un mismo producto → `ValueError`.
+
+## Despliegue
+
+**2026-09-25, `.98` (PRE), https://consilio.medicinainteligente.ai**: commit `2fc601f`, rama
+`feat/duplicidad` (sin mergear a `main`). Base con `drug_class` (661 membresías, 365 anclas) y
+`data/duplicidad_cupos.json` (1 excepción, Addison). Verificado por el dominio público:
+
+| Consulta | Resultado |
+|---|---|
+| paracetamol / paracetamol+codeína (products) | capa `substance` |
+| diazepam / lorazepam | clase `N05BA` |
+| enalapril + amlodipino + hidroclorotiazida | sin duplicidad |
+| hidrocortisona + fludrocortisona | suprimida `H02AA`, motivo Addison |
+| warfarina + ibuprofeno | 1 interacción, sin duplicidad |
+
+Cómo se desplegó (en el server no hay git): `rsync` del código **excluyendo `docker-compose.yml`**
+—en el server es la copia de `deploy/docker-compose.98.yml`; el local publica el puerto 8000—,
+`.env`, `data/`, `.venv`, `docs/`, `eval/`; después `rsync` de `data/recetalia_interactions.db` y
+`data/duplicidad_cupos.json`, y `docker compose up -d --build` en `/opt/recetalia/consilio`.
+Backup previo de la base: `/opt/recetalia/consilio-db.bak-2026-09-25`.
+
+Métrica al desplegar: `scripts/eval_duplicidad.py` 12/12 · suite 220 passed.
