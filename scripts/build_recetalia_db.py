@@ -11,7 +11,11 @@ pharmacist review.
 
 Usage:
     python -m scripts.build_recetalia_db seed   --from data/ddinter.db
+    python -m scripts.build_recetalia_db extend --from data/ddinter.db
     python -m scripts.build_recetalia_db stats
+
+`seed --force` rebuilds from scratch and renumbers drug_id; on a base that
+already has derived data (AEMPS, openFDA, DNMA, alerts) use `extend`.
 """
 
 from __future__ import annotations
@@ -239,6 +243,102 @@ def cmd_seed(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_extend(args: argparse.Namespace) -> int:
+    """Sumar a una base existente lo que un DDInter más nuevo trae de más.
+
+    `seed --force` borra la base y numera los fármacos por `ddinter_id`
+    ordenado: un fármaco nuevo en el medio corre todos los `drug_id`, y con eso
+    se rompen drug_class, drug_alias, dnma_substance_map, las alertas y las
+    interacciones AEMPS/openFDA, que los referencian. `extend` no toca nada de
+    lo que existe: agrega los fármacos que faltan al final (drug_id nuevos,
+    los viejos intactos), sus alias, y los pares DDInter que no estaban.
+    Un par DDInter ya cargado no se pisa; si el artefacto nuevo le cambió la
+    severidad, se informa y se deja como está.
+    """
+    src_path, dst_path = Path(args.source), Path(args.target)
+    for p in (src_path, dst_path):
+        if not p.exists():
+            logger.error("No existe %s", p)
+            return 1
+    src = sqlite3.connect(f"file:{src_path}?mode=ro", uri=True)
+    dst = sqlite3.connect(dst_path)
+    now = datetime.now(timezone.utc).isoformat()
+
+    names: dict[str, str] = {}
+    for a_id, a_name, b_id, b_name in src.execute(
+            "select drug_a_id, drug_a_name, drug_b_id, drug_b_name from interactions"):
+        names.setdefault(a_id, a_name)
+        names.setdefault(b_id, b_name)
+    rx = {d: (r, c) for r, d, c in src.execute(
+        "select rxcui, ddinter_id, canonical_name from rxnorm_to_ddinter")}
+
+    known = {d for (d,) in dst.execute(
+        "select ddinter_id from drug where ddinter_id is not null")}
+    canon_taken = {c.lower() for (c,) in dst.execute("select canonical from drug")}
+    nuevos, choques = [], []
+    for d, n in sorted(names.items()):
+        if d in known:
+            continue
+        if n.lower() in canon_taken:
+            choques.append((d, n))
+            continue
+        nuevos.append((n, rx.get(d, (None, None))[0], d, now))
+    if choques:
+        logger.warning("Fármacos nuevos cuyo nombre ya existe (no se cargan): %s", choques)
+
+    dst.executemany(
+        "insert into drug (canonical, rxcui, ddinter_id, source, created_at) "
+        "values (?,?,?,'ddinter',?)", nuevos)
+    ids = {d: i for i, d in dst.execute(
+        "select drug_id, ddinter_id from drug where ddinter_id is not null")}
+
+    aliases = []
+    for _, _, ddid, _ in nuevos:
+        name, did = names[ddid], ids[ddid]
+        aliases.append((did, name, _norm(name), "en", "ddinter"))
+        canon = rx.get(ddid, (None, None))[1]
+        if canon and _norm(canon) != _norm(name):
+            aliases.append((did, canon, _norm(canon), "en", "rxnorm"))
+    dst.executemany(
+        "insert or ignore into drug_alias (drug_id, alias, alias_norm, lang, source) "
+        "values (?,?,?,?,?)", aliases)
+
+    existentes = dict(((a, b), s) for a, b, s in dst.execute(
+        "select drug_a_id, drug_b_id, severity from interaction where source='ddinter'"))
+    pares: dict[tuple[int, int], str] = {}
+    cambiadas = sin_id = 0
+    for a_id, b_id, sev in src.execute(
+            "select drug_a_id, drug_b_id, severity from interactions"):
+        if a_id not in ids or b_id not in ids:
+            sin_id += 1
+            continue
+        a, b = ids[a_id], ids[b_id]
+        if a == b:
+            continue
+        key = (a, b) if a < b else (b, a)
+        if key in existentes:
+            cambiadas += existentes[key] != sev.lower()
+            continue
+        pares.setdefault(key, sev.lower())
+    dst.executemany(
+        "insert or ignore into interaction (drug_a_id, drug_b_id, severity, source) "
+        "values (?,?,?,'ddinter')", [(a, b, s) for (a, b), s in pares.items()])
+
+    meta = {k: v for k, v in src.execute("select key, value from meta")}
+    meta.update({"recetalia_extended_at": now, "recetalia_extend_source": str(src_path)})
+    dst.executemany("insert or replace into meta (key, value) values (?,?)",
+                    sorted(meta.items()))
+    dst.commit()
+    logger.info("Extendido %s", dst_path)
+    logger.info("  fármacos nuevos   %d  (choques de nombre %d)", len(nuevos), len(choques))
+    logger.info("  alias nuevos      %d", len(aliases))
+    logger.info("  pares nuevos      %d  (sin fármaco %d; ya cargados con otra severidad %d)",
+                len(pares), sin_id, cambiadas)
+    dst.close()
+    src.close()
+    return 0
+
+
 def cmd_stats(args: argparse.Namespace) -> int:
     db = sqlite3.connect(f"file:{Path(args.target)}?mode=ro", uri=True)
     print("fármacos por origen:",
@@ -269,7 +369,12 @@ def main() -> int:
     s.add_argument("--force", action="store_true")
     s.set_defaults(func=cmd_seed)
 
-    t = sub.add_parser("stats", help="Resumen de lo que hay adentro")
+    e = sub.add_parser("extend", help="Sumar fármacos y pares DDInter nuevos sin tocar los drug_id")
+    e.add_argument("--from", dest="source", default=DEFAULT_SOURCE)
+    e.add_argument("--target", default=DEFAULT_TARGET)
+    e.set_defaults(func=cmd_extend)
+
+    t = sub.add_parser("stats",help="Resumen de lo que hay adentro")
     t.add_argument("--target", default=DEFAULT_TARGET)
     t.set_defaults(func=cmd_stats)
 
