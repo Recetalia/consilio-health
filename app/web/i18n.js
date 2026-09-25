@@ -324,6 +324,7 @@ const T = {
 
     alerta_1: "alerta",
     alerta_n: "alertas",
+    evalua_como: "evalúa como {code}",
   },
 
   en: {
@@ -635,6 +636,7 @@ const T = {
 
     alerta_1: "alert",
     alerta_n: "alerts",
+    evalua_como: "evaluates as {code}",
   },
 };
 

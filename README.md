@@ -86,6 +86,7 @@ python -m scripts.resolve_dnma_substances --dump <dump>   # puente con el DNMA
 python -m scripts.fetch_drug_atc                          # código ATC por fármaco
 python -m scripts.fetch_mesh_tree                         # número de árbol MeSH por condición
 python -m scripts.build_condition_xref                    # puente CIE-10 ↔ MeSH
+python -m scripts.load_icd10_descendientes                # subcódigos CIE-10 (N18.5) de cada anclaje
 
 PYTHONPATH=scripts python scripts/cross_aemps_interactions.py   # interacciones AEMPS (mecanismo y manejo)
 PYTHONPATH=scripts python scripts/cross_aemps_geriatria.py      # alertas geriátricas AEMPS

@@ -200,8 +200,10 @@ async function buscarPatologias(q) {
               Object.entries(BUSQUEDA_ES_EN).find(([es]) => es.startsWith(norm))?.[1];
   const qs = alt && alt !== norm ? [q, alt] : [q];
 
+  // limit=15: con los descendientes CIE-10 (N18.1…N18.9, N18.30…) una familia
+  // como N18 ya son 11 códigos; con 10 se cortaba el anclaje más específico.
   const respuestas = await Promise.all(qs.map(async (t) => {
-    const r = await fetch(`/conditions/search?q=${encodeURIComponent(t)}&limit=10`,
+    const r = await fetch(`/conditions/search?q=${encodeURIComponent(t)}&limit=15`,
                           { headers: headers() });
     if (!r.ok) { handleHttpError(r); throw "handled"; }
     return (await r.json()).results || [];
@@ -214,9 +216,12 @@ async function buscarPatologias(q) {
     return true;
   }).map((x) => ({
     // El original (MeSH, inglés) se conserva sin tocar: en EN se muestra tal
-    // cual, en ES se traduce recién al pintar, con `condLabel()`.
+    // cual, en ES se traduce recién al pintar, con `condLabel()`. `anchor_code`
+    // viaja para el aviso sutil "evalúa como X" cuando el código elegido es un
+    // descendiente (no dispara alerta propia, dispara la de su anclaje).
     id: x.code, name: x.name, code: x.code, alertas: x.alertas,
-  })).slice(0, 12);
+    anchor_code: x.anchor_code,
+  })).slice(0, 15);
 }
 
 /* ---------------- desplegable propio ----------------
@@ -498,10 +503,15 @@ const patol = wireSearch({
   input: $("qp"), list: $("suggestions-patologias"), target: patologias,
   chips: $("chips-patologias"), onChange: syncButtons, fetchFn: buscarPatologias,
   // Se muestra cuántas alertas cuelgan del código: es la única forma de que el
-  // médico sepa, antes de elegirlo, si ese código va a evaluar algo.
+  // médico sepa, antes de elegirlo, si ese código va a evaluar algo. Un
+  // descendiente (p.ej. N18.5) no dispara alerta propia, dispara la de su
+  // anclaje (N18): se lo indica sutil, en los dos idiomas (`evalua_como`).
   renderItem: (r) => `<span class="code">${escapeHtml(r.code)}</span>
     <span class="nombre">${escapeHtml(nombrePatologia(r))}</span>
-    <span class="alertas">${r.alertas} ${r.alertas === 1 ? t("alerta_1") : t("alerta_n")}</span>`,
+    <span class="alertas">${r.alertas} ${r.alertas === 1 ? t("alerta_1") : t("alerta_n")}</span>${
+    r.anchor_code && r.anchor_code !== r.code
+      ? `<span class="resuelve-como">${escapeHtml(t("evalua_como", { code: r.anchor_code }))}</span>`
+      : ""}`,
   renderChip: (s) => `<span class="code">${escapeHtml(s.code)}</span> ${escapeHtml(nombrePatologia(s))}`,
 });
 
@@ -737,10 +747,11 @@ $("btn-ejemplo").addEventListener("click", async () => {
 const EJEMPLO_PACIENTE = {
   drugs: ["metformina", "diazepam", "lorazepam", "amoxicilina", "ibuprofeno"],
   alergias: ["amoxicilina"],
-  // El autocompletado sólo ofrece los anclajes del puente (N18, N18.9): N18.5
-  // no aparece en la lista aunque el backend lo resuelve por prefijo. Se carga
-  // con su título oficial CIE-10 (CMS) y, si alguna vez el catálogo lo
-  // ofrece, se usa lo que devuelva el buscador.
+  // Desde `icd10_descendant` (scripts/load_icd10_descendientes.py) el
+  // autocompletado ya ofrece N18.5, no sólo sus anclajes (N18, N18.9). Se
+  // busca igual por `buscarPatologias` y se usa lo que devuelva —el `código +
+  // nombre` oficial CIE-10 (CMS)—; el literal de acá es sólo el respaldo si
+  // la búsqueda llegara a fallar.
   patologia: { code: "N18.5", name: "Chronic kidney disease, stage 5" },
   perfil: { sexo: "F", edad: 78, renal: "grave" },
 };

@@ -402,35 +402,70 @@ class RecetaliaDatabase:
     async def search_conditions(self, query: str, limit: int = 10) -> list[dict[str, Any]]:
         """Busca patologías por código CIE-10 o por nombre, para el autocompletado.
 
-        Devuelve sólo los **anclajes** del puente: los 552 códigos a los que hay
-        alguna alerta colgada. Ofrecerle al médico un catálogo de 70.000 códigos
-        de los cuales 69.500 no disparan nada sería prometer una evaluación que
-        no existe.
+        Devuelve los **anclajes** del puente —los códigos a los que hay alguna
+        alerta colgada— MÁS sus **descendientes** (`icd10_descendant`, cargada
+        por `scripts/load_icd10_descendientes.py`): subcódigos CMS como `N18.5`
+        que no tienen alerta propia pero resuelven a un anclaje que sí. Cada
+        resultado dice a qué anclaje resuelve (`anchor_code`) y cuenta las
+        alertas de ESE anclaje, porque es el que dispara: para una fila que es
+        anclaje de sí misma, `anchor_code == code`.
 
-        El médico puede igual escribir un código más específico que el anclaje
-        (`N18.5` contra `N18`): eso lo resuelve `condition_ids_for_icd10` por
-        truncación. Acá se le muestra dónde va a caer.
+        `condition_ids_for_icd10` ya sabía subir de `N18.5` a `N18` por
+        truncación; lo que faltaba era poder ELEGIR `N18.5` en primer lugar.
+
+        Si `icd10_descendant` no existe (base vieja, o justo antes de correr el
+        ETL), se sigue devolviendo sólo los anclajes, como antes.
+
+        Orden: código exacto primero; después los que matchean por prefijo de
+        código (por sobre los que sólo matchean por nombre); dentro de eso, por
+        código. El anclaje siempre ordena antes que sus descendientes porque su
+        código es, literalmente, un prefijo más corto del de ellos (`N18` antes
+        que `N18.5`) — no hace falta un criterio aparte para lograrlo.
         """
         q = query.strip()
         if len(q) < 2:
             return []
         conn = await self._c()
         code_q = q.upper().replace(" ", "")
+        prelimit = max(limit * 20, 200)
+
         async with conn.execute(
-            """select c.condition_id, c.code, c.name,
+            """select c.condition_id, c.code, c.name, c.code as anchor_code,
                       (select count(*) from condition_xref x
                         join drug_condition_alert a on a.condition_id = x.to_id
                        where x.from_id = c.condition_id) as alertas
                from condition c
                where c.code_system like 'icd10%'
                  and (c.code like ? escape '\\' or c.name like ? escape '\\')
-               order by case when c.code like ? escape '\\' then 0 else 1 end,
-                        alertas desc, c.code
                limit ?""",
-            (f"{_like(code_q)}%", f"%{_like(q)}%", f"{_like(code_q)}%", limit),
+            (f"{_like(code_q)}%", f"%{_like(q)}%", prelimit),
         ) as cur:
-            rows = await cur.fetchall()
-        return [dict(r) for r in rows]
+            resultados = [dict(r) for r in await cur.fetchall()]
+
+        try:
+            async with conn.execute(
+                """select coalesce(anc.condition_id, 0) as condition_id,
+                          d.code, d.name, d.anchor_code,
+                          coalesce((select count(*) from condition_xref x
+                                     join drug_condition_alert a on a.condition_id = x.to_id
+                                    where x.from_id = anc.condition_id), 0) as alertas
+                     from icd10_descendant d
+                     left join condition anc
+                       on anc.code_system = 'icd10cm' and anc.code = d.anchor_code
+                    where d.code like ? escape '\\' or d.name like ? escape '\\'
+                    limit ?""",
+                (f"{_like(code_q)}%", f"%{_like(q)}%", prelimit),
+            ) as cur:
+                resultados += [dict(r) for r in await cur.fetchall()]
+        except aiosqlite.OperationalError:
+            pass  # sin `icd10_descendant`: sólo los anclajes, comportamiento previo
+
+        resultados.sort(key=lambda r: (
+            0 if r["code"] == code_q else 1,
+            0 if r["code"].startswith(code_q) else 1,
+            r["code"],
+        ))
+        return resultados[:limit]
 
     async def drug_id_by_dnma(self, sustancia_id: str) -> int | None:
         conn = await self._c()

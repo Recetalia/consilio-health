@@ -343,9 +343,13 @@ input::placeholder { color: #b6c0cc; }
 .suggestions li[aria-selected="true"], .suggestions li:hover { background: var(--hover-row); }
 .suggestions li.empty { color: var(--text-faint); cursor: default; font-style: italic; }
 .suggestions li.empty:hover { background: transparent; }
-.suggestions .rxcui, .suggestions .alertas {
+.suggestions .rxcui, .suggestions .alertas, .suggestions .resuelve-como {
   font-size: 10.5px; color: var(--text-faint); white-space: nowrap;
 }
+/* Un descendiente CIE-10 (N18.5) no tiene alerta propia: dispara la de su
+   anclaje (N18). Va en itálica, sutil, no como un dato nuevo sino como una
+   aclaración de dónde sale el conteo de arriba. */
+.suggestions .resuelve-como { font-style: italic; }
 /* El nombre internacional se deja a la vista aunque se muestre el castellano:
    es el que aparece en la bibliografía y en el prospecto importado. */
 .suggestions .alias-en { font-size: 11px; color: var(--text-faint); font-weight: 400; }

@@ -236,3 +236,85 @@ async def test_el_buscador_devuelve_el_nombre_en_castellano(db):
     # fármaco es peor que mostrar el inglés.
     todos = await db.search_drugs("ab", limit=25)
     assert any(r["name_es"] is None for r in todos) or todos, "smoke"
+
+
+# --- subcódigos CIE-10 (icd10_descendant) -----------------------------------
+
+async def test_n18_5_aparece_al_buscar_n18(db):
+    """El bug reportado: tipear 'N18' tiene que ofrecer también N18.5.
+
+    `N18.5` no tiene alerta propia (no es un anclaje de `condition`), pero
+    dispara la misma alerta que `N18` — así que tiene que aparecer, y decir
+    a qué anclaje resuelve.
+    """
+    res = await db.search_conditions("N18", limit=15)
+    n185 = next((r for r in res if r["code"] == "N18.5"), None)
+    assert n185, f"N18.5 no está en {[r['code'] for r in res]}"
+    assert n185["anchor_code"] == "N18"
+    assert n185["alertas"] > 0, "tiene que contar las alertas del anclaje N18"
+    # El anclaje sigue estando, como antes.
+    assert any(r["code"] == "N18" for r in res)
+
+
+async def test_buscar_n18_5_lo_pone_primero(db):
+    """Código exacto primero: si el médico ya tipeó el subcódigo completo,
+    no tiene que scrollear para encontrarlo."""
+    res = await db.search_conditions("N18.5")
+    assert res, "sin resultados para N18.5"
+    assert res[0]["code"] == "N18.5", res[:3]
+
+
+async def test_buscar_por_nombre_en_ingles_encuentra_el_descendiente(db):
+    """'stage 5' sólo está en el nombre del descendiente, no en el del
+    anclaje ('Chronic kidney disease (CKD)')."""
+    res = await db.search_conditions("stage 5")
+    assert any(r["code"] == "N18.5" for r in res), res
+
+
+async def test_anclaje_sin_descendientes_sigue_siendo_su_propio_anclaje(db):
+    """Una fila que es anclaje de sí misma: `anchor_code == code`."""
+    res = await db.search_conditions("N18", limit=15)
+    n18 = next(r for r in res if r["code"] == "N18")
+    assert n18["anchor_code"] == "N18"
+
+
+async def test_condition_ids_for_icd10_resuelve_n18_5(db):
+    """El backend ya sabía subir por truncación; ahora además se puede ELEGIR
+    N18.5 desde el buscador, así que el camino completo tiene que funcionar."""
+    anclaje = await db.condition_ids_for_icd10(["N18"])
+    subcodigo = await db.condition_ids_for_icd10(["N18.5"])
+    assert subcodigo.get("N18.5"), "N18.5 tiene que resolver condiciones"
+    assert set(subcodigo["N18.5"]) == set(anclaje["N18"]), (
+        "N18.5 tiene que resolver EXACTAMENTE lo mismo que su anclaje N18")
+
+
+async def test_condition_ids_for_icd10_codigo_de_5_o_mas_caracteres(db):
+    """`N18.30` (6 caracteres con el punto) también tiene que truncar a N18."""
+    anclaje = await db.condition_ids_for_icd10(["N18"])
+    largo = await db.condition_ids_for_icd10(["N18.30"])
+    assert largo.get("N18.30")
+    assert set(largo["N18.30"]) == set(anclaje["N18"])
+
+
+async def test_endpoint_de_busqueda_de_patologias_ofrece_el_subcodigo(monkeypatch):
+    """GET /conditions/search — el mismo endpoint que usa la interfaz.
+
+    Pega al servidor de verdad, contra la base de verdad: es el contrato HTTP
+    completo, no sólo el método del cliente de la base.
+    """
+    if not DB_PATH.exists():
+        pytest.skip("falta la base")
+    monkeypatch.setenv("API_KEY", "test-local")
+    from fastapi.testclient import TestClient
+    from app.main import app
+
+    with TestClient(app) as c:
+        r = c.get("/conditions/search", params={"q": "N18", "limit": 15},
+                  headers={"X-API-Key": "test-local"})
+    assert r.status_code == 200, r.text
+    results = r.json()["results"]
+    codigos = [x["code"] for x in results]
+    assert "N18.5" in codigos, codigos
+    n185 = next(x for x in results if x["code"] == "N18.5")
+    assert n185["anchor_code"] == "N18"
+    assert n185["alertas"] > 0
