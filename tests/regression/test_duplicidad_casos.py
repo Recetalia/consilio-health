@@ -35,3 +35,31 @@ async def test_caso(db, caso):
     assert not out["duplicity_not_evaluated"], f"no resolvieron: {out['duplicity_not_evaluated']}"
     ok, motivo = cumple(out, caso["esperado"])
     assert ok, motivo
+
+
+async def test_interactions_endpoint_devuelve_duplicidad(monkeypatch):
+    """End-to-end de `POST /interactions` con `products`, contra la base real
+    (no mockeada): que el contrato de la Task 8 dispare `duplicity_checker` de
+    punta a punta y no sólo por unit test con el servicio mockeado.
+
+    Mismo patrón que `test_aemps_cross.py::test_el_endpoint_no_revienta_con_una_fuente_nueva`:
+    `TestClient(app)` real, con `API_KEY` puesta por `monkeypatch` y mandada por
+    header. `recetalia_db.client` toma `INTERACTION_DB_PATH` al importar el
+    módulo (nivel de módulo, ver `app/clients/recetalia_db.py`), que ya está
+    fijo por el comando de la suite — no hace falta el fixture `db` de este
+    archivo, que reapunta `db_path` a mano para los tests que llaman a
+    `chequear` directo.
+    """
+    if not DB_PATH.exists():
+        pytest.skip("falta la base")
+    monkeypatch.setenv("API_KEY", "test-local")
+    from fastapi.testclient import TestClient
+    from app.main import app
+
+    with TestClient(app) as c:
+        r = c.post("/interactions", json={"products": [
+            {"id": "p1", "substances": ["diazepam"]},
+            {"id": "p2", "substances": ["lorazepam"]},
+        ]}, headers={"X-API-Key": "test-local"})
+    assert r.status_code == 200, r.text
+    assert r.json()["duplicities"][0]["class_id"] == "N05BA"

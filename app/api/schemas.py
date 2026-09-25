@@ -2,15 +2,45 @@
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, StringConstraints
+from pydantic import BaseModel, Field, StringConstraints, model_validator
 
 
 # --- POST /interactions ---
 
+class ProductIn(BaseModel):
+    """Un producto recetado y sus sustancias. Sin esto un combinado llega
+    desarmado y la misma sustancia en dos productos es invisible."""
+    id: Annotated[str, StringConstraints(min_length=1, max_length=100, strip_whitespace=True)]
+    substances: list[Annotated[str, StringConstraints(min_length=1, max_length=200,
+                                                      strip_whitespace=True)]] = Field(
+        ..., min_length=1, max_length=20)
+    # Aceptada desde ya; la regla tópico/sistémico se escribe cuando Recetalia la mande.
+    route: str | None = Field(None, max_length=50)
+
+
 class InteractionsRequest(BaseModel):
-    drugs: list[Annotated[str, StringConstraints(min_length=1, max_length=200, strip_whitespace=True)]] = Field(
-        ..., min_length=2, examples=[["ibuprofen", "warfarin"]]
-    )
+    drugs: list[Annotated[str, StringConstraints(min_length=1, max_length=200,
+                                                 strip_whitespace=True)]] = Field(
+        default_factory=list, examples=[["ibuprofen", "warfarin"]])
+    products: list[ProductIn] | None = Field(None, max_length=50)
+
+    @model_validator(mode="after")
+    def _al_menos_dos(self):
+        # Compatible hacia atrás: sin `products`, `drugs` sigue exigiendo 2.
+        if self.products:
+            ids = [p.id for p in self.products]
+            if len(ids) != len(set(ids)):
+                raise ValueError("ids de producto repetidos")
+            if not self.drugs:
+                vistos: list[str] = []
+                for p in self.products:
+                    vistos += [s for s in p.substances if s not in vistos]
+                self.drugs = vistos
+            if len(self.products) < 2 and len(self.drugs) < 2:
+                raise ValueError("hacen falta al menos dos productos o dos sustancias")
+        elif len(self.drugs) < 2:
+            raise ValueError("drugs necesita al menos dos elementos")
+        return self
 
 
 class DrugRef(BaseModel):
@@ -53,6 +83,8 @@ class InteractionsDataSources(BaseModel):
 
 _INTERACTION_LIMITATIONS = [
     "Checks pairwise interactions only — multi-drug cascades are not detected",
+    "Therapeutic duplicity is evaluated separately (same substance, or same "
+    "AEMPS class over quota) — it is not a drug-drug interaction",
     "Does not account for patient-specific factors (age, weight, renal/hepatic function, genetics)",
     "Coverage depends on the DDInter 2.0 corpus and OpenFDA labels",
     "Not a substitute for professional medical advice",
@@ -67,6 +99,12 @@ class InteractionsResponse(BaseModel):
     coverage_summary: dict[str, int] = Field(
         default_factory=lambda: {"recetalia": 0, "aemps": 0, "ddinter": 0,
                                  "openfda": 0, "unknown": 0})
+    """Duplicidad terapéutica. Ver docs/2026-09-24-duplicidad-terapeutica-design.md."""
+    duplicities: list[dict] = Field(default_factory=list)
+    """Lo que NO se alertó por un cupo o una excepción, con el motivo."""
+    duplicities_suppressed: list[dict] = Field(default_factory=list)
+    duplicity_not_evaluated: list[str] = Field(default_factory=list)
+    duplicity_warnings: list[str] = Field(default_factory=list)
     limitations: list[str] = _INTERACTION_LIMITATIONS
 
 

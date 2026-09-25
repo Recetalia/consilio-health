@@ -191,6 +191,37 @@ class TestInteractionsEndpoint:
         resp = client.post("/interactions", json={})
         assert resp.status_code == 422
 
+    def test_products_only_reaches_checker(self, client):
+        with patch("app.api.interactions.interaction_checker.check", new=AsyncMock(return_value={
+            "interactions": [],
+            "safe": True,
+            "error": None,
+            "coverage_summary": {"ddinter": 0, "openfda": 0, "unknown": 0},
+            "duplicities": [],
+            "duplicities_suppressed": [],
+            "duplicity_not_evaluated": [],
+            "duplicity_warnings": [],
+        })) as mock_check:
+            resp = client.post("/interactions", json={"products": [
+                {"id": "p1", "substances": ["paracetamol"]},
+                {"id": "p2", "substances": ["codeina"]},
+            ]})
+        assert resp.status_code == 200
+        kwargs = mock_check.call_args.kwargs
+        ids = [p["id"] for p in kwargs["products"]]
+        assert ids == ["p1", "p2"]
+
+    def test_validation_rejects_single_drug_without_products(self, client):
+        resp = client.post("/interactions", json={"drugs": ["a"]})
+        assert resp.status_code == 422
+
+    def test_validation_rejects_repeated_product_ids(self, client):
+        resp = client.post("/interactions", json={"products": [
+            {"id": "p1", "substances": ["paracetamol"]},
+            {"id": "p1", "substances": ["codeina"]},
+        ]})
+        assert resp.status_code == 422
+
 
 class TestHealthEndpoint:
     def test_health_returns_ok(self, client):

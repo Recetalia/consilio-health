@@ -21,7 +21,8 @@ INTERACTIONS_RATE = os.environ.get("CONSILIO_INTERACTIONS_RATE", "120/minute")
 @router.post("/interactions", response_model=InteractionsResponse)
 @limiter.limit(INTERACTIONS_RATE)
 async def check_interactions(request: Request, body: InteractionsRequest):
-    result = await interaction_checker.check(body.drugs)
+    result = await interaction_checker.check(
+        body.drugs, products=[p.model_dump() for p in body.products] if body.products else None)
     return InteractionsResponse(
         **result,
         data_sources=InteractionsDataSources(

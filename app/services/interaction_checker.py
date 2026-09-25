@@ -15,22 +15,22 @@ from typing import Any
 from app.clients import openfda_client, recetalia_db, rxnorm_client
 from app.middleware.audit_log import get_audit_context
 from app.nlp import severity_classifier
+from app.services import duplicity_checker
 
 logger = logging.getLogger(__name__)
 
 _EMPTY_COVERAGE = {"recetalia": 0, "aemps": 0, "ddinter": 0, "openfda": 0, "unknown": 0}
 
 
-async def check(drug_names: list[str]) -> dict[str, Any]:
-    """Check pairwise interactions for the supplied drug names."""
-    if len(drug_names) < 2:
-        return {
-            "interactions": [],
-            "safe": True,
-            "error": None,
-            "coverage_summary": dict(_EMPTY_COVERAGE),
-        }
+async def check(drug_names: list[str], products: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    """Check pairwise interactions for the supplied drug names.
 
+    `products` es lo que manda Recetalia: cada producto con sus sustancias, para
+    la duplicidad terapéutica. Sin él (clientes viejos que sólo mandan `drugs`),
+    se arma uno por nombre único — la misma deduplicación por casefold que ya
+    usan las interacciones, para no chocar con el chequeo de ids repetidos de
+    `duplicity_checker.chequear`.
+    """
     unique_names = []
     seen_names: set[str] = set()
     for name in drug_names:
@@ -38,6 +38,20 @@ async def check(drug_names: list[str]) -> dict[str, Any]:
         if key not in seen_names:
             seen_names.add(key)
             unique_names.append(name)
+
+    if products is None:
+        products = [{"id": name, "substances": [name]} for name in unique_names]
+    dup = await _duplicidad(products)
+
+    if len(drug_names) < 2:
+        return {
+            "interactions": [],
+            "safe": not dup["duplicities"],
+            "error": None,
+            "coverage_summary": dict(_EMPTY_COVERAGE),
+            **dup,
+        }
+
     rxcui_results = await asyncio.gather(
         *[rxnorm_client.get_rxcui(name) for name in unique_names],
         return_exceptions=True,
@@ -61,10 +75,25 @@ async def check(drug_names: list[str]) -> dict[str, Any]:
 
     return {
         "interactions": interactions,
-        "safe": len(interactions) == 0,
+        "safe": len(interactions) == 0 and not dup["duplicities"],
         "error": None,
         "coverage_summary": coverage,
+        **dup,
     }
+
+
+async def _duplicidad(products: list[dict[str, Any]]) -> dict[str, Any]:
+    vacio = {"duplicities": [], "duplicities_suppressed": [],
+             "duplicity_not_evaluated": [], "duplicity_warnings": []}
+    if len(products) < 2:
+        return vacio
+    try:
+        return await duplicity_checker.chequear(recetalia_db.client, products)
+    except Exception:
+        # Que falle la duplicidad no puede tumbar las interacciones; se dice.
+        logger.warning("Chequeo de duplicidad falló", exc_info=True)
+        return {**vacio, "duplicity_warnings": [
+            "No se pudo evaluar la duplicidad terapéutica en esta consulta."]}
 
 
 async def _resolve_pair(
