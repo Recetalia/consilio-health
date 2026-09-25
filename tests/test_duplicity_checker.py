@@ -7,10 +7,10 @@ SIN_CUPOS = {"clases": {}, "excepciones": []}
 CANON = {1: "Acetaminophen", 2: "Codeine", 3: "Diazepam", 4: "Lorazepam",
          5: "Enalapril", 6: "Insulin glargine", 7: "Insulin aspart",
          8: "Insulin detemir"}
-CLASES = {1: [("N02BE", "Anilidas")], 3: [("N05BA", "Benzodiazepinas")],
-          4: [("N05BA", "Benzodiazepinas")], 5: [("C09AA", "IECA")],
-          6: [("A10AB", "Insulinas")], 7: [("A10AB", "Insulinas")],
-          8: [("A10AB", "Insulinas")]}
+CLASES = {1: [("N02BE", "Anilidas", "ancla")], 3: [("N05BA", "Benzodiazepinas", "ancla")],
+          4: [("N05BA", "Benzodiazepinas", "ancla")], 5: [("C09AA", "IECA", "ancla")],
+          6: [("A10AB", "Insulinas", "ancla")], 7: [("A10AB", "Insulinas", "ancla")],
+          8: [("A10AB", "Insulinas", "ancla")]}
 
 
 def P(pid, *pares):
@@ -150,3 +150,52 @@ def test_cargar_cupos_real_tiene_las_claves_esperadas():
     data = cargar_cupos()
     assert isinstance(data["clases"], dict)
     assert isinstance(data["excepciones"], list)
+
+
+# --- rol ancla/miembro y deduplicación por conjunto de productos -------------
+
+# prednisona (9) y dexametasona (10) son MIEMBRO de H02AA (la clase amplia que
+# generaba el falso positivo del hallazgo) pero ANCLA de H02AB.
+CLASES_ROL = {**CLASES,
+              9: [("H02AA", "Corticosteroides", "miembro"), ("H02AB", "Glucocorticoides", "ancla")],
+              10: [("H02AA", "Corticosteroides", "miembro"), ("H02AB", "Glucocorticoides", "ancla")],
+              11: [("H02AA", "Corticosteroides", "ancla")]}
+CANON_ROL = {**CANON, 9: "Prednisone", 10: "Dexamethasone", 11: "SomeAnchor"}
+
+
+def test_clase_sin_ningun_ancla_no_alerta_y_la_de_ancla_si():
+    out = evaluar([P("p1", ("prednisona", 9)), P("p2", ("dexametasona", 10))],
+                  CLASES_ROL, SIN_CUPOS, CANON_ROL)
+    class_ids = {d["class_id"] for d in out["duplicities"] if d["layer"] == "class"}
+    assert class_ids == {"H02AB"}
+
+
+def test_ancla_mas_miembro_en_la_misma_clase_si_alerta():
+    out = evaluar([P("p1", ("prednisona", 9)), P("p3", ("anchor", 11))],
+                  CLASES_ROL, SIN_CUPOS, CANON_ROL)
+    class_ids = {d["class_id"] for d in out["duplicities"] if d["layer"] == "class"}
+    assert "H02AA" in class_ids
+
+
+def test_dedup_una_alerta_por_conjunto_exacto_de_productos():
+    # drogaA y drogaB son ancla en dos clases distintas, pero sobre el MISMO
+    # par de productos: es el hallazgo de alendronato+risedronato (4 clases,
+    # mismo par de productos) reducido a dos.
+    clases = {12: [("K01AA", "ClaseUno", "ancla"), ("K01AB", "ClaseDos", "ancla")],
+              13: [("K01AA", "ClaseUno", "ancla"), ("K01AB", "ClaseDos", "ancla")]}
+    canon = {**CANON, 12: "DrugA", 13: "DrugB"}
+    out = evaluar([P("p1", ("drogaA", 12)), P("p2", ("drogaB", 13))], clases, SIN_CUPOS, canon)
+    [d] = out["duplicities"]
+    assert d["class_id"] == "K01AA"
+    assert d["other_classes"] == [{"class_id": "K01AB", "class_desc": "ClaseDos"}]
+
+
+def test_other_classes_siempre_presente():
+    # una sola clase involucrada: other_classes vacío mas no ausente.
+    out = evaluar([P("p1", ("diazepam", 3)), P("p2", ("lorazepam", 4))], CLASES, SIN_CUPOS, CANON)
+    [d] = out["duplicities"]
+    assert d["other_classes"] == []
+    # capa 1 también lo trae, siempre vacío.
+    out2 = evaluar([P("p1", ("paracetamol", 1)), P("p2", ("paracetamol", 1))], CLASES, SIN_CUPOS, CANON)
+    [d2] = out2["duplicities"]
+    assert d2["other_classes"] == []

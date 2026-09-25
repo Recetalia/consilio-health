@@ -5,7 +5,20 @@ Dos capas en consulta (la tercera, cupos y excepciones, es dato curado):
 1. **Sustancia**: el mismo fármaco en dos productos distintos. Cupo 0, grave.
    Cubre el paracetamol dentro de un combinado, que ningún prefijo ATC ve.
 2. **Clase**: más productos de una clase que su cupo (1 por defecto). Las
-   clases salen de la AEMPS (`scripts/cross_aemps_duplicidad.py`).
+   clases salen de la AEMPS (`scripts/cross_aemps_duplicidad.py`), cada
+   fármaco con un rol 'ancla' o 'miembro' dentro de la clase.
+
+Una regla AEMPS significa "un producto de atc_b duplica a atc_a": los
+fármacos de atc_b son MIEMBROS de la clase del ancla, no anclas en sí. Con
+membresía plana (sin este rol) medimos falsos positivos reales: prednisona +
+dexametasona alertaban también bajo H02AA "Mineralocorticoides" (ninguno de
+los dos es el ancla de esa clase, ambos llegan ahí como miembro de la regla
+de otro fármaco), y alendronato + risedronato alertaban 4 veces (G03XC,
+H05AA, H05BA, M05BA) por ser miembros de las cuatro. Por eso una clase sólo
+alerta si al menos uno de sus productos aporta un fármaco con rol 'ancla' en
+esa clase, y si dos o más clases alertarían sobre el mismo conjunto exacto de
+productos se emite una sola (la de menor `class_id`), listando el resto en
+`other_classes`.
 
 Sustancias del MISMO producto nunca se comparan entre sí: el médico no puede
 separarlas. Y lo que no se alerta por un cupo o una excepción se devuelve
@@ -58,10 +71,14 @@ def cargar_cupos(path: str | None = None) -> dict[str, Any]:
 
 def evaluar(
     productos: list[Producto],
-    clases_por_drug: dict[int, list[tuple[str, str]]] | None,
+    clases_por_drug: dict[int, list[tuple[str, str, str]]] | None,
     cupos: dict[str, Any],
     canonicos: dict[int, str],
 ) -> dict[str, Any]:
+    """`clases_por_drug[drug_id]` es una lista de `(class_id, class_desc, rol)`,
+    con `rol` en `{"ancla", "miembro"}`. Ver el docstring del módulo: sin esa
+    distinción, cualquier miembro de una regla AEMPS parecía duplicarse con
+    cualquier otro."""
     out: dict[str, Any] = {"duplicities": [], "duplicities_suppressed": [],
                            "duplicity_not_evaluated": [], "duplicity_warnings": []}
 
@@ -90,7 +107,7 @@ def evaluar(
                 layer="substance", class_id=None, class_desc=None,
                 products=list(prods), substances=sorted(set(prods.values())),
                 count=len(prods), cupo=0, severity="major", source="consilio",
-                rule="misma-sustancia"))
+                rule="misma-sustancia", other_classes=[]))
 
     if clases_por_drug is None:
         out["duplicity_warnings"].append(AVISO_SIN_CLASES)
@@ -99,9 +116,11 @@ def evaluar(
     # --- capa 2: clase -------------------------------------------------------
     # class_id -> (desc, {product_id: {drug_id: nombre}})
     por_clase: dict[str, tuple[str, dict[str, dict[int, str]]]] = {}
+    roles_por_clase: dict[str, dict[int, str]] = {}  # class_id -> {drug_id: rol}
     for did, prods in por_droga.items():
-        for cid, desc in clases_por_drug.get(did, []):
+        for cid, desc, rol in clases_por_drug.get(did, []):
             _, miembros = por_clase.setdefault(cid, (desc, {}))
+            roles_por_clase.setdefault(cid, {})[did] = rol
             for pid, nombre in prods.items():
                 miembros.setdefault(pid, {})[did] = nombre
 
@@ -109,6 +128,10 @@ def evaluar(
         if len(miembros) < 2:
             continue
         drogas = {d for m in miembros.values() for d in m}
+        # sin ningún fármaco "ancla" de la clase entre los productos, la
+        # coincidencia es de miembros de otras reglas AEMPS: no es duplicidad.
+        if not any(roles_por_clase[cid].get(d) == "ancla" for d in drogas):
+            continue
         productos_clase = set(miembros)
         # si un solo drug_id ya cubre (por capa 1) a TODOS los productos de la
         # clase, la alerta de clase no suma información: es el mismo aviso.
@@ -121,7 +144,8 @@ def evaluar(
         alerta = dict(
             layer="class", class_id=cid, class_desc=desc, products=products_en_orden,
             substances=sorted({n for m in miembros.values() for n in m.values()}),
-            count=len(miembros), cupo=cupo, severity="moderate", source="aemps", rule=cid)
+            count=len(miembros), cupo=cupo, severity="moderate", source="aemps", rule=cid,
+            other_classes=[])
 
         if desactivada or (cupo is not None and len(miembros) <= cupo):
             motivo = cfg
@@ -135,7 +159,34 @@ def evaluar(
                 **alerta, "motivo": motivo.get("motivo"),
                 "referencia": motivo.get("referencia"),
                 "validado": bool(motivo.get("validado", False))})
+
+    _fusionar_por_conjunto_de_productos(out["duplicities"])
     return out
+
+
+def _fusionar_por_conjunto_de_productos(duplicities: list[dict]) -> None:
+    """Si dos o más alertas de clase (ya filtradas, no suprimidas) comparten
+    EXACTAMENTE el mismo conjunto de productos, son la misma duplicidad vista
+    desde reglas AEMPS distintas (el caso alendronato+risedronato: 4 clases,
+    2 productos). Se deja una sola, la de menor `class_id`, y el resto pasa a
+    `other_classes`. Muta `duplicities` in place; conserva el orden original."""
+    grupos: dict[frozenset[str], list[dict]] = {}
+    otros: list[dict] = []
+    for d in duplicities:
+        if d["layer"] != "class":
+            otros.append(d)
+            continue
+        grupos.setdefault(frozenset(d["products"]), []).append(d)
+
+    clases_finales = []
+    for entradas in grupos.values():
+        principal, *resto = entradas  # ya en orden de class_id ascendente
+        if resto:
+            principal["other_classes"] = [
+                {"class_id": e["class_id"], "class_desc": e["class_desc"]} for e in resto]
+        clases_finales.append(principal)
+
+    duplicities[:] = otros + clases_finales
 
 
 def _excepcion(cid: str, miembros: dict[str, dict[int, str]],
