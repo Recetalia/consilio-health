@@ -174,7 +174,17 @@ def test_ancla_mas_miembro_en_la_misma_clase_si_alerta():
     out = evaluar([P("p1", ("prednisona", 9)), P("p3", ("anchor", 11))],
                   CLASES_ROL, SIN_CUPOS, CANON_ROL)
     class_ids = {d["class_id"] for d in out["duplicities"] if d["layer"] == "class"}
-    assert "H02AA" in class_ids
+    assert class_ids == {"H02AA"}
+
+
+def test_ancla_gana_si_el_mismo_farmaco_llega_con_dos_roles_en_la_clase():
+    # farmaco 3 aporta dos tuplas para N05BA: una ancla y otra miembro. La
+    # ancla tiene que ganar sin importar el orden en que aparezcan.
+    clases = {3: [("N05BA", "B", "ancla"), ("N05BA", "B", "miembro")],
+              4: [("N05BA", "B", "miembro")]}
+    out = evaluar([P("p1", ("diazepam", 3)), P("p2", ("lorazepam", 4))], clases, SIN_CUPOS, CANON)
+    class_ids = {d["class_id"] for d in out["duplicities"] if d["layer"] == "class"}
+    assert class_ids == {"N05BA"}
 
 
 def test_dedup_una_alerta_por_conjunto_exacto_de_productos():
@@ -199,3 +209,34 @@ def test_other_classes_siempre_presente():
     out2 = evaluar([P("p1", ("paracetamol", 1)), P("p2", ("paracetamol", 1))], CLASES, SIN_CUPOS, CANON)
     [d2] = out2["duplicities"]
     assert d2["other_classes"] == []
+
+
+def test_supresion_no_fusiona_con_alerta_emitida_del_mismo_conjunto():
+    # K2AA se suprime por cupo curado, K2AB no: comparten el mismo par de
+    # productos pero la fusión sólo opera sobre alertas emitidas. Es a
+    # propósito: la supresión se muestra plegada, con su propio motivo, no
+    # mezclada dentro de otra alerta.
+    clases = {12: [("K2AA", "ClaseUno", "ancla"), ("K2AB", "ClaseDos", "ancla")],
+              13: [("K2AA", "ClaseUno", "ancla"), ("K2AB", "ClaseDos", "ancla")]}
+    canon = {**CANON, 12: "DrugA", 13: "DrugB"}
+    cupos = {"clases": {"K2AA": {"cupo": 2, "motivo": "m", "referencia": "r", "validado": False}},
+             "excepciones": []}
+    out = evaluar([P("p1", ("drogaA", 12)), P("p2", ("drogaB", 13))], clases, cupos, canon)
+    [d] = out["duplicities"]
+    assert d["class_id"] == "K2AB" and d["other_classes"] == []
+    [s] = out["duplicities_suppressed"]
+    assert s["class_id"] == "K2AA"
+
+
+def test_subconjunto_de_productos_no_fusiona():
+    # K3AA cubre p1,p2; K3AB cubre p1,p2,p3. Un conjunto es subconjunto del
+    # otro pero no son iguales: no se fusionan.
+    clases = {12: [("K3AA", "X", "ancla"), ("K3AB", "Y", "ancla")],
+              13: [("K3AA", "X", "ancla"), ("K3AB", "Y", "ancla")],
+              14: [("K3AB", "Y", "ancla")]}
+    canon = {**CANON, 12: "DrugA", 13: "DrugB", 14: "DrugC"}
+    out = evaluar([P("p1", ("drogaA", 12)), P("p2", ("drogaB", 13)), P("p3", ("drogaC", 14))],
+                  clases, SIN_CUPOS, canon)
+    clases_alertadas = [d for d in out["duplicities"] if d["layer"] == "class"]
+    assert {d["class_id"] for d in clases_alertadas} == {"K3AA", "K3AB"}
+    assert all(d["other_classes"] == [] for d in clases_alertadas)

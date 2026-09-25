@@ -76,6 +76,11 @@ comparan entre sí (el médico no puede separarlas).
   supera el cupo (default 1) → alerta, severidad moderada.
 - Si todos los productos de la alerta de clase ya están cubiertos por una alerta
   de capa 1 de la misma sustancia, la de clase no se emite (no duplicar el aviso).
+- Cada fármaco tiene un rol por clase, **ancla** o **miembro** (ancla = lado
+  `atc_a` de la regla AEMPS; miembro = lado `atc_b`). Una clase sólo alerta si
+  al menos un producto aporta un fármaco ancla; si el mismo fármaco llega con
+  los dos roles a la misma clase, gana ancla. Sin esto, cualquier miembro de
+  una regla AEMPS parecía duplicarse con cualquier otro miembro suyo.
 
 ### Capa 3 — cupos y excepciones curados
 `data/duplicidad_cupos.json`, en git, curado a mano:
@@ -137,11 +142,17 @@ Si viene sólo `drugs`, cada nombre es un producto. La respuesta suma:
 "duplicities": [ { "layer": "substance|class", "class_id": "N02BE", "class_desc": "...",
                    "products": ["p1","p2"], "substances": ["paracetamol"],
                    "count": 2, "cupo": 1, "severity": "major|moderate",
-                   "source": "aemps|consilio", "rule": "N02BE" } ],
+                   "source": "aemps|consilio", "rule": "N02BE",
+                   "other_classes": [ { "class_id": "...", "class_desc": "..." } ] } ],
 "duplicities_suppressed": [ { ...mismos campos, "motivo": "...", "referencia": "..." } ],
 "duplicity_not_evaluated": ["sustancia no resuelta"],
 "duplicity_warnings": ["la base no tiene clases cargadas"]
 ```
+
+`other_classes` va en toda alerta de clase (vacío si no aplica; vacío también en
+las de sustancia). Si dos o más clases alertarían sobre el mismo conjunto exacto
+de productos, se emite una sola —la de menor `class_id`— y el resto queda ahí
+listado en vez de repetir la alerta.
 
 ## Componentes
 
@@ -167,3 +178,5 @@ capa: es la primera métrica que va a correr la routine semanal.
 
 Sustancia no resuelta → `duplicity_not_evaluated`, nunca se omite en silencio.
 Base sin `drug_class` (ETL no corrido) → `duplicities` trae sólo lo de la capa 1 (misma sustancia), más un aviso en `duplicity_warnings`, no 500.
+Ids de producto repetidos → `ValueError` (la API responde 422).
+`substances` y `drug_ids` de largos distintos en un mismo producto → `ValueError`.

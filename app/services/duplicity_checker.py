@@ -120,7 +120,9 @@ def evaluar(
     for did, prods in por_droga.items():
         for cid, desc, rol in clases_por_drug.get(did, []):
             _, miembros = por_clase.setdefault(cid, (desc, {}))
-            roles_por_clase.setdefault(cid, {})[did] = rol
+            roles = roles_por_clase.setdefault(cid, {})
+            if roles.get(did) != "ancla":  # ancla nunca la pisa un miembro posterior
+                roles[did] = rol
             for pid, nombre in prods.items():
                 miembros.setdefault(pid, {})[did] = nombre
 
