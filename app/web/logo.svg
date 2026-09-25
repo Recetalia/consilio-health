@@ -5,13 +5,13 @@
   </defs>
 
   <!-- isotipo -->
-  <circle cx="29.5" cy="24" r="12" fill="#2EA1B1" clip-path="url(#lente-l)"/>
-  <g fill="none" stroke="#0f766e" stroke-width="2.6">
+  <circle cx="29.5" cy="24" r="12" fill="#1f6fd0" clip-path="url(#lente-l)"/>
+  <g fill="none" stroke="#14213a" stroke-width="2.6">
     <circle cx="18.5" cy="24" r="12"/>
     <circle cx="29.5" cy="24" r="12"/>
   </g>
 
   <!-- logotipo -->
-  <text x="54" y="30" font-family="Hind, Roboto, Helvetica, Arial, sans-serif"
-        font-size="23" font-weight="700" letter-spacing="-0.3" fill="#0f172a">Consilio</text>
+  <text x="54" y="30" font-family="'Space Grotesk', Manrope, Helvetica, Arial, sans-serif"
+        font-size="23" font-weight="700" letter-spacing="-0.3" fill="#14213a">Consilio</text>
 </svg>

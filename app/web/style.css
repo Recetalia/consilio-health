@@ -1,30 +1,34 @@
 /* Consilio — interfaz de consulta.
 
-   Los tokens salen de los frontends de Recetalia para que Consilio no se vea
-   como una aplicación ajena metida adentro: fondo `#f5f8fa`, tarjetas blancas
-   con borde `#e2e8f0`, teal corporativo `#2EA1B1`, CTA `#0f766e`, Roboto para
-   el cuerpo y Hind para encabezados y tablas, radios de 6/8px y la sombra
-   suave del dashboard de gestión. */
+   Identidad visual de Medicina Inteligente, el sitio madre: navy `#14213a`
+   como color de marca (header, textos fuertes), azul `#1f6fd0` como acción
+   primaria (botones, links, foco) con azul profundo `#14549f` de hover/
+   pressed y para títulos de sección, fondo `#f7f9fd` con paneles `#edf3fb`,
+   líneas en navy con alfa, cuerpo en Manrope y marca/títulos en Space
+   Grotesk, radios de 6/8px y la sombra suave del dashboard de gestión. */
 
 :root {
-  /* --- Recetalia --- */
-  --bg:            #f5f8fa;
+  /* --- Medicina Inteligente --- */
+  --bg:            #f7f9fd;
+  --bg-seccion:    #edf3fb;
   --card:          #ffffff;
-  --border:        #e2e8f0;
-  --border-soft:   #eef2f7;
-  --teal:          #2EA1B1;   /* acento corporativo */
-  --cta:           #0f766e;   /* botón primario del dashboard */
-  --cta-hover:     #0c5f59;
-  --link:          #3498db;
-  --text:          #334155;
-  --text-strong:   #0f172a;
-  --text-soft:     #64748b;
-  --text-faint:    #94a3b8;
-  --hover-row:     #e9ecef;
+  --border:        #14213a1a;   /* línea de tarjeta: navy 10% alfa */
+  --border-input:  #14213a29;   /* línea de input: navy 16% alfa */
+  --border-soft:   #14213a12;   /* línea de sección: navy 7% alfa */
+  --navy:          #14213a;     /* color principal de marca */
+  --azul:          #1f6fd0;     /* acción primaria: botones, links, foco */
+  --azul-profundo: #14549f;     /* hover/pressed del azul, títulos de sección */
+  --text-on-navy:  #fcfdff;
+  --link:          var(--azul);
+  --text:          #44546f;
+  --text-strong:   #14213a;
+  --text-soft:     #5d6b85;
+  --text-faint:    #8a97ad;
+  --hover-row:     #edf3fb;
 
   /* --- estado --- */
   /* Los `-bg` son los fondos de las tarjetas de hallazgo. Medidos contra el
-     fondo de página #f5f8fa: al 4% de saturación —que es donde estaban— la
+     fondo de página #f7f9fd: al 4% de saturación —que es donde estaban— la
      tarjeta "sin graduar" era indistinguible del fondo y la gravedad la
      comunicaba sólo el filete lateral. Si el color tiene que leerse desde
      lejos, tiene que ser color. */
@@ -32,11 +36,14 @@
   --major-bg:      #fbe7e4;
   --moderate:      #d98b06;
   --moderate-bg:   #fdf2d9;
-  --minor:         #0ea5e9;
-  --minor-bg:      #e4f1fb;
+  /* Antes #0ea5e9 (sky-500): con el nuevo azul de marca #1f6fd0 al lado,
+     "leve" y "marca" se leían como el mismo color. Bajado a un cyan más
+     oscuro y distinguible; contra blanco en el badge da ~5.4:1, AA. */
+  --minor:         #0e7490;
+  --minor-bg:      #e6f1f4;
   /* Antes gris (#7c8b9c): se confundía con "sin cargar" y, sobre una página
-     con acento verde/teal, con la marca. Violeta no compite con ninguno de
-     los dos. */
+     con acento azul de marca, con la marca. Violeta no compite con ninguno
+     de los dos. */
   --unknown:       #7c3aed;
   --unknown-bg:    #f1eafe;
 
@@ -52,31 +59,31 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: Manrope, "Helvetica Neue", Arial, sans-serif;
   /* 15px, no 14: a 14 la pantalla entera se lee como "letra chica" y esto lo
      va a mirar un médico entre paciente y paciente, no un desarrollador. */
   font-size: 15px;
   line-height: 1.55;
 }
 
-h5, h6, .col-title, .brand .name { font-family: Hind, Roboto, sans-serif; }
+h5, h6, .col-title, .brand .name { font-family: "Space Grotesk", Manrope, sans-serif; }
 
 /* ---------------- barra superior ---------------- */
 
-/* La cabecera va en el teal corporativo, como el header público de Recetalia.
-   Con todo blanco la pantalla no tenía dónde anclar la marca y se leía como un
+/* La cabecera va en el navy de marca de Medicina Inteligente. Con todo
+   blanco la pantalla no tenía dónde anclar la marca y se leía como un
    formulario suelto en vez de como un producto. */
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px; min-height: 62px; padding: 0 24px;
-  background: linear-gradient(90deg, #2EA1B1 0%, #21899a 55%, #0f766e 100%);
-  box-shadow: 0 1px 0 rgba(0,0,0,.06), 0 2px 10px rgba(15,118,110,.18);
+  background: var(--navy);
+  box-shadow: 0 1px 0 rgba(0,0,0,.06), 0 2px 10px rgba(20,33,58,.18);
   position: sticky; top: 0; z-index: 30;
 }
 .brand { display: flex; align-items: center; gap: 9px; }
 .brand .isotipo { display: block; flex: 0 0 auto; }
 .brand .name {
-  font-size: 23px; font-weight: 700; color: #fff;
+  font-size: 23px; font-weight: 700; color: var(--text-on-navy);
   letter-spacing: -.015em; line-height: 1;
 }
 .brand .tagline {
@@ -89,7 +96,7 @@ h5, h6, .col-title, .brand .name { font-family: Hind, Roboto, sans-serif; }
 /* ---------------- ayuda ---------------- */
 
 .ayuda {
-  background: #eef7f8; border-bottom: 1px solid #cfe6ea;
+  background: var(--bg-seccion); border-bottom: 1px solid #cbdcf3;
   padding: 22px 24px;
 }
 .ayuda-grid {
@@ -99,7 +106,7 @@ h5, h6, .col-title, .brand .name { font-family: Hind, Roboto, sans-serif; }
 }
 .ayuda h6 {
   margin: 0 0 9px; font-size: 12px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .04em; color: var(--cta);
+  letter-spacing: .04em; color: var(--azul-profundo);
 }
 .ayuda ul { margin: 0; padding-left: 18px; font-size: 14px; }
 .ayuda li { margin-bottom: 5px; }
@@ -139,16 +146,16 @@ main { max-width: 1280px; margin: 0 auto; padding: 26px 24px 8px; }
   border-radius: var(--radius-lg); box-shadow: var(--shadow);
   overflow: hidden;
 }
-/* La cabecera de cada tarjeta va teñida y con un filete teal arriba: sin eso
+/* La cabecera de cada tarjeta va teñida y con un filete azul arriba: sin eso
    son cuatro rectángulos blancos sobre un fondo casi blanco y la pantalla no
    tiene jerarquía, que es de lo que se quejaba la primera versión. */
 .card-header {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  padding: 14px 18px; background: #f3f9fa;
-  border-bottom: 1px solid #d9eaed; border-top: 3px solid var(--teal);
+  padding: 14px 18px; background: var(--bg-seccion);
+  border-bottom: 1px solid #cbdcf3; border-top: 3px solid var(--azul);
 }
 .card-header h5 {
-  margin: 0; font-size: 16px; font-weight: 600; color: var(--cta);
+  margin: 0; font-size: 16px; font-weight: 600; color: var(--azul-profundo);
 }
 /* Dentro de un `label` en versales, el aclarador tiene que salirse de las
    versales: "PATOLOGÍAS CÓDIGO CIE-10 O NOMBRE" se lee como un solo título
@@ -160,27 +167,27 @@ main { max-width: 1280px; margin: 0 auto; padding: 26px 24px 8px; }
 label .opt::before { content: "· "; }
 .counter {
   font-size: 12px; font-weight: 600; color: #fff;
-  background: var(--teal); border-radius: 11px; padding: 3px 11px;
+  background: var(--azul); border-radius: 11px; padding: 3px 11px;
 }
 .card-body { padding: 18px; }
 
 .hint { margin: 0 0 13px; font-size: 13.5px; color: var(--text-soft); }
 /* Ocupa el sobrante de la tarjeta y dice qué va a pasar al consultar. */
 .resumen-cruce {
-  margin-top: auto; padding-top: 14px; border-top: 1px dashed #d9eaed;
+  margin-top: auto; padding-top: 14px; border-top: 1px dashed #cbdcf3;
   font-size: 13.5px; color: var(--text-soft);
 }
-.resumen-cruce strong { color: var(--cta); font-size: 15px; }
+.resumen-cruce strong { color: var(--azul-profundo); font-size: 15px; }
 .micro-aviso {
   margin: 7px 0 0; font-size: 13px; color: var(--text-soft); line-height: 1.45;
-  padding-left: 10px; border-left: 2px solid #d9eaed;
+  padding-left: 10px; border-left: 2px solid #cbdcf3;
 }
 
 /* ---------------- formularios ---------------- */
 
 label {
   display: block; font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .05em; color: var(--cta); margin-bottom: 5px;
+  letter-spacing: .05em; color: var(--azul-profundo); margin-bottom: 5px;
 }
 label.check {
   display: inline-flex; align-items: center; gap: 6px; margin: 0;
@@ -190,11 +197,11 @@ label.check {
 input[type="text"], input[type="number"], input[type="search"], select {
   width: 100%; padding: 10px 13px; font: inherit; font-size: 15px;
   color: var(--text); background: #fcfdfe;
-  border: 1px solid var(--border); border-radius: var(--radius);
+  border: 1px solid var(--border-input); border-radius: var(--radius);
   outline: none; transition: border-color .12s, box-shadow .12s;
 }
 input:focus, select:focus {
-  border-color: var(--teal); box-shadow: 0 0 0 3px rgba(46,161,177,.14);
+  border-color: var(--azul); box-shadow: 0 0 0 3px rgba(31,111,208,.16);
 }
 input::placeholder { color: #b6c0cc; }
 
@@ -211,13 +218,13 @@ input::placeholder { color: #b6c0cc; }
   width: 100%; display: flex; align-items: center; justify-content: space-between;
   gap: 8px; padding: 10px 13px; font: inherit; font-size: 15px; text-align: left;
   color: var(--text); background: #fcfdfe; cursor: pointer;
-  border: 1px solid var(--border); border-radius: var(--radius);
+  border: 1px solid var(--border-input); border-radius: var(--radius);
   transition: border-color .12s, box-shadow .12s;
 }
-.select-btn:hover { border-color: #cfd8e3; }
+.select-btn:hover { border-color: #14213a40; }
 .select-btn:focus-visible,
 .select.abierto .select-btn {
-  outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(46,161,177,.14);
+  outline: none; border-color: var(--azul); box-shadow: 0 0 0 3px rgba(31,111,208,.16);
 }
 .select-btn .valor { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .select-btn .valor.vacio { color: #b6c0cc; }
@@ -240,9 +247,9 @@ input::placeholder { color: #b6c0cc; }
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
 }
 .select-list li:hover, .select-list li.activo { background: var(--hover-row); }
-.select-list li[aria-selected="true"] { color: var(--cta); font-weight: 500; }
+.select-list li[aria-selected="true"] { color: var(--azul-profundo); font-weight: 500; }
 .select-list li[aria-selected="true"]::after {
-  content: "✓"; font-size: 12px; color: var(--cta);
+  content: "✓"; font-size: 12px; color: var(--azul-profundo);
 }
 /* La lista de semanas son 43 opciones y a una columna obliga a scrollear.
    ⚠️ NO usar `columns: 2`: con una altura tope el multicolumn no reparte en dos
@@ -270,7 +277,7 @@ input::placeholder { color: #b6c0cc; }
 .field { margin-bottom: 18px; }
 .gestacion {
   display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  padding: 12px 14px; background: #f2f6fd; border: 1px solid #dbe5f8;
+  padding: 12px 14px; background: #f0f6ff; border: 1px solid #dce8f9;
   border-radius: var(--radius);
 }
 /* Dentro del bloque flex el desplegable no debe estirarse a todo el ancho. */
@@ -286,18 +293,18 @@ input::placeholder { color: #b6c0cc; }
 .chips:empty { margin: 0; }
 .chips li {
   display: inline-flex; align-items: center; gap: 7px;
-  background: #eaf6f8; color: #14606b; border: 1px solid #cde9ee;
+  background: #dce8f9; color: var(--azul-profundo); border: 1px solid #cbdcf3;
   border-radius: 15px; padding: 5px 7px 5px 13px; font-size: 14px;
 }
 .chips li button {
-  border: 0; background: transparent; color: #4e8b95; cursor: pointer;
+  border: 0; background: transparent; color: #4c74a8; cursor: pointer;
   font-size: 15px; line-height: 1; padding: 0 4px; border-radius: 50%;
 }
 .chips li button:hover { color: var(--major); background: rgba(192,57,43,.09); }
 .chips-alergia li { background: #fdf1f0; color: #8d2f24; border-color: #f6d9d5; }
 .chips-alergia li button { color: #b07068; }
-.chips-patologia li { background: #f1f5fd; color: #2c4a80; border-color: #d9e3f6; }
-.chips-patologia li button { color: #6d85b5; }
+.chips-patologia li { background: #f0f6ff; color: var(--azul-profundo); border-color: #dce8f9; }
+.chips-patologia li button { color: #5b7fb5; }
 .chips li .code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 11px; opacity: .72;
@@ -328,7 +335,7 @@ input::placeholder { color: #b6c0cc; }
 .suggestions .alias-en { font-size: 11px; color: var(--text-faint); font-weight: 400; }
 .suggestions .code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11.5px; font-weight: 600; color: var(--teal);
+  font-size: 11.5px; font-weight: 600; color: var(--azul);
   min-width: 62px; flex: 0 0 auto;
 }
 .suggestions .nombre { flex: 1 1 auto; min-width: 0; }
@@ -337,30 +344,30 @@ input::placeholder { color: #b6c0cc; }
 
 .actions { display: flex; align-items: center; gap: 14px; margin: 26px 0 0; }
 .btn-primary {
-  background: var(--cta); border: 1px solid var(--cta); color: #fff;
+  background: var(--azul); border: 1px solid var(--azul); color: #fff;
   border-radius: var(--radius); padding: 11px 30px;
   font: inherit; font-size: 15.5px; font-weight: 600; cursor: pointer;
-  box-shadow: 0 1px 2px rgba(15,118,110,.3);
+  box-shadow: 0 1px 2px rgba(20,84,159,.3);
   transition: background .12s, box-shadow .12s;
 }
-.btn-primary:hover:not(:disabled) { box-shadow: 0 2px 8px rgba(15,118,110,.32); }
-.btn-primary:hover:not(:disabled) { background: var(--cta-hover); border-color: var(--cta-hover); }
+.btn-primary:hover:not(:disabled) { box-shadow: 0 2px 8px rgba(20,84,159,.32); }
+.btn-primary:hover:not(:disabled) { background: var(--azul-profundo); border-color: var(--azul-profundo); }
 .btn-primary:disabled { background: #b9c6d3; border-color: #b9c6d3; box-shadow: none; cursor: not-allowed; }
 .btn-ghost {
-  background: var(--card); border: 1px solid #cfd8e3; color: var(--text);
+  background: var(--card); border: 1px solid var(--border-input); color: var(--text);
   border-radius: var(--radius); padding: 6px 14px;
   font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
 }
 .btn-ghost:hover { background: var(--hover-row); }
-.btn-ghost[aria-expanded="true"] { background: #e7f3f1; border-color: var(--cta); color: var(--cta); }
-/* Sobre el teal de la cabecera los botones van calados, no blancos: un bloque
+.btn-ghost[aria-expanded="true"] { background: #dce8f9; border-color: var(--azul-profundo); color: var(--azul-profundo); }
+/* Sobre el navy de la cabecera los botones van calados, no blancos: un bloque
    blanco ahí compite con el logo. */
 .topbar .btn-ghost {
-  background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.4); color: #fff;
+  background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.4); color: var(--text-on-navy);
 }
 .topbar .btn-ghost:hover { background: rgba(255,255,255,.26); }
 .topbar .btn-ghost[aria-expanded="true"] {
-  background: #fff; border-color: #fff; color: var(--cta);
+  background: #fff; border-color: #fff; color: var(--azul-profundo);
 }
 .btn-link {
   background: none; border: 0; color: var(--link); cursor: pointer;
@@ -369,7 +376,7 @@ input::placeholder { color: #b6c0cc; }
 .kbd-hint { font-size: 11.5px; color: var(--text-faint); }
 kbd {
   font-family: ui-monospace, Menlo, monospace; font-size: 10.5px;
-  background: #eef2f7; border: 1px solid var(--border); border-bottom-width: 2px;
+  background: var(--bg-seccion); border: 1px solid var(--border); border-bottom-width: 2px;
   border-radius: 3px; padding: 1px 4px; color: var(--text-soft);
 }
 
@@ -377,7 +384,7 @@ kbd {
 
 .filtros {
   display: flex; flex-wrap: wrap; align-items: flex-end; gap: 18px;
-  background: #f3f9fa; border: 1px solid #d9eaed;
+  background: var(--bg-seccion); border: 1px solid #cbdcf3;
   border-radius: var(--radius-lg); box-shadow: var(--shadow);
   padding: 12px 16px; margin: 20px 0 12px;
 }
@@ -386,22 +393,22 @@ kbd {
 .filtro-grupo:last-child { flex-direction: row; align-items: center; gap: 8px; }
 .filtro-label {
   font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .05em; color: var(--cta);
+  letter-spacing: .05em; color: var(--azul-profundo);
 }
 .pills { display: flex; flex-wrap: wrap; gap: 6px; }
 .pill {
   display: inline-flex; align-items: center; gap: 7px; margin: 0;
-  border: 1px solid #b9d3d8; background: var(--card); border-radius: var(--radius);
+  border: 1px solid #cbdcf3; background: var(--card); border-radius: var(--radius);
   padding: 6px 12px; font-size: 13px; font-weight: 500; color: var(--text);
   text-transform: none; letter-spacing: 0; cursor: pointer; user-select: none;
   transition: background .12s, border-color .12s;
 }
 .pill:hover { background: var(--hover-row); }
 .pill input { display: none; }
-.pill.on { background: var(--cta); border-color: var(--cta); color: #fff; }
+.pill.on { background: var(--azul); border-color: var(--azul); color: #fff; }
 .pill.on .n { color: rgba(255,255,255,.8); }
 .pill .n { font-size: 11px; color: var(--text-faint); font-weight: 600; }
-.pill.toggle.on { background: var(--cta); border-color: var(--cta); color: #fff; }
+.pill.toggle.on { background: var(--azul); border-color: var(--azul); color: #fff; }
 .filtro-texto { padding: 7px 12px; font-size: 13.5px; }
 .filtro-estado {
   margin: 0 0 14px; font-size: 13.5px; color: #7a5b16;
@@ -414,12 +421,12 @@ kbd {
 #results { margin-top: 22px; }
 .col-title {
   margin: 0 0 12px; font-size: 13px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .05em; color: var(--cta);
+  letter-spacing: .05em; color: var(--azul-profundo);
   display: flex; align-items: center; gap: 9px;
 }
 .col-title::before {
   content: ""; width: 4px; height: 15px; border-radius: 2px;
-  background: var(--teal); flex: 0 0 auto;
+  background: var(--azul); flex: 0 0 auto;
 }
 .col { min-width: 0; }
 
@@ -434,7 +441,7 @@ kbd {
 }
 .finding.major    { border-left-color: var(--major);    background: var(--major-bg);    border-color: #eec2bb; }
 .finding.moderate { border-left-color: var(--moderate); background: var(--moderate-bg); border-color: #edd497; }
-.finding.minor    { border-left-color: var(--minor);    background: var(--minor-bg);    border-color: #b9daf1; }
+.finding.minor    { border-left-color: var(--minor);    background: var(--minor-bg);    border-color: #a8d2da; }
 .finding.unknown  { border-left-color: var(--unknown);  background: var(--unknown-bg);  border-color: #ddd0fa; }
 
 .finding-head {
@@ -457,7 +464,7 @@ kbd {
 /* El manejo clínico es lo accionable del hallazgo: se separa del mecanismo
    con un filete para que se lea aunque el médico no lea el resto. Neutro a
    propósito: un verde acá, dentro de una tarjeta de alerta, se confunde con
-   el teal/verde de la marca — que es justo lo que Pablo pidió evitar. */
+   el azul de la marca — que es justo lo que Pablo pidió evitar. */
 .manejo {
   margin: 11px 0 0; padding: 10px 13px; font-size: 14px; color: var(--text);
   background: #f1f5f9; border-left: 3px solid var(--text-soft); border-radius: 4px;
@@ -470,13 +477,13 @@ kbd {
   border-radius: 3px; padding: 1px 6px;
 }
 .tag-clase {
-  display: inline-block; font-size: 11.5px; color: #2c4a80;
-  background: #f1f5fd; border: 1px solid #d9e3f6;
+  display: inline-block; font-size: 11.5px; color: var(--azul-profundo);
+  background: #f0f6ff; border: 1px solid #dce8f9;
   border-radius: 3px; padding: 1px 6px;
 }
 
 .empty-state {
-  background: var(--card); border: 1px dashed #bcd5da;
+  background: var(--card); border: 1px dashed #cbdcf3;
   border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px;
   font-size: 14px; color: var(--text-soft);
 }
@@ -511,7 +518,7 @@ details.suprimidas .finding:last-child { margin-bottom: 10px; }
 
 footer {
   margin: 34px 0 0; padding: 20px 24px 30px;
-  background: #eef2f6; border-top: 3px solid var(--teal);
+  background: var(--bg-seccion); border-top: 3px solid var(--azul);
 }
 footer > * { max-width: 1280px; margin-left: auto; margin-right: auto; }
 .disclaimer { margin: 0; font-size: 13px; color: var(--text); }
@@ -534,6 +541,6 @@ footer > * { max-width: 1280px; margin-left: auto; margin-right: auto; }
   #ayuda, .kbd-hint { display: none !important; }
   body { background: #fff; font-size: 11pt; }
   .card, .finding { box-shadow: none; break-inside: avoid; }
-  .topbar { position: static; border-bottom: 2px solid var(--teal); }
+  .topbar { position: static; border-bottom: 2px solid var(--azul); }
   main { max-width: none; padding: 0; }
 }
