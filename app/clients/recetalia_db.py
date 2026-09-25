@@ -41,11 +41,14 @@ import logging
 import os
 import re
 import unicodedata
+from collections import defaultdict
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
 import aiosqlite
+
+from app.nlp.nombres import skeleton
 
 logger = logging.getLogger(__name__)
 
@@ -124,6 +127,7 @@ class RecetaliaDatabase:
         self.db_path = db_path
         self._conn: aiosqlite.Connection | None = None
         self._lock = asyncio.Lock()
+        self._respaldo: dict | None = None
 
     async def connect(self) -> None:
         if self._conn is not None:
@@ -143,6 +147,7 @@ class RecetaliaDatabase:
         if self._conn:
             await self._conn.close()
             self._conn = None
+        self._respaldo = None
 
     async def _c(self) -> aiosqlite.Connection:
         if self._conn is None:
@@ -195,13 +200,91 @@ class RecetaliaDatabase:
         return {r["rxcui"]: r["drug_id"] for r in rows}
 
     async def drug_id_by_name(self, name: str) -> int | None:
+        """Alias exacto; si no, el nombre del DNMA; si no, el esqueleto INN.
+
+        Los dos respaldos existen porque Recetalia manda castellano y los alias
+        son mayormente inglés. El esqueleto se acepta sólo si apunta a UN
+        fármaco: con dos candidatos no hay match, hay elección arbitraria.
+        """
         conn = await self._c()
+        n = normalize(name)
         async with conn.execute(
-            "select drug_id from drug_alias where alias_norm = ? limit 1",
-            (normalize(name),),
+            "select drug_id from drug_alias where alias_norm = ? limit 1", (n,)
         ) as cur:
             row = await cur.fetchone()
-        return row["drug_id"] if row else None
+        if row:
+            return row["drug_id"]
+        idx = await self._indice_respaldo()
+        return idx["dnma"].get(n) or idx["skel"].get(skeleton(name))
+
+    async def _indice_respaldo(self) -> dict[str, dict]:
+        if self._respaldo is not None:
+            return self._respaldo
+        conn = await self._c()
+        # `_c()` puede disparar `connect()`, que toma `self._lock`; por eso se
+        # llama ANTES de tomar el lock acá, no adentro: si no, la segunda
+        # corrutina en construir el índice se queda esperando un lock que la
+        # primera ya soltó pero mirando `self._conn` como si aún no existiera.
+        async with self._lock:
+            if self._respaldo is not None:
+                return self._respaldo
+            dnma: dict[str, int] = {}
+            # Dos niveles, medidos sobre la base real (2026-09-25): de 2.151
+            # esqueletos construidos desde `drug_alias`, 112 resultan ambiguos
+            # (>1 drug_id). De esos, 107 (95,5%) son SÓLO por alias entre
+            # paréntesis que marcan vía/forma ("Diclofenac (ophthalmic)",
+            # "Diclofenac (topical)"): `skeleton()` borra el paréntesis y las
+            # tres formulaciones caen en el mismo esqueleto "diclofenac",
+            # aunque son `drug_id` distintos con perfil de interacción propio.
+            # Los otros 5 son homónimos genuinos sin paréntesis en ningún
+            # alias (`vitamin`, `vitamin d`, `iodid i`, `interferon alf n`,
+            # `iobenguan i`) y tienen que seguir sin resolver.
+            #
+            # Por eso el índice separa "base" (alias sin paréntesis + DNMA,
+            # que no trae vía) de "vía" (alias con paréntesis). Un esqueleto
+            # con vía SÓLO se usa si la base no tiene NINGÚN candidato para
+            # ese esqueleto — así una receta sin vía ("diclofenaco") cae en el
+            # sistémico, que es lo que manda, sin arbitrar entre formulaciones
+            # cuando la base ya tenía alguna (ambigua o no). Dentro de cada
+            # nivel sigue rigiendo la regla de UN solo drug_id: seguir ambiguo
+            # (los 5 homónimos) bloquea igual que antes.
+            skel_base: dict[str, set[int]] = defaultdict(set)
+            skel_via: dict[str, set[int]] = defaultdict(set)
+            try:
+                async with conn.execute(
+                    "select sustancia_dsc, drug_id from dnma_substance_map "
+                    "where drug_id is not null"
+                ) as cur:
+                    for r in await cur.fetchall():
+                        dnma.setdefault(normalize(r[0]), r[1])
+                        skel_base[skeleton(r[0])].add(r[1])
+            except aiosqlite.OperationalError:
+                logger.warning(
+                    "Sin dnma_substance_map: el respaldo por DNMA queda vacío")
+            async with conn.execute("select alias, drug_id from drug_alias") as cur:
+                for r in await cur.fetchall():
+                    destino = skel_via if "(" in r["alias"] else skel_base
+                    destino[skeleton(r["alias"])].add(r["drug_id"])
+            skel: dict[str, int] = {
+                s: next(iter(ids)) for s, ids in skel_base.items()
+                if s and len(ids) == 1
+            }
+            for s, ids in skel_via.items():
+                if s and s not in skel_base and len(ids) == 1:
+                    skel[s] = next(iter(ids))
+            self._respaldo = {"dnma": dnma, "skel": skel}
+            return self._respaldo
+
+    async def canonicals_for(self, drug_ids: list[int]) -> dict[int, str]:
+        if not drug_ids:
+            return {}
+        conn = await self._c()
+        ph = ",".join("?" * len(drug_ids))
+        async with conn.execute(
+            f"select drug_id, canonical from drug where drug_id in ({ph})",
+            tuple(drug_ids),
+        ) as cur:
+            return {r["drug_id"]: r["canonical"] for r in await cur.fetchall()}
 
     async def search_drugs(self, query: str, limit: int = 10) -> list[dict[str, Any]]:
         """Busca fármacos por prefijo de alias, para el autocompletado.
