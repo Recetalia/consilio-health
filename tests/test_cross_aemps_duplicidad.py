@@ -1,8 +1,8 @@
-"""Detector de combinados y clase del ancla, sin base."""
+"""Detector de combinados, clase del ancla y desempate de rol, sin base."""
 import sys
 
 sys.path.insert(0, "scripts")
-from cross_aemps_duplicidad import clase_de, es_codigo_combinado  # noqa: E402
+from cross_aemps_duplicidad import agregar_membresia, clase_de, es_codigo_combinado  # noqa: E402
 
 NOMBRES = {
     "C09AA": "Inhibidores de la ECA, monofarmacos",
@@ -52,3 +52,26 @@ def test_n5():
 
 def test_lista_explicita_de_falsos():
     assert not es_codigo_combinado("N04BA", NOMBRES)
+
+
+def test_ancla_no_se_pisa_por_un_miembro_posterior():
+    """La AEMPS repite fármacos entre reglas: si ya es ancla de esta clase,
+    un 'miembro' que llega después (de otra regla) no lo degrada."""
+    filas = {}
+    agregar_membresia(filas, 1, "N05BA", "Benzodiacepinas", "molecula", "N05BA01", "ancla")
+    agregar_membresia(filas, 1, "N05BA", "Benzodiacepinas", "molecula", "N05BA01", "miembro")
+    assert filas[(1, "N05BA")][5] == "ancla"
+
+
+def test_miembro_se_reemplaza_por_un_ancla_posterior():
+    filas = {}
+    agregar_membresia(filas, 1, "N05BA", "Benzodiacepinas", "molecula", "N05BA01", "miembro")
+    agregar_membresia(filas, 1, "N05BA", "Benzodiacepinas", "molecula", "N05BA01", "ancla")
+    assert filas[(1, "N05BA")][5] == "ancla"
+
+
+def test_miembro_se_reemplaza_por_otro_miembro():
+    filas = {}
+    agregar_membresia(filas, 1, "N05BA", "d", "modo1", "codigo1", "miembro")
+    agregar_membresia(filas, 1, "N05BA", "d", "modo2", "codigo2", "miembro")
+    assert filas[(1, "N05BA")] == (1, "N05BA", "d", "aemps", "match modo2 · codigo2", "miembro")

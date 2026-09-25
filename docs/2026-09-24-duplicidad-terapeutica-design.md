@@ -137,6 +137,25 @@ mano, cuando muestren qué se escapa. Vía de administración (tópico vs sisté
 el contrato la acepta desde ya como campo opcional, pero la regla se escribe
 cuando Recetalia la mande.
 
+### Huecos conocidos (medidos 2026-09-24)
+
+Verificado contra la base real (`drug_class` ya cargada):
+
+- **Clonazepam (N03AE, antiepiléptico) + alprazolam (N05BA) no alerta**,
+  aunque clínicamente es duplicidad de benzodiacepinas: la AEMPS codifica al
+  clonazepam por su indicación (antiepiléptico), no por su clase
+  farmacológica, así que no cae en ninguna regla de duplicidad y
+  `drug_class` lo deja sin clase (`clases(clonazepam) == set()`). Es exactamente
+  lo que la capa de mecanismo sobre RxClass (MoA/EPC, fuera de alcance de este
+  lote) está para resolver: agruparía por mecanismo, no por el ATC que la
+  AEMPS le asignó.
+- **Amoxicilina + ácido clavulánico por separado, y salbutamol + budesonida:
+  sin clase, sin alerta — correcto.** El ácido clavulánico no tiene ATC en la
+  base (`drug.atc is null`) y no resuelve a ninguna clase; salbutamol
+  (R03AC) y budesonida (R03BA/R03AK/…) no comparten ATC4 y ninguna regla
+  AEMPS los cruza — son inhaladores con mecanismos distintos (beta-agonista
+  vs. corticoide), no una duplicidad.
+
 ## Contrato
 
 `POST /interactions` — compatible hacia atrás:

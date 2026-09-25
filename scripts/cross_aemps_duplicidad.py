@@ -46,7 +46,9 @@ gana `'ancla'`.
 Reseedable: borra sus propias filas antes de escribir. La tabla ya existía
 sin `rol`: si al migrar no está la columna, se recrea entera (`drop table` +
 `create`) — es sólo nuestra (`source='aemps'`) y se re-siembra completa, así
-que no hay dato que preservar.
+que no hay dato que preservar. La migración, el borrado, la inserción y el
+sello en `meta` corren dentro de una única transacción explícita: si algo
+falla a mitad de camino no queda la tabla a medio recrear.
 """
 from __future__ import annotations
 
@@ -64,18 +66,21 @@ from cross_aemps_interactions import Resolver, cargar_atc_names, es_combinacion
 
 logger = logging.getLogger("cross_duplicidad")
 
-DDL = """
-create table if not exists drug_class (
-    drug_id    integer not null references drug(drug_id),
-    class_id   text    not null,          -- ATC4 del ancla (o N3 si el ancla es N3)
-    class_desc text    not null,
-    source     text    not null,
-    note       text,
-    rol        text    not null,          -- 'ancla' (de atc_a) | 'miembro' (de atc_b); empate gana 'ancla'
-    primary key (drug_id, class_id, source)
-);
-create index if not exists idx_dc_drug on drug_class(drug_id);
-"""
+# Statements sueltos, no `executescript`: `executescript` hace un COMMIT
+# implícito antes de correr, lo que rompería la transacción explícita que
+# envuelve migración + borrado + inserción en `main`.
+DDL_STATEMENTS = (
+    """create table if not exists drug_class (
+        drug_id    integer not null references drug(drug_id),
+        class_id   text    not null,      -- ATC4 del ancla (o N3 si el ancla es N3)
+        class_desc text    not null,
+        source     text    not null,
+        note       text,
+        rol        text    not null,      -- 'ancla' (de atc_a) | 'miembro' (de atc_b); empate gana 'ancla'
+        primary key (drug_id, class_id, source)
+    )""",
+    "create index if not exists idx_dc_drug on drug_class(drug_id)",
+)
 
 
 def migrar_ddl(db: sqlite3.Connection) -> None:
@@ -84,7 +89,8 @@ def migrar_ddl(db: sqlite3.Connection) -> None:
     if cols and "rol" not in cols:
         logger.info("drug_class sin columna 'rol': recreando la tabla")
         db.execute("drop table drug_class")
-    db.executescript(DDL)
+    for stmt in DDL_STATEMENTS:
+        db.execute(stmt)
 
 
 # `es_combinacion` incluye `inhibidores de` porque en nombres de MOLÉCULA marca
@@ -107,13 +113,6 @@ def clase_de(atc_ancla: str) -> str:
     return atc_ancla[:5]
 
 
-# Memoización manual: `nombres` (dict) no es hashable para `lru_cache`, y el
-# costo real está en N3/N4, que recorren los ~6.025 N5 por código. Se cachea
-# por `(code, id(nombres))`: dentro de una corrida el dict no cambia de
-# identidad, y entre corridas de test cada NOMBRES es un dict distinto.
-_cache_n3n4: dict[tuple[str, int], bool] = {}
-
-
 def es_codigo_combinado(code: str, nombres: dict[str, str]) -> bool:
     """N5: el nombre de la molécula dice combinación.
 
@@ -122,31 +121,67 @@ def es_codigo_combinado(code: str, nombres: dict[str, str]) -> bool:
     hijos combinados —el paracetamol en todas sus asociaciones— y es la clase
     del paracetamol; "Inhibidores de la ECA y diuréticos" lo dice el nombre y
     lo confirman los hijos.
+
+    Pura y sin caché a propósito: la usan los tests directo, sin `main`.
+    Para las ~629 llamadas N3/N4 repetidas sobre la base real, `main` la usa
+    una vez por código a través de `codigos_combinados_n3n4` y reusa el
+    resultado como `set`, en vez de cachear acá por identidad del dict (con
+    `id()`, que Python puede reciclar entre objetos distintos y que no se
+    invalida si el dict cambia — bug real, no hipotético).
     """
     if len(code) >= 7:
         return es_combinacion(nombres.get(code, ""))
-    key = (code, id(nombres))
-    if key in _cache_n3n4:
-        return _cache_n3n4[key]
     if code in _NO_COMBINADO:
-        resultado = False
-    elif not _COMBINACION_CLASE.search(_ascii(nombres.get(code, ""))):
-        resultado = False
-    else:
-        hijos = [n for c, n in nombres.items() if len(c) >= 7 and c.startswith(code)]
-        resultado = bool(hijos) and sum(es_combinacion(h) for h in hijos) / len(hijos) >= 0.5
-    _cache_n3n4[key] = resultado
-    return resultado
+        return False
+    if not _COMBINACION_CLASE.search(_ascii(nombres.get(code, ""))):
+        return False
+    hijos = [n for c, n in nombres.items() if len(c) >= 7 and c.startswith(code)]
+    return bool(hijos) and sum(es_combinacion(h) for h in hijos) / len(hijos) >= 0.5
 
 
-def quitar_combinados(res: Resolver, nombres: dict[str, str]) -> None:
+def codigos_combinados_n3n4(nombres: dict[str, str]) -> set[str]:
+    """Precalcula, una sola vez, qué códigos N3/N4 del diccionario son combinados.
+
+    `es_codigo_combinado` recorre los ~6.025 N5 por cada código N3/N4: barato
+    una vez, caro si se repite miles de veces sobre el mismo código a través
+    de las reglas y de `drug.atc`. Se llama acá una vez por código (~629 en la
+    base real) y el resultado se reusa como `set` durante toda la corrida.
+    """
+    return {c for c in nombres if len(c) < 7 and es_codigo_combinado(c, nombres)}
+
+
+def es_combinado(code: str, nombres: dict[str, str], combinados_n3n4: set[str]) -> bool:
+    """`es_codigo_combinado` con el N3/N4 ya resuelto: N5 se decide al vuelo
+    (una regex sobre un string), N3/N4 sale del `set` precalculado."""
+    if len(code) >= 7:
+        return es_combinacion(nombres.get(code, ""))
+    return code in combinados_n3n4
+
+
+def quitar_combinados(res: Resolver, nombres: dict[str, str], combinados_n3n4: set[str]) -> None:
     """La expansión por prefijo no puede entrar por un ATC de combinado."""
     por_clase: dict[str, set[int]] = collections.defaultdict(set)
     for did, atc in res.drug_atc.items():
         for p in (x.strip() for x in atc.split(",")):
-            if p and not es_codigo_combinado(p, nombres):
+            if p and not es_combinado(p, nombres, combinados_n3n4):
                 por_clase[p].add(did)
     res.por_clase = por_clase
+
+
+def agregar_membresia(
+    filas: dict[tuple[int, str], tuple],
+    drug_id: int, class_id: str, class_desc: str, modo: str, code: str, rol: str,
+) -> None:
+    """Agrega una membresía a `filas`, respetando el desempate de rol.
+
+    Un fármaco puede resolver como ancla de una regla y como miembro de otra
+    en la misma clase; `'ancla'` nunca se pisa, sea cual sea el orden en que
+    se procesen las reglas.
+    """
+    key = (drug_id, class_id)
+    prev = filas.get(key)
+    if prev is None or prev[5] != "ancla":
+        filas[key] = (drug_id, class_id, class_desc, "aemps", f"match {modo} · {code}", rol)
 
 
 def main() -> None:
@@ -162,10 +197,15 @@ def main() -> None:
         if not os.path.exists(f):
             raise SystemExit(f"falta {f}")
 
-    db = sqlite3.connect(args.db)
+    # `isolation_level=None` = autocommit real: el módulo `sqlite3` no abre ni
+    # cierra transacciones por su cuenta (y `executescript` ya no puede
+    # colarnos un COMMIT implícito). El `BEGIN`/`COMMIT` de la escritura son
+    # explícitos, más abajo.
+    db = sqlite3.connect(args.db, isolation_level=None)
     nombres = cargar_atc_names(args.dicc_atc)
+    combinados_n3n4 = codigos_combinados_n3n4(nombres)
     res = Resolver(db, nombres)
-    quitar_combinados(res, nombres)
+    quitar_combinados(res, nombres, combinados_n3n4)
     reglas = json.load(open(args.reglas, encoding="utf-8"))["duplicidades"]
 
     filas: dict[tuple[int, str], tuple] = {}
@@ -173,7 +213,7 @@ def main() -> None:
     descartadas = 0
     for r in reglas:
         a, b = r["atc_a"].strip(), r["atc_b"].strip()
-        if es_codigo_combinado(a, nombres) or es_codigo_combinado(b, nombres):
+        if es_combinado(a, nombres, combinados_n3n4) or es_combinado(b, nombres, combinados_n3n4):
             descartadas += 1
             continue
         cid = clase_de(a)
@@ -182,12 +222,7 @@ def main() -> None:
             ids, modo = res.resolver(code)
             modos[modo] += 1
             for did in ids:
-                key = (did, cid)
-                prev = filas.get(key)
-                # 'ancla' no se pisa: si el fármaco ya es ancla de esta clase
-                # por otra regla, un 'miembro' posterior no lo degrada.
-                if prev is None or prev[5] != "ancla":
-                    filas[key] = (did, cid, desc, "aemps", f"match {modo} · {code}", rol)
+                agregar_membresia(filas, did, cid, desc, modo, code, rol)
 
     por_clase = collections.Counter(cid for _, cid in filas)
     anclas = sum(1 for v in filas.values() if v[5] == "ancla")
@@ -202,16 +237,24 @@ def main() -> None:
         logger.info("dry-run: no se escribió nada")
         return
 
-    migrar_ddl(db)
-    borradas = db.execute("delete from drug_class where source='aemps'").rowcount
-    if borradas:
-        logger.info("Reemplazando %d filas previas", borradas)
-    db.executemany(
-        "insert into drug_class (drug_id, class_id, class_desc, source, note, rol) "
-        "values (?,?,?,?,?,?)", list(filas.values()))
-    db.execute("insert or replace into meta (key, value) values ('aemps_duplicidad_at', ?)",
-               (datetime.now(timezone.utc).isoformat(timespec="seconds"),))
-    db.commit()
+    # Migración + borrado + inserción + sello en `meta`, atómicos: si algo
+    # falla a mitad de camino (p. ej. el `drop table` corrió pero el insert
+    # no), el `ROLLBACK` deshace todo, no deja la tabla a medio recrear.
+    db.execute("begin")
+    try:
+        migrar_ddl(db)
+        borradas = db.execute("delete from drug_class where source='aemps'").rowcount
+        if borradas:
+            logger.info("Reemplazando %d filas previas", borradas)
+        db.executemany(
+            "insert into drug_class (drug_id, class_id, class_desc, source, note, rol) "
+            "values (?,?,?,?,?,?)", list(filas.values()))
+        db.execute("insert or replace into meta (key, value) values ('aemps_duplicidad_at', ?)",
+                   (datetime.now(timezone.utc).isoformat(timespec="seconds"),))
+    except Exception:
+        db.execute("rollback")
+        raise
+    db.execute("commit")
     logger.info("Escritas %d filas", len(filas))
 
 

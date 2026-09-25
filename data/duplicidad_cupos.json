@@ -1,0 +1,12 @@
+{
+  "clases": {},
+  "excepciones": [
+    {
+      "clase": "H02AA",
+      "grupos": [["Fludrocortisone"], ["Hydrocortisone"]],
+      "motivo": "Reemplazo corticoideo en insuficiencia suprarrenal (Addison): un mineralocorticoide más un glucocorticoide es tratamiento estándar, no duplicidad.",
+      "referencia": "Endocrine Society, guía de insuficiencia suprarrenal primaria (2016)",
+      "validado": false
+    }
+  ]
+}
