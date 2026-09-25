@@ -23,7 +23,30 @@ Y `drug.atc` trae los ATC de los combinados que contienen al fármaco —RxClass
 se los asigna a cada ingrediente—: sin filtrarlos, la hidroclorotiazida entra a
 los ARA II por `C09DX`. Ver `es_codigo_combinado` para cómo se decide.
 
-Reseedable: borra sus propias filas antes de escribir.
+## `rol`: ancla vs. miembro
+
+Una regla `{atc_a, atc_b, desc}` significa "un producto de `atc_b` duplica a
+`atc_a`", **no** "`atc_a` y `atc_b` son intercambiables entre sí". Los
+fármacos que resuelven de `atc_a` son el `rol='ancla'` de la clase; los que
+resuelven de `atc_b` son `rol='miembro'`. Dos miembros entre sí NO son
+duplicidad en esa clase (lo serán en la suya si la AEMPS la define aparte).
+
+Medido 2026-09-24 con la membresía plana (sin rol): prednisona y
+dexametasona compartían H02AA ("Mineralocorticoides") **y** H02AB
+("Glucocorticoides") —alertaban dos veces—, y alendronato/risedronato
+compartían G03XC, H05AA, H05BA y M05BA —alertaban cuatro veces—. Las cuatro
+son clases donde ambos fármacos entran como `atc_b` de reglas ancladas en
+otro corticoide o bifosfonato: son miembros, no anclas, y la comparación
+correcta (`prednisona`+`dexametasona` ancla en H02AB;
+`alendronato`+`risedronato` ancla en M05BA) sigue alertando.
+
+Si un fármaco es ancla y miembro de la misma clase (por reglas distintas),
+gana `'ancla'`.
+
+Reseedable: borra sus propias filas antes de escribir. La tabla ya existía
+sin `rol`: si al migrar no está la columna, se recrea entera (`drop table` +
+`create`) — es sólo nuestra (`source='aemps'`) y se re-siembra completa, así
+que no hay dato que preservar.
 """
 from __future__ import annotations
 
@@ -48,10 +71,21 @@ create table if not exists drug_class (
     class_desc text    not null,
     source     text    not null,
     note       text,
+    rol        text    not null,          -- 'ancla' (de atc_a) | 'miembro' (de atc_b); empate gana 'ancla'
     primary key (drug_id, class_id, source)
 );
 create index if not exists idx_dc_drug on drug_class(drug_id);
 """
+
+
+def migrar_ddl(db: sqlite3.Connection) -> None:
+    """`rol` es columna nueva: si la tabla existe sin ella, se recrea entera."""
+    cols = {r[1] for r in db.execute("pragma table_info(drug_class)")}
+    if cols and "rol" not in cols:
+        logger.info("drug_class sin columna 'rol': recreando la tabla")
+        db.execute("drop table drug_class")
+    db.executescript(DDL)
+
 
 # `es_combinacion` incluye `inhibidores de` porque en nombres de MOLÉCULA marca
 # "amoxicilina e inhibidores de la betalactamasa". En nombres de CLASE es falso:
@@ -144,16 +178,23 @@ def main() -> None:
             continue
         cid = clase_de(a)
         desc = nombres.get(cid) or r["desc"].strip()
-        for code in (a, b):
+        for code, rol in ((a, "ancla"), (b, "miembro")):
             ids, modo = res.resolver(code)
             modos[modo] += 1
             for did in ids:
-                filas[(did, cid)] = (did, cid, desc, "aemps", f"match {modo} · {code}")
+                key = (did, cid)
+                prev = filas.get(key)
+                # 'ancla' no se pisa: si el fármaco ya es ancla de esta clase
+                # por otra regla, un 'miembro' posterior no lo degrada.
+                if prev is None or prev[5] != "ancla":
+                    filas[key] = (did, cid, desc, "aemps", f"match {modo} · {code}", rol)
 
     por_clase = collections.Counter(cid for _, cid in filas)
+    anclas = sum(1 for v in filas.values() if v[5] == "ancla")
     logger.info("=== %d membresías · %d fármacos · %d clases (%d con ≥2 miembros) ===",
                 len(filas), len({d for d, _ in filas}), len(por_clase),
                 sum(1 for n in por_clase.values() if n >= 2))
+    logger.info("Por rol: %d ancla · %d miembro", anclas, len(filas) - anclas)
     logger.info("Reglas descartadas por combinado: %d de %d", descartadas, len(reglas))
     logger.info("Resolución de códigos: %s", dict(modos.most_common()))
 
@@ -161,13 +202,13 @@ def main() -> None:
         logger.info("dry-run: no se escribió nada")
         return
 
-    db.executescript(DDL)
+    migrar_ddl(db)
     borradas = db.execute("delete from drug_class where source='aemps'").rowcount
     if borradas:
         logger.info("Reemplazando %d filas previas", borradas)
     db.executemany(
-        "insert into drug_class (drug_id, class_id, class_desc, source, note) "
-        "values (?,?,?,?,?)", list(filas.values()))
+        "insert into drug_class (drug_id, class_id, class_desc, source, note, rol) "
+        "values (?,?,?,?,?,?)", list(filas.values()))
     db.execute("insert or replace into meta (key, value) values ('aemps_duplicidad_at', ?)",
                (datetime.now(timezone.utc).isoformat(timespec="seconds"),))
     db.commit()

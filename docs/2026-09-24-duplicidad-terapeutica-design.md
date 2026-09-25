@@ -76,6 +76,18 @@ comparan entre sí (el médico no puede separarlas).
     - `=== 661 membresías · 354 fármacos · 76 clases (68 con ≥2 miembros) ===`
     - `Reglas descartadas por combinado: 807 de 1593`
     - `Resolución de códigos: {'molecula': 571, 'clase': 560, 'sin-resolver': 354, 'ambiguo': 48, 'molecula-laxa': 33, 'clase-unica': 6}`
+  - **`rol`: ancla vs. miembro.** Una regla `{atc_a, atc_b, desc}` dice "un
+    producto de `atc_b` duplica a `atc_a`", no que `atc_a` y `atc_b` sean
+    intercambiables entre sí. `drug_class` distingue `rol='ancla'` (viene de
+    `atc_a`) de `rol='miembro'` (viene de `atc_b`); dos miembros entre sí no
+    son duplicidad en esa clase. Medido 2026-09-24 con la membresía plana
+    (sin rol): prednisona y dexametasona compartían H02AA
+    ("Mineralocorticoides") **y** H02AB ("Glucocorticoides") —alertaban dos
+    veces—, y alendronato/risedronato compartían G03XC, H05AA, H05BA y M05BA
+    —alertaban cuatro veces—. Con rol, sólo alertan por donde son ancla:
+    prednisona+dexametasona en H02AB, alendronato+risedronato en M05BA. Total
+    tras el cambio: 661 membresías (365 ancla · 296 miembro), mismas 76 clases
+    (el rol es metadata aditiva, no cambia la resolución).
 - Al chequear: por clase, contar **productos distintos** con algún miembro. Si
   supera el cupo (default 1) → alerta, severidad moderada.
 - Si todos los productos de la alerta de clase ya están cubiertos por una alerta
