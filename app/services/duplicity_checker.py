@@ -214,3 +214,38 @@ def _excepcion(cid: str, miembros: dict[str, dict[int, str]],
         if ok:
             return exc
     return None
+
+
+async def chequear(db: Any, productos: list[dict[str, Any]],
+                   cupos: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Productos como llegan por la API → evaluación. `db` es un RecetaliaDatabase."""
+    resueltos: list[Producto] = []
+    for p in productos:
+        subs = tuple(p["substances"])
+        ids = tuple([await db.drug_id_by_name(s) for s in subs])
+        resueltos.append(Producto(id=str(p["id"]), sustancias=subs, drug_ids=ids,
+                                  route=p.get("route")))
+    drug_ids = sorted({d for p in resueltos for d in p.drug_ids if d is not None})
+    clases = await db.classes_for(drug_ids)
+    canonicos = await db.canonicals_for(drug_ids)
+    return evaluar(resueltos, clases, cupos or cargar_cupos(), canonicos)
+
+
+def cumple(out: dict[str, Any], esperado: dict[str, Any] | None) -> tuple[bool, str]:
+    """¿La evaluación da lo esperado? Lo usan el test y la métrica."""
+    alertas = out["duplicities"]
+    if esperado is None:
+        if alertas:
+            return False, f"falso positivo: {[(a['layer'], a['class_id']) for a in alertas]}"
+        return True, ""
+    lista = out["duplicities_suppressed"] if esperado.get("suprimida") else alertas
+    capa = [a for a in lista if a["layer"] == esperado["capa"]]
+    if not capa:
+        return False, f"falso negativo: se esperaba capa {esperado['capa']} (suprimida={bool(esperado.get('suprimida'))}), vino {alertas}"
+    if esperado.get("suprimida") and alertas:
+        return False, f"se esperaba suprimida y además alertó: {[(a['layer'], a['class_id']) for a in alertas]}"
+    if esperado.get("clase"):
+        clases = {a["class_id"] for a in capa} | {o["class_id"] for a in capa for o in a.get("other_classes", [])}
+        if esperado["clase"] not in clases:
+            return False, f"clase esperada {esperado['clase']}, vino {sorted(clases)}"
+    return True, ""

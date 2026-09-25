@@ -1,0 +1,14 @@
+[
+  {"nombre": "paracetamol solo + paracetamol/codeína", "productos": [["paracetamol"], ["paracetamol", "codeina"]], "esperado": {"capa": "substance"}},
+  {"nombre": "dos AINEs", "productos": [["ibuprofeno"], ["diclofenaco"]], "esperado": {"capa": "class"}},
+  {"nombre": "dos benzodiacepinas", "productos": [["diazepam"], ["lorazepam"]], "esperado": {"capa": "class", "clase": "N05BA"}},
+  {"nombre": "dos IBP", "productos": [["omeprazol"], ["pantoprazol"]], "esperado": {"capa": "class"}},
+  {"nombre": "dos ISRS", "productos": [["sertralina"], ["fluoxetina"]], "esperado": {"capa": "class", "clase": "N06AB"}},
+  {"nombre": "dos anti-H2", "productos": [["ranitidina"], ["famotidina"]], "esperado": {"capa": "class"}},
+  {"nombre": "dos corticoides sistémicos", "productos": [["prednisona"], ["dexametasona"]], "esperado": {"capa": "class", "clase": "H02AB"}},
+  {"nombre": "IECA + ACA + tiazida (intencional)", "productos": [["enalapril"], ["amlodipino"], ["hidroclorotiazida"]], "esperado": null},
+  {"nombre": "ARA II + tiazida (intencional)", "productos": [["losartan"], ["hidroclorotiazida"]], "esperado": null},
+  {"nombre": "AAS + clopidogrel (doble antiagregación)", "productos": [["acido acetilsalicilico"], ["clopidogrel"]], "esperado": null},
+  {"nombre": "metformina + glibenclamida (intencional)", "productos": [["metformina"], ["glibenclamida"]], "esperado": null},
+  {"nombre": "hidrocortisona + fludrocortisona (Addison, excepción curada)", "productos": [["hidrocortisona"], ["fludrocortisona"]], "esperado": {"capa": "class", "suprimida": true}}
+]
