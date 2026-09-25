@@ -30,6 +30,7 @@ const FUENTE = {
   openfda:   "openFDA — prospecto oficial de la FDA",
   medrt:     "MED-RT — Biblioteca Nacional de Medicina (EE.UU.)",
   recetalia: "Revisión propia de Consilio",
+  consilio:  "Regla propia de Consilio",
   perfil: "Dato cargado en el perfil del paciente",
 };
 // Canónico (inglés, el de la base) -> nombre para mostrar (castellano). Se va
@@ -41,7 +42,7 @@ const mostrar = (n) => NOMBRE_ES[n] || n;
 
 const FUENTE_CORTA = {
   aemps: "AEMPS", ddinter: "DDInter", openfda: "openFDA",
-  medrt: "MED-RT", recetalia: "Consilio", perfil: "Perfil",
+  medrt: "MED-RT", recetalia: "Consilio", consilio: "Consilio", perfil: "Perfil",
 };
 
 // Receta de ejemplo: cada par de acá dispara algo distinto —una grave con
@@ -888,8 +889,8 @@ function cardDuplicidad(d, suprimida) {
     : `Duplicidad de clase: ${escapeHtml(d.class_desc || d.class_id)}`;
   const detalle = d.layer === "substance"
     ? `${escapeHtml(d.substances.map(mostrar).join(", "))} aparece en ${d.count} productos distintos.`
-    : `${d.count} productos de la misma clase (${escapeHtml(d.substances.map(mostrar).join(", "))});
-       el máximo sin alerta es ${d.cupo}.`;
+    : `${d.count} productos de la misma clase (${escapeHtml(d.substances.map(mostrar).join(", "))})${
+       d.cupo == null ? "" : `; el máximo sin alerta es ${d.cupo}`}.`;
   return `
     <article class="finding ${sev}">
       <div class="finding-head">
