@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS drug_alias (
     alias      TEXT    NOT NULL,
     alias_norm TEXT    NOT NULL,            -- minúsculas, sin acentos, sin sal
     lang       TEXT    NOT NULL DEFAULT 'en',
-    source     TEXT    NOT NULL CHECK (source IN ('ddinter','rxnorm','dnma','manual')),
+    source     TEXT    NOT NULL CHECK (source IN ('ddinter','rxnorm','dnma','manual','aemps')),
     PRIMARY KEY (drug_id, alias_norm)
 );
 CREATE INDEX IF NOT EXISTS idx_alias_norm ON drug_alias(alias_norm);

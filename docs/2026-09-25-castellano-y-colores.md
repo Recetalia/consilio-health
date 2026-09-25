@@ -14,6 +14,17 @@ gris). Decisión: **sólo fuentes oficiales**, nada de traducción automática.
 - Cruzando por esqueleto INN contra `DICCIONARIO_ATC.xml` (N5) de la AEMPS: **779** de esos 1.214
   consiguen nombre oficial (Acarbose→Acarbosa, Acenocoumarol→Acenocumarol). Falta sumar
   `DICCIONARIO_PRINCIPIOS_ACTIVOS.xml` (tag `<principioactivo>`, en MAYÚSCULAS).
+- **2026-09-25, dry-run real de `scripts/enrich_nombres_aemps.py --dry-run`** (N5 del ATC +
+  `DICCIONARIO_PRINCIPIOS_ACTIVOS.xml`, con las tres reglas de descarte — combinación, token
+  ≤2 caracteres, ambigüedad en los dos sentidos — y el filtro de PK `(drug_id, alias_norm)`
+  aplicados): **594** de los 1.214 sin nombre lo ganan (725 → 1.319 con nombre, 65,3% de 1.939).
+  Quedan **620** sin nombre. La primera cifra de 779 era una medición preliminar (sólo ATC N5,
+  sin las tres reglas de descarte completas); el número final y correcto es este.
+  De los 1.483 matches que produce el emparejamiento, 457 no generan fila nueva porque el
+  fármaco ya tenía un alias (casi siempre en inglés) cuyo `alias_norm` coincide exactamente con
+  el nombre en castellano asignado (`Misoprostol`, `Ondansetron`, `Sorbitol`, …: mismo
+  significante en los dos idiomas) — la restricción es la propia PK de `drug_alias`
+  `(drug_id, alias_norm)`, no una regla de negocio nueva.
 - 4.433 interacciones de openFDA con texto en inglés: **se quedan en inglés** (no hay fuente
   oficial en castellano), con el aviso "Texto original del prospecto, en inglés".
 - 1.517 patologías MeSH en inglés; 144 traducidas a mano en `app/web/condiciones-es.js`. La
