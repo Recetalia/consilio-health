@@ -34,9 +34,11 @@
   --moderate-bg:   #fdf2d9;
   --minor:         #0ea5e9;
   --minor-bg:      #e4f1fb;
-  --unknown:       #7c8b9c;
-  --unknown-bg:    #e9eef3;
-  --ok:            #22a06b;
+  /* Antes gris (#7c8b9c): se confundía con "sin cargar" y, sobre una página
+     con acento verde/teal, con la marca. Violeta no compite con ninguno de
+     los dos. */
+  --unknown:       #7c3aed;
+  --unknown-bg:    #f1eafe;
 
   --radius:        6px;
   --radius-lg:     8px;
@@ -425,14 +427,15 @@ kbd {
    blancas con una rayita de 3px se leen todas igual. El fondo teñido hace que
    la gravedad se vea desde lejos, que es la única forma en que sirve. */
 .finding {
-  background: var(--unknown-bg); border: 1px solid #ccd6e0;
-  border-left: 5px solid var(--unknown);
+  background: var(--card); border: 1px solid var(--border);
+  border-left: 5px solid var(--text-faint);
   border-radius: var(--radius); box-shadow: var(--shadow);
   padding: 14px 16px; margin-bottom: 12px;
 }
 .finding.major    { border-left-color: var(--major);    background: var(--major-bg);    border-color: #eec2bb; }
 .finding.moderate { border-left-color: var(--moderate); background: var(--moderate-bg); border-color: #edd497; }
 .finding.minor    { border-left-color: var(--minor);    background: var(--minor-bg);    border-color: #b9daf1; }
+.finding.unknown  { border-left-color: var(--unknown);  background: var(--unknown-bg);  border-color: #ddd0fa; }
 
 .finding-head {
   display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 2px;
@@ -452,12 +455,14 @@ kbd {
 .evidence.sin-texto { color: var(--text-faint); font-style: italic; }
 .evidence-note { margin: 3px 0 0; font-size: 11px; color: var(--text-faint); }
 /* El manejo clínico es lo accionable del hallazgo: se separa del mecanismo
-   con un filete para que se lea aunque el médico no lea el resto. */
+   con un filete para que se lea aunque el médico no lea el resto. Neutro a
+   propósito: un verde acá, dentro de una tarjeta de alerta, se confunde con
+   el teal/verde de la marca — que es justo lo que Pablo pidió evitar. */
 .manejo {
-  margin: 11px 0 0; padding: 10px 13px; font-size: 14px; color: #14532d;
-  background: #eefaf3; border-left: 3px solid var(--ok); border-radius: 4px;
+  margin: 11px 0 0; padding: 10px 13px; font-size: 14px; color: var(--text);
+  background: #f1f5f9; border-left: 3px solid var(--text-soft); border-radius: 4px;
 }
-.manejo strong { color: #15803d; }
+.manejo strong { color: var(--text-strong); }
 .meta { margin: 11px 0 0; font-size: 12.5px; color: var(--text-soft); }
 .tag-uncertain {
   display: inline-block; font-size: 11.5px; color: #8a6d3b;
