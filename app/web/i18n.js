@@ -32,7 +32,7 @@ const T = {
 
     datos_eyebrow: "Los datos detrás de cada alerta",
     datos_h: "Fuentes públicas, trazables y con fecha",
-    datos_lead: "Consilio cruza cada receta contra bases curadas de interacciones, reguladores y catálogos clínicos. Cada hallazgo dice de dónde sale, y cada fuente, cuándo se actualizó.",
+    datos_lead: "Consilio cruza la información de los medicamentos que indicás —y del paciente, si la cargás— contra bases curadas de interacciones, reguladores y catálogos clínicos. No guarda recetas ni datos de pacientes. Cada hallazgo dice de dónde sale, y cada fuente, cuándo se actualizó.",
     datos_cargando: "Cargando los datos…",
     datos_error: "No se pudieron cargar los datos ({detalle}).",
     datos_fuentes_h: "Fuentes",
@@ -343,7 +343,7 @@ const T = {
 
     datos_eyebrow: "The data behind every alert",
     datos_h: "Public sources, traceable and dated",
-    datos_lead: "Consilio checks every prescription against curated interaction databases, regulators and clinical catalogs. Every finding states where it comes from, and every source, when it was last updated.",
+    datos_lead: "Consilio cross-checks the drugs you enter —and the patient profile, if you add one— against curated interaction databases, regulators and clinical catalogs. It does not store prescriptions or patient data. Every finding states where it comes from, and every source, when it was last updated.",
     datos_cargando: "Loading the data…",
     datos_error: "Could not load the data ({detalle}).",
     datos_fuentes_h: "Sources",
