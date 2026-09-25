@@ -76,6 +76,7 @@ python -m scripts.build_ddinter_db fetch                  # CSV de DDInter
 python -m scripts.build_ddinter_db resolve-rxnorm         # crosswalk RxNorm
 python -m scripts.build_ddinter_db build --tag <tag>      # SQLite crudo
 python -m scripts.build_recetalia_db seed                 # nuestro esquema
+python -m scripts.build_recetalia_db extend               # o, sobre una base existente: suma sin renumerar drug_id
 python -m scripts.fetch_openfda_labels                    # prospectos FDA
 python -m scripts.derive_openfda_interactions             # pares por nombre
 python -m scripts.expand_class_interactions               # pares por clase

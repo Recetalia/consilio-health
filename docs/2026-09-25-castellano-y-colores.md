@@ -59,3 +59,60 @@ gris). Decisión: **sólo fuentes oficiales**, nada de traducción automática.
   que el botón "Probar un ejemplo" pueble los nombres en castellano.
 - **Integración y deploy**: merge, suite, `eval_duplicidad.py`, verificación en Chrome, deploy al
   `.98` (procedimiento en `2026-09-24-duplicidad-terapeutica-design.md` § Despliegue).
+
+## DDInter: las 6 categorías que faltaban
+
+**Hallazgo (2026-09-25).** `scripts/ddinter_sources.py` decía que las categorías ATC C/G/J/M/N/S
+"no están disponibles" y cargaba sólo A B D H L P R V. Era falso. Cómo se midió:
+`curl` a `https://ddinter2.scbdd.com/static/media/download/ddinter_downloads_code_{C,G,J,M,N,S}.csv`
+devuelve 200 con el mismo formato (`DDInterID_A,Drug_A,DDInterID_B,Drug_B,Level`), y C tiene
+60.455 líneas y N 91.596. Sin ellas, pares graves clásicos llegaban sólo desde openFDA como
+`unknown`: tramadol + fluoxetina, amiodarona + digoxina y sildenafilo + nitroglicerina.
+
+**Por qué no hubo re-seed.** `build_recetalia_db seed --force` borra la base y numera los `drug_id`
+por `ddinter_id` ordenado. Los 32 fármacos nuevos habrían corrido los ids y roto `drug_class`,
+`drug_alias`, `dnma_substance_map`, las alertas y los pares AEMPS/openFDA. Por eso se agregó
+`build_recetalia_db extend`: suma al final los fármacos y pares nuevos y no toca lo que ya existe.
+
+**Números** (`select source, severity, count(*) from interaction group by 1,2`):
+
+| fuente | gravedad | antes | después |
+|---|---|---:|---:|
+| ddinter | major | 26.914 | 39.082 |
+| ddinter | moderate | 96.675 | 143.748 |
+| ddinter | minor | 6.833 | 9.736 |
+| ddinter | unknown | 29.813 | 42.415 |
+| aemps | major / moderate | 435 / 1.386 | 435 / 1.386 |
+| openfda | major / moderate / unknown | 775 / 1.270 / 2.388 | igual |
+
+- `ddinter.db`: 160.235 → 234.981 pares. Ningún par viejo cambió de gravedad ni se perdió, y no
+  hubo conflictos de gravedad entre CSV.
+- Fármacos: 1.939 → 1.971. Los 1.939 ids previos y las 166.489 filas de `interaction` previas
+  quedaron idénticos (comparado con `attach` contra el backup).
+- Las 2.388 openFDA `unknown`: **1.337** tienen ahora par DDInter con gravedad (540 major,
+  703 moderate, 94 minor), y otras 137 lo tienen como `unknown` en DDInter.
+- `drug_class` 661 → 662, alertas geriátricas 166 = 166, alias AEMPS 967 → 981.
+
+**Bug de paso.** `enrich_nombres_aemps` no era idempotente: sus propias filas contaban como "ya
+existentes", así que una segunda corrida borraba las 967 y escribía sólo las nuevas (quedaron 14).
+Corregido, y hay un test que lo cubre.
+
+**Comando** (orden y tiempos medidos):
+
+```bash
+python -m scripts.build_ddinter_db fetch        # o curl de los 6 CSV nuevos
+python -m scripts.build_ddinter_db resolve-rxnorm --previous <crosswalk anterior>   # 2 min, 102 nombres
+python -m scripts.build_ddinter_db build --tag ddinter-2026-09-25
+python -m scripts.build_recetalia_db extend     # +32 fármacos, +74.746 pares
+python scripts/fetch_drug_atc.py                # 2 min 14 s
+python -m scripts.enrich_drug_aliases           # 27 min: recorre los 1.891 con RxCUI, no sólo los nuevos
+PYTHONPATH=scripts python scripts/cross_aemps_interactions.py
+PYTHONPATH=scripts python scripts/cross_aemps_geriatria.py
+PYTHONPATH=scripts python scripts/cross_aemps_duplicidad.py
+python -m scripts.enrich_nombres_aemps
+```
+
+**Pendiente.** Para los 32 fármacos nuevos no se corrieron openFDA (`fetch_openfda_labels`,
+`derive_openfda_interactions`, `expand_class_interactions`) ni MED-RT: no tienen pares de
+prospecto ni contraindicaciones por patología. MeSH y `condition_xref` no dependen de los
+fármacos. La base nueva todavía no está desplegada en el `.98` ni en el `.217`.
