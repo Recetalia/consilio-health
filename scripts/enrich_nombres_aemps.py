@@ -228,8 +228,12 @@ def main() -> int:
     antes = _con_nombre_es(db)
     curados = {r[0] for r in db.execute(
         "select distinct drug_id from drug_alias where lang='es' and source<>'aemps'")}
+    # Sin las filas propias: se borran abajo antes de insertar. Contarlas como
+    # "existentes" hacía que una segunda corrida borrara las 967 y escribiera
+    # sólo las nuevas (medido 2026-09-25: 967 -> 14).
     existentes = {(r[0], r[1]) for r in db.execute(
-        "select drug_id, alias_norm from drug_alias")}
+        "select drug_id, alias_norm from drug_alias "
+        "where not (source='aemps' and lang='es')")}
 
     filas: list[tuple[int, str, str]] = []
     for drug_id, nombre in asignaciones.items():

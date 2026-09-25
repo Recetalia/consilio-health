@@ -68,3 +68,48 @@ def test_normalizacion_igual_cuenta_como_el_mismo_nombre():
     idx = indice_canonico({2: "Nitroglycerin"})
     out = asignar_nombres(["Nitroglicerina", "Nitroglicerina clorhidrato"], idx)
     assert out[2] == "Nitroglicerina"
+
+
+def test_correr_dos_veces_no_borra_los_nombres(tmp_path, monkeypatch):
+    """La segunda corrida tiene que dejar lo mismo que la primera.
+
+    Medido 2026-09-25: las filas propias contaban como "ya existentes", así que
+    la re-corrida las filtraba, borraba las 967 y escribía sólo las nuevas (14).
+    """
+    import sqlite3
+
+    import enrich_nombres_aemps as m
+
+    db = tmp_path / "r.db"
+    con = sqlite3.connect(db)
+    con.executescript("""
+        create table drug (drug_id integer primary key, canonical text);
+        create table drug_alias (drug_id, alias, alias_norm, lang, source
+            check (source in ('ddinter','rxnorm','dnma','manual','aemps')),
+            primary key (drug_id, alias_norm));
+        create table dnma_substance_map (drug_id);
+        create table meta (key primary key, value);
+    """)
+    con.executemany("insert into drug values (?,?)", CANONICOS.items())
+    con.commit()
+    con.close()
+    for f in ("atc.xml", "pa.xml"):
+        (tmp_path / f).write_text("")
+    monkeypatch.setattr(m, "nombres_candidatos",
+                        lambda *_: ["Acarbosa", "Nitroglicerina"])
+    monkeypatch.setattr(sys, "argv", ["x", "--db", str(db), "--dicc-atc",
+                                      str(tmp_path / "atc.xml"), "--dicc-principios",
+                                      str(tmp_path / "pa.xml")])
+
+    def aemps():
+        c = sqlite3.connect(db)
+        try:
+            return set(c.execute("select drug_id, alias from drug_alias where source='aemps'"))
+        finally:
+            c.close()
+
+    m.main()
+    primera = aemps()
+    assert primera == {(1, "Acarbosa"), (2, "Nitroglicerina")}
+    m.main()
+    assert aemps() == primera
