@@ -74,9 +74,10 @@ function notaFuenteIdioma(idiomaTexto) {
 // que el usuario tenga que adivinar qué escribir. Se busca por el nombre en
 // castellano (mismo endpoint que el autocompletado) para que las píldoras
 // no aparezcan en inglés al cargar el ejemplo.
+// Sólo medicamentos: el perfil del paciente es el otro ejemplo. Mezclarlos
+// hacía que "Probar un ejemplo" dejara edad y función renal cargadas.
 const EJEMPLO = {
   drugs: ["warfarina", "ibuprofeno", "simvastatina", "claritromicina"],
-  perfil: { edad: 72, renal: "moderada" },
 };
 
 function toast(msg, ms = 4500) {
@@ -715,17 +716,13 @@ async function resolverFarmaco(nombre) {
 }
 
 $("btn-ejemplo").addEventListener("click", async () => {
-  selected.length = 0;
+  $("clear").click();   // mismo estado que "Vaciar todo": sin perfil ni caso anterior
   for (const nombre of EJEMPLO.drugs) {
     try {
       const exacto = await resolverFarmaco(nombre);
       if (exacto) selected.push(exacto);
     } catch { /* si falla uno, se cargan los demás */ }
   }
-  $("edad").value = EJEMPLO.perfil.edad;
-  $("renal").value = EJEMPLO.perfil.renal;
-  SELECTS.renal.sync();
-  $("aviso-edad").hidden = false;
   invalidateResults();
   meds.render();
   syncButtons();

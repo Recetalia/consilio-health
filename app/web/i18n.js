@@ -21,7 +21,7 @@ const T = {
     lang_switch_label: "Idioma de la interfaz",
 
     btn_ejemplo: "Probar un ejemplo",
-    btn_ejemplo_title: "Carga una receta de ejemplo con interacciones conocidas",
+    btn_ejemplo_title: "Carga sólo medicamentos de ejemplo con interacciones conocidas, sin perfil de paciente",
     btn_ayuda: "¿Qué evalúa?",
 
     btn_ejemplo_paciente: "Ejemplo con paciente",
@@ -333,7 +333,7 @@ const T = {
     lang_switch_label: "Interface language",
 
     btn_ejemplo: "Try an example",
-    btn_ejemplo_title: "Loads a sample prescription with known interactions",
+    btn_ejemplo_title: "Loads sample drugs only, with known interactions and no patient profile",
     btn_ayuda: "What does it check?",
 
     btn_ejemplo_paciente: "Example with patient",
