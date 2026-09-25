@@ -164,7 +164,7 @@ const T = {
     label_patologias: "Patologías",
     opt_patologias: "código CIE-10 o nombre",
     qp_placeholder: "N18, insuficiencia renal, K70…",
-    aviso_patologias: "Se ofrecen sólo los códigos que disparan alguna alerta. Un código más específico que el de la lista (N18.5 contra N18) también se resuelve.",
+    aviso_patologias: "Se ofrecen los códigos que disparan alguna alerta y sus subcódigos: N18.5 se evalúa como N18.",
 
     btn_consultar: "Consultar",
     btn_consultando: "Consultando…",
@@ -476,7 +476,7 @@ const T = {
     label_patologias: "Conditions",
     opt_patologias: "ICD-10 code or name",
     qp_placeholder: "N18, kidney failure, K70…",
-    aviso_patologias: "Only codes that trigger an alert are offered. A code more specific than the listed one (N18.5 vs. N18) also resolves.",
+    aviso_patologias: "Codes that trigger an alert are offered, along with their subcodes: N18.5 is evaluated as N18.",
 
     btn_consultar: "Check",
     btn_consultando: "Checking…",

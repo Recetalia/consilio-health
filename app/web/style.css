@@ -545,6 +545,7 @@ details.suprimidas .finding:last-child { margin-bottom: 10px; }
 footer {
   margin: 34px 0 0; padding: 20px 24px 30px;
   background: var(--bg-seccion); border-top: 3px solid var(--azul);
+  text-align: center;
 }
 footer > * { max-width: 1280px; margin-left: auto; margin-right: auto; }
 .disclaimer { margin: 0; font-size: 13px; color: var(--text); }
