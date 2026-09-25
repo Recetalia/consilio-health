@@ -91,7 +91,23 @@ h5, h6, .col-title, .brand .name { font-family: "Space Grotesk", Manrope, sans-s
   padding-left: 13px; border-left: 1px solid rgba(255,255,255,.3);
 }
 @media (max-width: 720px) { .brand .tagline { display: none; } }
-.topbar-actions { display: flex; gap: 8px; }
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+/* Selector ES/EN: dos botones dentro de un mismo borde, como un segmented
+   control. Calado sobre el navy igual que los `.btn-ghost` de la cabecera;
+   el activo pasa a blanco sólido para que se note sin sumar un tercer color. */
+.lang-switch {
+  display: flex; border: 1px solid rgba(255,255,255,.4); border-radius: var(--radius);
+  overflow: hidden;
+}
+.lang-switch button {
+  background: rgba(255,255,255,.14); border: 0; color: var(--text-on-navy);
+  font: inherit; font-size: 12.5px; font-weight: 700; letter-spacing: .02em;
+  cursor: pointer; padding: 6px 11px;
+}
+.lang-switch button + button { border-left: 1px solid rgba(255,255,255,.4); }
+.lang-switch button:hover { background: rgba(255,255,255,.26); }
+.lang-switch button[aria-pressed="true"] { background: #fff; color: var(--azul-profundo); }
 
 /* ---------------- ayuda ---------------- */
 

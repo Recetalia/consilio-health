@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <!-- ?v= en los recursos: Cloudflare cachea .js/.css 4 h (max-age=14400) y este HTML no.
      Subir la versión en cada deploy que cambie la UI; si no, se sirve la vieja. -->
-<link rel="stylesheet" href="/ui/style.css?v=2026-09-25c">
-<link rel="icon" type="image/svg+xml" href="/ui/favicon.svg">
+<link rel="stylesheet" href="/ui/style.css?v=2026-09-25d">
+<link rel="icon" type="image/svg+xml" href="/ui/favicon.svg?v=2026-09-25d">
 </head>
 <body>
 
@@ -22,14 +22,19 @@
   <div class="brand">
     <img src="/ui/isotipo-blanco.svg" alt="" class="isotipo" width="36" height="36">
     <span class="name">Consilio</span>
-    <span class="tagline">Seguridad en la prescripción</span>
+    <span class="tagline" data-i18n="tagline">Seguridad en la prescripción</span>
   </div>
   <div class="topbar-actions">
+    <div id="lang-switch" class="lang-switch" role="group" data-i18n-aria-label="lang_switch_label" aria-label="Idioma de la interfaz">
+      <button type="button" data-lang="es" aria-pressed="true">ES</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
     <button id="btn-ejemplo" class="btn-ghost" type="button"
+            data-i18n="btn_ejemplo" data-i18n-title="btn_ejemplo_title"
             title="Carga una receta de ejemplo con interacciones conocidas">
       Probar un ejemplo
     </button>
-    <button id="btn-ayuda" class="btn-ghost" type="button"
+    <button id="btn-ayuda" class="btn-ghost" type="button" data-i18n="btn_ayuda"
             aria-expanded="false" aria-controls="ayuda">¿Qué evalúa?</button>
   </div>
 </header>
@@ -39,29 +44,42 @@
 <section id="ayuda" class="ayuda" hidden>
   <div class="ayuda-grid">
     <div>
-      <h6>Qué cruza</h6>
+      <h6 data-i18n="ayuda_cruza_h">Qué cruza</h6>
       <ul>
-        <li><strong>Medicamento con medicamento</strong> — todas las combinaciones posibles de la receta.</li>
-        <li><strong>Medicamento con paciente</strong> — embarazo y semana de gestación, lactancia, función renal y hepática, alergias declaradas, patologías por código CIE-10, y criterios de prescripción en el anciano a partir de los 65 años.</li>
+        <li><strong data-i18n="ayuda_cruza_1_t">Medicamento con medicamento</strong>
+          <span data-i18n="ayuda_cruza_1_d"> — todas las combinaciones posibles de la receta.</span></li>
+        <li><strong data-i18n="ayuda_cruza_2_t">Medicamento con paciente</strong>
+          <span data-i18n="ayuda_cruza_2_d"> — embarazo y semana de gestación, lactancia, función renal y hepática, alergias declaradas, patologías por código CIE-10, y criterios de prescripción en el anciano a partir de los 65 años.</span></li>
       </ul>
     </div>
     <div>
-      <h6>Cómo leer la gravedad</h6>
+      <h6 data-i18n="ayuda_gravedad_h">Cómo leer la gravedad</h6>
       <ul class="leyenda">
-        <li><span class="dot major"></span><strong>Grave</strong> — evitar la combinación o suspender uno de los dos.</li>
-        <li><span class="dot moderate"></span><strong>Moderada</strong> — valorar beneficio/riesgo y monitorizar.</li>
-        <li><span class="dot minor"></span><strong>Leve</strong> — relevancia clínica limitada.</li>
-        <li><span class="dot unknown"></span><strong>Revisar</strong> — la fuente registra el par pero no lo gradúa: consultar el prospecto.</li>
+        <li><span class="dot major"></span><strong data-i18n="ayuda_grave_t">Grave</strong>
+          <span data-i18n="ayuda_grave_d"> — evitar la combinación o suspender uno de los dos.</span></li>
+        <li><span class="dot moderate"></span><strong data-i18n="ayuda_moderada_t">Moderada</strong>
+          <span data-i18n="ayuda_moderada_d"> — valorar beneficio/riesgo y monitorizar.</span></li>
+        <li><span class="dot minor"></span><strong data-i18n="ayuda_leve_t">Leve</strong>
+          <span data-i18n="ayuda_leve_d"> — relevancia clínica limitada.</span></li>
+        <li><span class="dot unknown"></span><strong data-i18n="ayuda_revisar_t">Revisar</strong>
+          <span data-i18n="ayuda_revisar_d"> — la fuente registra el par pero no lo gradúa: consultar el prospecto.</span></li>
       </ul>
     </div>
     <div>
-      <h6>Qué NO hace</h6>
+      <h6 data-i18n="ayuda_no_h">Qué NO hace</h6>
       <ul>
-        <li>No controla <strong>dosis</strong> ni duración del tratamiento.</li>
-        <li>No evalúa <strong>peso, talla ni función renal por aclaramiento</strong>: la función renal entra como alterada/normal.</li>
-        <li>No detecta <strong>reactividad cruzada</strong> entre alergias: sólo el fármaco exacto declarado.</li>
-        <li>No asume simultaneidad parcial: cruza todo contra todo.</li>
-        <li><strong>No decide.</strong> Avisa y deja constancia.</li>
+        <li><span data-i18n="ayuda_no_1_pre">No controla</span>
+          <strong data-i18n="ayuda_no_1_b">dosis</strong>
+          <span data-i18n="ayuda_no_1_post">ni duración del tratamiento.</span></li>
+        <li><span data-i18n="ayuda_no_2_pre">No evalúa</span>
+          <strong data-i18n="ayuda_no_2_b">peso, talla ni función renal por aclaramiento</strong>
+          <span data-i18n="ayuda_no_2_post">: la función renal entra como alterada/normal.</span></li>
+        <li><span data-i18n="ayuda_no_3_pre">No detecta</span>
+          <strong data-i18n="ayuda_no_3_b">reactividad cruzada</strong>
+          <span data-i18n="ayuda_no_3_post">entre alergias: sólo el fármaco exacto declarado.</span></li>
+        <li data-i18n="ayuda_no_4">No asume simultaneidad parcial: cruza todo contra todo.</li>
+        <li><strong data-i18n="ayuda_no_5_b">No decide.</strong>
+          <span data-i18n="ayuda_no_5_post"> Avisa y deja constancia.</span></li>
       </ul>
     </div>
   </div>
@@ -72,15 +90,16 @@
 
     <section class="card">
       <div class="card-header">
-        <h5>Medicamentos a verificar</h5>
+        <h5 data-i18n="card_meds_h">Medicamentos a verificar</h5>
         <span id="cnt-meds" class="counter" hidden></span>
       </div>
       <div class="card-body">
-        <p class="hint">Escribí el nombre del principio activo. Agregá dos o más para consultar interacciones entre ellos.</p>
+        <p class="hint" data-i18n="card_meds_hint">Escribí el nombre del principio activo. Agregá dos o más para consultar interacciones entre ellos.</p>
         <ul id="chips" class="chips"></ul>
         <div class="search">
           <input id="q" type="text" autocomplete="off" spellcheck="false"
-                 aria-label="Buscar medicamento"
+                 data-i18n-aria-label="q_aria" aria-label="Buscar medicamento"
+                 data-i18n-placeholder="q_placeholder"
                  placeholder="warfarina, ibuprofeno, sildenafil…">
           <ul id="suggestions" class="suggestions" hidden role="listbox"></ul>
         </div>
@@ -94,79 +113,83 @@
 
     <section class="card">
       <div class="card-header">
-        <h5>Perfil del paciente <span class="opt">opcional</span></h5>
+        <h5 data-i18n="card_perfil_h">Perfil del paciente <span class="opt" data-i18n="card_perfil_opt">opcional</span></h5>
         <span id="cnt-perfil" class="counter" hidden></span>
       </div>
       <div class="card-body profile">
 
         <div class="row row-2">
           <div class="field-inline">
-            <label for="sexo">Sexo</label>
+            <label for="sexo" data-i18n="label_sexo">Sexo</label>
             <select id="sexo">
-              <option value="">—</option>
-              <option value="F">Femenino</option>
-              <option value="M">Masculino</option>
+              <option value="" data-i18n="opt_sexo_vacio">—</option>
+              <option value="F" data-i18n="opt_sexo_f">Femenino</option>
+              <option value="M" data-i18n="opt_sexo_m">Masculino</option>
             </select>
           </div>
           <div class="field-inline">
-            <label for="edad">Edad</label>
-            <input id="edad" type="number" min="0" max="130" placeholder="años">
+            <label for="edad" data-i18n="label_edad">Edad</label>
+            <input id="edad" type="number" min="0" max="130"
+                   data-i18n-placeholder="edad_placeholder" placeholder="años">
             <!-- El aviso va DENTRO del campo de edad: a ancho completo debajo
                  de la fila quedaba pegado a la etiqueta siguiente y se leía
                  como si describiera la función renal. -->
-            <p id="aviso-edad" class="micro-aviso" hidden>
+            <p id="aviso-edad" class="micro-aviso" hidden data-i18n="aviso_edad">
               Desde los 65 se aplican los criterios de prescripción en el anciano.
             </p>
           </div>
         </div>
 
         <div id="gestacion" class="row gestacion" hidden>
-          <label class="check"><input id="embarazo" type="checkbox"> Embarazo</label>
-          <label class="check"><input id="lactancia" type="checkbox"> Lactancia</label>
-          <select id="semanas" disabled aria-label="Semana de gestación">
-            <option value="">semana —</option>
+          <label class="check"><input id="embarazo" type="checkbox">
+            <span data-i18n="check_embarazo">Embarazo</span></label>
+          <label class="check"><input id="lactancia" type="checkbox">
+            <span data-i18n="check_lactancia">Lactancia</span></label>
+          <select id="semanas" disabled data-i18n-aria-label="semanas_aria" aria-label="Semana de gestación">
+            <option value="" data-i18n="semana_placeholder">semana —</option>
           </select>
         </div>
 
         <div class="row row-2">
           <div class="field-inline">
-            <label for="renal">Función renal</label>
+            <label for="renal" data-i18n="label_renal">Función renal</label>
             <select id="renal">
-              <option value="">normal</option>
-              <option value="leve">alterada — leve</option>
-              <option value="moderada">alterada — moderada</option>
-              <option value="grave">alterada — grave</option>
+              <option value="" data-i18n="opt_renal_normal">normal</option>
+              <option value="leve" data-i18n="opt_renal_leve">alterada — leve</option>
+              <option value="moderada" data-i18n="opt_renal_moderada">alterada — moderada</option>
+              <option value="grave" data-i18n="opt_renal_grave">alterada — grave</option>
             </select>
           </div>
           <div class="field-inline">
-            <label for="hepatica">Función hepática</label>
+            <label for="hepatica" data-i18n="label_hepatica">Función hepática</label>
             <select id="hepatica">
-              <option value="">normal</option>
-              <option value="alterada">alterada</option>
+              <option value="" data-i18n="opt_hepatica_normal">normal</option>
+              <option value="alterada" data-i18n="opt_hepatica_alterada">alterada</option>
             </select>
           </div>
         </div>
 
         <div class="field">
-          <label for="qa">Alergias a medicamentos</label>
+          <label for="qa" data-i18n="label_alergias">Alergias a medicamentos</label>
           <ul id="chips-alergias" class="chips chips-alergia"></ul>
           <div class="search">
             <input id="qa" type="text" autocomplete="off" spellcheck="false"
-                   placeholder="penicilina, aspirina…">
+                   data-i18n-placeholder="qa_placeholder" placeholder="penicilina, aspirina…">
             <ul id="suggestions-alergias" class="suggestions" hidden></ul>
           </div>
-          <p class="micro-aviso">Se compara sólo el fármaco exacto. No se infiere reactividad cruzada por clase.</p>
+          <p class="micro-aviso" data-i18n="aviso_alergias">Se compara sólo el fármaco exacto. No se infiere reactividad cruzada por clase.</p>
         </div>
 
         <div class="field">
-          <label for="qp">Patologías <span class="opt">código CIE-10 o nombre</span></label>
+          <label for="qp"><span data-i18n="label_patologias">Patologías</span>
+            <span class="opt" data-i18n="opt_patologias">código CIE-10 o nombre</span></label>
           <ul id="chips-patologias" class="chips chips-patologia"></ul>
           <div class="search">
             <input id="qp" type="text" autocomplete="off" spellcheck="false"
-                   placeholder="N18, insuficiencia renal, K70…">
+                   data-i18n-placeholder="qp_placeholder" placeholder="N18, insuficiencia renal, K70…">
             <ul id="suggestions-patologias" class="suggestions" hidden></ul>
           </div>
-          <p class="micro-aviso">Se ofrecen sólo los códigos que disparan alguna alerta. Un código más
+          <p class="micro-aviso" data-i18n="aviso_patologias">Se ofrecen sólo los códigos que disparan alguna alerta. Un código más
             específico que el de la lista (N18.5 contra N18) también se resuelve.</p>
         </div>
 
@@ -176,9 +199,9 @@
   </div>
 
   <div class="actions">
-    <button id="check" class="btn-primary" disabled>Consultar</button>
-    <span class="kbd-hint">o <kbd>Ctrl</kbd>+<kbd>Enter</kbd></span>
-    <button id="clear" class="btn-link" hidden>Vaciar todo</button>
+    <button id="check" class="btn-primary" disabled data-i18n="btn_consultar">Consultar</button>
+    <span class="kbd-hint"><span data-i18n="kbd_hint_o">o</span> <kbd>Ctrl</kbd>+<kbd>Enter</kbd></span>
+    <button id="clear" class="btn-link" hidden data-i18n="btn_vaciar">Vaciar todo</button>
   </div>
 
   <section id="results" hidden>
@@ -186,32 +209,33 @@
          los filtros que aplican a lo que efectivamente se encontró. -->
     <div id="filtros" class="filtros" hidden>
       <div class="filtro-grupo" id="f-sev-grupo">
-        <span class="filtro-label">Gravedad</span>
+        <span class="filtro-label" data-i18n="filtro_gravedad">Gravedad</span>
         <div id="f-sev" class="pills"></div>
       </div>
       <div class="filtro-grupo" id="f-fuente-grupo">
-        <span class="filtro-label">Fuente</span>
+        <span class="filtro-label" data-i18n="filtro_fuente">Fuente</span>
         <div id="f-fuente" class="pills"></div>
       </div>
       <div class="filtro-grupo">
-        <span class="filtro-label">Filtrar</span>
+        <span class="filtro-label" data-i18n="filtro_filtrar">Filtrar</span>
         <div class="pills">
           <label class="pill toggle"><input type="checkbox" id="f-con-texto">
-            Sólo con explicación</label>
+            <span data-i18n="filtro_con_texto">Sólo con explicación</span></label>
           <label class="pill toggle"><input type="checkbox" id="f-sin-inferidas">
-            Ocultar inferidas de texto</label>
+            <span data-i18n="filtro_sin_inferidas">Ocultar inferidas de texto</span></label>
         </div>
       </div>
       <div class="filtro-grupo grow">
-        <span class="filtro-label">Buscar en resultados</span>
+        <span class="filtro-label" data-i18n="filtro_buscar">Buscar en resultados</span>
         <input id="f-texto" type="search" class="filtro-texto"
-               placeholder="hemorragia, potasio, warfarina…">
+               data-i18n-placeholder="filtro_texto_placeholder" placeholder="hemorragia, potasio, warfarina…">
       </div>
       <div class="filtro-grupo">
-        <button id="f-reset" class="btn-link" type="button" hidden>Quitar filtros</button>
+        <button id="f-reset" class="btn-link" type="button" hidden data-i18n="btn_quitar_filtros">Quitar filtros</button>
         <button id="btn-copiar" class="btn-ghost" type="button"
+                data-i18n="btn_copiar" data-i18n-title="btn_copiar_title"
                 title="Copia el resumen al portapapeles">Copiar resumen</button>
-        <button id="btn-imprimir" class="btn-ghost" type="button">Imprimir</button>
+        <button id="btn-imprimir" class="btn-ghost" type="button" data-i18n="btn_imprimir">Imprimir</button>
       </div>
     </div>
     <p id="filtro-estado" class="filtro-estado" hidden></p>
@@ -221,16 +245,17 @@
 
 <footer>
   <p class="disclaimer">
-    Información generada automáticamente a partir de fuentes públicas.
-    <strong>No sustituye el criterio clínico.</strong>
-    Verificar con el prospecto oficial ante cualquier duda.
+    <span data-i18n="disclaimer_1">Información generada automáticamente a partir de fuentes públicas.</span>
+    <strong data-i18n="disclaimer_2">No sustituye el criterio clínico.</strong>
+    <span data-i18n="disclaimer_3">Verificar con el prospecto oficial ante cualquier duda.</span>
   </p>
   <p class="sources" id="sources"></p>
 </footer>
 
 <div id="toast" class="toast" hidden></div>
 
-<script src="/ui/condiciones-es.js?v=2026-09-25c"></script>
-<script src="/ui/app.js?v=2026-09-25c"></script>
+<script src="/ui/i18n.js?v=2026-09-25d"></script>
+<script src="/ui/condiciones-es.js?v=2026-09-25d"></script>
+<script src="/ui/app.js?v=2026-09-25d"></script>
 </body>
 </html>

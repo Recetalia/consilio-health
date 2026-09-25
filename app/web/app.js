@@ -2,6 +2,10 @@
    Vanilla, sin build: la app es un servicio, no un frontend, y meterle un
    toolchain de JS para dos pantallas sería costo sin beneficio.
 
+   `i18n.js` se carga antes y aporta `T`, `t()`, `LANG`, `setLang()`. Sólo
+   traduce la UI: nombres de fármaco y de patología resuelven su idioma acá
+   (`mostrar()`, `condLabel()`); el texto clínico libre de AEMPS/openFDA no se
+   traduce nunca, ver `notaFuenteIdioma()`.
    `condiciones-es.js` se carga antes y aporta `condEs` y `BUSQUEDA_ES_EN`. */
 
 const $ = (id) => document.getElementById(id);
@@ -17,33 +21,53 @@ const headers = () => {
   return h;
 };
 
+// `label` se resuelve en el momento (no al cargar el módulo) para seguir al
+// idioma elegido: SEV se referencia desde muchos lugares que corren después
+// de un cambio de idioma.
 const SEV = {
-  major:    { label: "Grave",       rank: 0 },
-  moderate: { label: "Moderada",    rank: 1 },
-  minor:    { label: "Leve",        rank: 2 },
-  unknown:  { label: "Revisar",     rank: 3 },
+  major:    { get label() { return t("sev_major"); },    rank: 0 },
+  moderate: { get label() { return t("sev_moderate"); }, rank: 1 },
+  minor:    { get label() { return t("sev_minor"); },    rank: 2 },
+  unknown:  { get label() { return t("sev_unknown"); },  rank: 3 },
 };
 
-const FUENTE = {
-  aemps:     "AEMPS — Agencia Española de Medicamentos",
-  ddinter:   "DDInter 2.0 — base curada de interacciones",
-  openfda:   "openFDA — prospecto oficial de la FDA",
-  medrt:     "MED-RT — Biblioteca Nacional de Medicina (EE.UU.)",
-  recetalia: "Revisión propia de Consilio",
-  consilio:  "Regla propia de Consilio",
-  perfil: "Dato cargado en el perfil del paciente",
-};
-// Canónico (inglés, el de la base) -> nombre para mostrar (castellano). Se va
+// Nombre completo y corto de cada fuente, también dependientes del idioma.
+const FUENTE_KEYS = ["aemps", "ddinter", "openfda", "medrt", "recetalia", "consilio", "perfil"];
+const FUENTE = {};
+const FUENTE_CORTA = {};
+FUENTE_KEYS.forEach((k) => {
+  Object.defineProperty(FUENTE, k, { enumerable: true, get: () => t(`fuente_${k}`) });
+  Object.defineProperty(FUENTE_CORTA, k, { enumerable: true, get: () => t(`fuente_corta_${k}`) });
+});
+
+// Canónico (inglés, el de la base) -> nombre para mostrar en castellano. Se va
 // llenando con lo que devuelve el buscador: la base tiene 728 sustancias del
 // DNMA y 73 alias manuales, así que buena parte del vademécum uruguayo se
-// muestra en su grafía local en vez de en inglés.
+// muestra en su grafía local en vez de en inglés. En inglés se muestra
+// siempre el canónico: por eso `mostrar()` mira `LANG`.
 const NOMBRE_ES = {};
-const mostrar = (n) => NOMBRE_ES[n] || n;
+const mostrar = (n) => (LANG === "es" ? (NOMBRE_ES[n] || n) : n);
 
-const FUENTE_CORTA = {
-  aemps: "AEMPS", ddinter: "DDInter", openfda: "openFDA",
-  medrt: "MED-RT", recetalia: "Consilio", consilio: "Consilio", perfil: "Perfil",
-};
+// Patologías: en castellano, la traducción manual de `condEs()` (o el
+// original si no está traducida); en inglés, siempre el nombre MeSH
+// original. Es la misma idea que `mostrar()`, para el otro catálogo.
+const condLabel = (n) => (LANG === "es" ? condEs(n) : n);
+
+// Idioma real del texto libre según la fuente que lo escribió. Sólo se marca
+// para las dos fuentes con texto libre: AEMPS (castellano) y openFDA
+// (inglés). El resto (DDInter, MED-RT, Consilio) no lleva `lang` ni aviso.
+const FUENTE_TEXTO_IDIOMA = { aemps: "es", openfda: "en" };
+
+// Nota que aclara cuándo un texto clínico quedó en un idioma distinto al de
+// la interfaz. `idiomaTexto` es el idioma real del texto ("es" para AEMPS,
+// "en" para openFDA); no se traduce el texto, sólo se avisa cuando no
+// coincide con `LANG`.
+function notaFuenteIdioma(idiomaTexto) {
+  if (idiomaTexto === LANG) return "";
+  return idiomaTexto === "en"
+    ? `<p class="evidence-note">${t("nota_texto_ingles")}</p>`
+    : `<p class="evidence-note" lang="es">${t("nota_texto_espanol")}</p>`;
+}
 
 // Receta de ejemplo: cada par de acá dispara algo distinto —una grave con
 // texto, una por clase, una contra el perfil—, así se ve de qué es capaz sin
@@ -102,7 +126,7 @@ function wireSearch({ input, list, target, chips, onChange, fetchFn, renderItem,
     try {
       data = await fetchFn(q);
     } catch (err) {
-      if (err !== "handled") toast("No se pudo consultar el servicio.");
+      if (err !== "handled") toast(t("toast_error_servicio"));
       return;
     }
     if (!data) return;
@@ -189,7 +213,9 @@ async function buscarPatologias(q) {
     vistos.add(x.code);
     return true;
   }).map((x) => ({
-    id: x.code, name: condEs(x.name), code: x.code, alertas: x.alertas,
+    // El original (MeSH, inglés) se conserva sin tocar: en EN se muestra tal
+    // cual, en ES se traduce recién al pintar, con `condLabel()`.
+    id: x.code, name: x.name, code: x.code, alertas: x.alertas,
   })).slice(0, 12);
 }
 
@@ -321,9 +347,16 @@ const semanasSel = $("semanas");
 for (let w = 1; w <= 42; w++) {
   const o = document.createElement("option");
   o.value = String(w);
-  o.textContent = `semana ${w}`;
   semanasSel.appendChild(o);
 }
+// Generadas por script, así que `data-i18n` no las alcanza: se traducen acá
+// y de nuevo en cada cambio de idioma (ver `onLangChange`).
+function actualizarTextoSemanas() {
+  [...semanasSel.options].forEach((o) => {
+    o.textContent = o.value ? t("semana_n", { n: o.value }) : t("semana_placeholder");
+  });
+}
+actualizarTextoSemanas();
 
 // Los cuatro desplegables de la pantalla. `semanas` va en dos columnas porque
 // son 43 opciones y a una columna obliga a scrollear.
@@ -418,42 +451,48 @@ function syncButtons() {
   $("clear").hidden = selected.length === 0 && alergias.length === 0 &&
                       patologias.length === 0 && !hayPerfil();
   const n = selected.length;
-  $("cnt-meds").textContent = n ? `${n} ${n === 1 ? "medicamento" : "medicamentos"}` : "";
+  $("cnt-meds").textContent = n ? `${n} ${n === 1 ? t("n_medicamento") : t("n_medicamentos")}` : "";
   $("cnt-meds").hidden = !n;
 
   const pares = n * (n - 1) / 2;
   const r = $("resumen-cruce");
   r.hidden = n < 1;
   if (n >= 2) {
-    r.innerHTML = `Se van a cruzar <strong>${pares}</strong>
-      ${pares === 1 ? "combinación" : "combinaciones"} entre sí,
-      y cada medicamento contra el perfil del paciente.`;
+    r.innerHTML = t("resumen_cruce_multi", {
+      pares, palabra: pares === 1 ? t("n_combinacion") : t("n_combinaciones"),
+    });
   } else if (n === 1) {
-    r.innerHTML = `Con un solo medicamento no hay combinaciones que cruzar.
-      Agregá otro, o completá el perfil para cruzarlo contra el paciente.`;
+    r.innerHTML = t("resumen_cruce_uno");
   }
 
   const campos = [
     $("sexo").value, $("edad").value, $("renal").value, $("hepatica").value,
     $("embarazo").checked ? "1" : "", $("lactancia").checked ? "1" : "",
   ].filter(Boolean).length + alergias.length + patologias.length;
-  $("cnt-perfil").textContent = campos ? `${campos} ${campos === 1 ? "dato" : "datos"}` : "";
+  $("cnt-perfil").textContent = campos ? `${campos} ${campos === 1 ? t("n_dato") : t("n_datos")}` : "";
   $("cnt-perfil").hidden = !campos;
 }
+
+// Nombre a mostrar de un resultado de búsqueda de fármaco: el mismo criterio
+// que `mostrar()`, pero antes de que el ítem tenga su `name` mapeado en
+// `NOMBRE_ES` (acá se usa directamente el `name_es` que trae la respuesta).
+const nombreFarmaco = (r) => (LANG === "es" ? (r.name_es || r.name) : r.name);
+const aliasFarmaco = (r) => (LANG === "es" ? (r.name_es ? r.name : null) : (r.name_es || null));
+const nombrePatologia = (r) => (LANG === "es" ? condEs(r.name) : r.name);
 
 const meds = wireSearch({
   input: $("q"), list: $("suggestions"), target: selected, chips: $("chips"),
   onChange: syncButtons, fetchFn: buscarFarmacos,
-  renderItem: (r) => `<span class="nombre">${escapeHtml(r.name_es || r.name)}${
-    r.name_es ? `<span class="alias-en"> · ${escapeHtml(r.name)}</span>` : ""}</span>${
+  renderItem: (r) => `<span class="nombre">${escapeHtml(nombreFarmaco(r))}${
+    aliasFarmaco(r) ? `<span class="alias-en"> · ${escapeHtml(aliasFarmaco(r))}</span>` : ""}</span>${
     r.rxcui ? `<span class="rxcui">RxCUI ${r.rxcui}</span>` : ""}`,
-  renderChip: (s) => escapeHtml(s.name_es || s.name),
+  renderChip: (s) => escapeHtml(nombreFarmaco(s)),
 });
 const alerg = wireSearch({
   input: $("qa"), list: $("suggestions-alergias"), target: alergias,
   chips: $("chips-alergias"), onChange: syncButtons, fetchFn: buscarFarmacos,
-  renderItem: (r) => `<span class="nombre">${escapeHtml(r.name_es || r.name)}</span>`,
-  renderChip: (s) => escapeHtml(s.name_es || s.name),
+  renderItem: (r) => `<span class="nombre">${escapeHtml(nombreFarmaco(r))}</span>`,
+  renderChip: (s) => escapeHtml(nombreFarmaco(s)),
 });
 const patol = wireSearch({
   input: $("qp"), list: $("suggestions-patologias"), target: patologias,
@@ -461,9 +500,9 @@ const patol = wireSearch({
   // Se muestra cuántas alertas cuelgan del código: es la única forma de que el
   // médico sepa, antes de elegirlo, si ese código va a evaluar algo.
   renderItem: (r) => `<span class="code">${escapeHtml(r.code)}</span>
-    <span class="nombre">${escapeHtml(r.name)}</span>
-    <span class="alertas">${r.alertas} ${r.alertas === 1 ? "alerta" : "alertas"}</span>`,
-  renderChip: (s) => `<span class="code">${escapeHtml(s.code)}</span> ${escapeHtml(s.name)}`,
+    <span class="nombre">${escapeHtml(nombrePatologia(r))}</span>
+    <span class="alertas">${r.alertas} ${r.alertas === 1 ? t("alerta_1") : t("alerta_n")}</span>`,
+  renderChip: (s) => `<span class="code">${escapeHtml(s.code)}</span> ${escapeHtml(nombrePatologia(s))}`,
 });
 
 $("clear").addEventListener("click", () => {
@@ -516,7 +555,7 @@ $("btn-ejemplo").addEventListener("click", async () => {
   invalidateResults();
   meds.render();
   syncButtons();
-  if (!selected.length) toast("No se pudo cargar el ejemplo.");
+  if (!selected.length) toast(t("toast_ejemplo_error"));
   else $("check").focus();
 });
 
@@ -532,7 +571,7 @@ document.addEventListener("keydown", (e) => {
 $("check").addEventListener("click", async () => {
   const btn = $("check");
   btn.disabled = true;
-  btn.textContent = "Consultando…";
+  btn.textContent = t("btn_consultando");
   const drugs = selected.map((s) => s.name);
   let inter = null, contra = null, interError = null, contraError = null;
 
@@ -557,10 +596,10 @@ $("check").addEventListener("click", async () => {
     }
     await Promise.all(calls);
   } catch {
-    toast("No se pudo consultar el servicio.");
-    interError = contraError = "No se pudo contactar al servicio.";
+    toast(t("toast_error_servicio"));
+    interError = contraError = t("error_sin_contacto");
   }
-  btn.textContent = "Consultar";
+  btn.textContent = t("btn_consultar");
   syncButtons();
   // Fuera del try: un error al pintar no puede disfrazarse de error de red.
   ultimo = { inter, contra, interError, contraError };
@@ -716,7 +755,7 @@ function render() {
   let ocultos = 0;
 
   /* --- columna 1: medicamento <-> medicamento --- */
-  html += '<div class="col"><p class="col-title">Alertas medicamento — medicamento</p>';
+  html += `<div class="col"><p class="col-title">${t("col_title_inter")}</p>`;
   if (inter) {
     const todos = (inter.interactions || []).slice()
       .sort((a, b) => (SEV[a.severity]?.rank ?? 9) - (SEV[b.severity]?.rank ?? 9));
@@ -733,13 +772,12 @@ function render() {
     const sup = inter.duplicities_suppressed || [];
     if (sup.length && !hayFiltro()) {
       html += `<details class="suprimidas"><summary>${sup.length}
-        ${sup.length === 1 ? "duplicidad no alertada" : "duplicidades no alertadas"}
-        por una excepción curada</summary>${sup.map((d) => cardDuplicidad(d, true)).join("")}</details>`;
+        ${sup.length === 1 ? t("sup_duplicidad_1") : t("sup_duplicidad_n")}
+        ${t("sup_por_excepcion")}</summary>${sup.map((d) => cardDuplicidad(d, true)).join("")}</details>`;
     }
     if (!hayFiltro()) {
       (inter.duplicity_not_evaluated || []).forEach((n) => {
-        html += `<div class="empty-state"><strong>${escapeHtml(n)}</strong> no se pudo
-          identificar, así que no se evaluó su duplicidad.</div>`;
+        html += `<div class="empty-state"><strong>${escapeHtml(n)}</strong> ${t("empty_no_identificado_dup_pre")}</div>`;
       });
       (inter.duplicity_warnings || []).forEach((w) => {
         html += `<div class="aviso-perfil">${escapeHtml(w)}</div>`;
@@ -749,7 +787,7 @@ function render() {
     // ni una interacción ni una duplicidad visible, y sólo cuando había algo
     // que los filtros pudieran haber escondido.
     if (!found.length && !dups.length && (todos.length || dupsTodos.length)) {
-      html += '<div class="empty-state">Ningún hallazgo coincide con los filtros.</div>';
+      html += `<div class="empty-state">${t("empty_sin_filtros")}</div>`;
     }
     // Esto habla de interacciones, no de duplicidad: que una combinación no
     // tenga interacción documentada no contradice que sí tenga una tarjeta de
@@ -757,19 +795,19 @@ function render() {
     const sin = pares - todos.length;
     if (sin > 0 && !hayFiltro()) {
       // Nunca "es seguro": decimos que no encontramos evidencia.
-      html += `<div class="empty-state"><strong>${sin}
-        ${sin === 1 ? "combinación" : "combinaciones"} sin interacción documentada.</strong>
-        Que no hayamos encontrado una interacción documentada no significa que no exista.</div>`;
+      html += `<div class="empty-state"><strong>${t("empty_sin_combinacion", {
+        sin, palabra: sin === 1 ? t("n_combinacion") : t("n_combinaciones"),
+      })}</strong> ${t("empty_sin_combinacion_nota")}</div>`;
     }
   } else if (interError) {
-    html += cardError("No se pudieron evaluar las interacciones", interError);
+    html += cardError(t("error_titulo_inter"), interError);
   } else {
-    html += '<div class="empty-state">Agregá dos o más medicamentos para cruzarlos entre sí.</div>';
+    html += `<div class="empty-state">${t("empty_agregar_meds")}</div>`;
   }
   html += "</div>";
 
   /* --- columna 2: medicamento <-> paciente --- */
-  html += '<div class="col"><p class="col-title">Alertas medicamento — paciente</p>';
+  html += `<div class="col"><p class="col-title">${t("col_title_contra")}</p>`;
   if (contra) {
     (contra.profile_warnings || []).forEach((w) => {
       html += `<div class="aviso-perfil">${escapeHtml(w)}</div>`;
@@ -778,9 +816,9 @@ function render() {
       .filter((a) => pasaFiltroPaciente([a.drug, a.declared_as], "major", "perfil"));
     const noId = (contra.allergies || []).filter((a) => a.match === "unresolved");
     const ci = (contra.contraindications || [])
-      .filter((c) => pasaFiltroPaciente([c.drug, condEs(c.condition)], "major", c.source));
+      .filter((c) => pasaFiltroPaciente([c.drug, condLabel(c.condition)], "major", c.source));
     const pre = (contra.precautions || [])
-      .filter((c) => pasaFiltroPaciente([c.drug, condEs(c.condition)], "moderate", c.source));
+      .filter((c) => pasaFiltroPaciente([c.drug, condLabel(c.condition)], "moderate", c.source));
     const geri = (contra.geriatric || []).filter((g) =>
       pasaFiltroPaciente([g.drug, g.situacion, g.recomendacion],
                          sevPaciente("geriatrica", g), g.source));
@@ -798,29 +836,26 @@ function render() {
     // Lo que no se pudo evaluar se dice, no se omite.
     if (!hayFiltro()) {
       noId.forEach((a) => {
-        html += `<div class="empty-state">No se pudo identificar
-          <strong>${escapeHtml(a.declared_as)}</strong> como medicamento, así que esa
-          alergia no se tuvo en cuenta.</div>`;
+        html += `<div class="empty-state">${t("empty_no_identificado_alergia_pre")}
+          <strong>${escapeHtml(a.declared_as)}</strong> ${t("empty_no_identificado_alergia_post")}</div>`;
       });
       (contra.not_evaluated || []).forEach((n) => {
         html += `<div class="empty-state"><strong>${escapeHtml(n.drug || n.icd10)}</strong>
-          no se pudo evaluar: ${escapeHtml(n.reason)}.</div>`;
+          ${t("empty_no_evaluado", { motivo: escapeHtml(n.reason) })}</div>`;
       });
     }
 
     const total = al.length + ci.length + pre.length + geri.length;
     if (total === 0 && !noId.length) {
       html += hayFiltro()
-        ? '<div class="empty-state">Ningún hallazgo coincide con los filtros.</div>'
-        : `<div class="empty-state"><strong>Sin alertas para este perfil.</strong>
-             Se evalúan embarazo y semana de gestación, lactancia, función renal y
-             hepática, alergias declaradas, patologías por CIE-10 y, desde los 65
-             años, los criterios de prescripción en el anciano.</div>`;
+        ? `<div class="empty-state">${t("empty_sin_filtros")}</div>`
+        : `<div class="empty-state"><strong>${t("empty_sin_alertas_perfil_t")}</strong>
+             ${t("empty_sin_alertas_perfil_d")}</div>`;
     }
   } else if (contraError) {
-    html += cardError("No se pudieron evaluar las alertas contra el paciente", contraError);
+    html += cardError(t("error_titulo_contra"), contraError);
   } else {
-    html += '<div class="empty-state">Completá el perfil del paciente para cruzarlo contra los medicamentos.</div>';
+    html += `<div class="empty-state">${t("empty_completar_perfil")}</div>`;
   }
   html += "</div></div>";
 
@@ -830,23 +865,24 @@ function render() {
   $("f-reset").hidden = !hayFiltro();
   $("filtro-estado").hidden = !ocultos;
   $("filtro-estado").textContent = ocultos
-    ? `${ocultos} ${ocultos === 1 ? "hallazgo oculto" : "hallazgos ocultos"} por los filtros.` : "";
+    ? t("filtro_estado", { n: ocultos, palabra: ocultos === 1 ? t("n_hallazgo_oculto") : t("n_hallazgos_ocultos") })
+    : "";
 
   const cov = (inter && inter.coverage_summary) || {};
   const partes = Object.entries(cov).filter(([k, n]) => n > 0 && k !== "unknown")
-    .map(([k, n]) => `${n} de ${FUENTE[k] || k}`);
+    .map(([k, n]) => `${n} ${t("cov_de")} ${FUENTE[k] || k}`);
   if (contra && ((contra.contraindications || []).length || (contra.precautions || []).length)) {
     partes.push(FUENTE.medrt);
   }
-  $("sources").textContent = partes.length ? `Fuentes consultadas: ${partes.join(" · ")}.` : "";
+  $("sources").textContent = partes.length ? t("fuentes_consultadas", { lista: partes.join(" · ") }) : "";
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 function descripcionError(r) {
-  if (r.status === 401) return "El servicio pidió una API key.";
-  if (r.status === 429) return "Demasiadas consultas seguidas.";
-  if (r.status === 503) return "El servicio no está disponible.";
-  return `El servicio respondió con un error ${r.status}.`;
+  if (r.status === 401) return t("err_desc_401");
+  if (r.status === 429) return t("err_desc_429");
+  if (r.status === 503) return t("err_desc_503");
+  return t("err_desc_generico", { status: r.status });
 }
 
 /* Una consulta que falló NO se pinta como un resultado vacío. Es la diferencia
@@ -856,10 +892,9 @@ function cardError(titulo, detalle) {
   return `
     <div class="error-state">
       <strong>${escapeHtml(titulo)}</strong>
-      <p>${escapeHtml(detalle)} Los resultados de esta columna están incompletos:
-         <strong>no interpretar el vacío como ausencia de alertas.</strong></p>
+      <p>${escapeHtml(detalle)} ${t("error_detalle_post")}</p>
       <button type="button" class="btn-ghost" onclick="document.getElementById('check').click()">
-        Reintentar</button>
+        ${t("btn_reintentar")}</button>
     </div>`;
 }
 
@@ -868,29 +903,30 @@ function cardInteraccion(i) {
   // El modo de match sólo se muestra cuando la regla fue de CLASE: es menos
   // específica que una de molécula y el médico tiene derecho a saberlo.
   const porClase = (i.text_match || "").includes("clase");
+  // Texto clínico libre: se muestra tal cual salió de la fuente, con su
+  // idioma real en `lang` y, si no coincide con la interfaz, un aviso chico.
+  const idiomaTexto = FUENTE_TEXTO_IDIOMA[i.source];
   return `
     <article class="finding ${sev}">
       <div class="finding-head">
         <span class="pair">${escapeHtml(mostrar(i.drug_a))} + ${escapeHtml(mostrar(i.drug_b))}</span>
         <span class="badge ${sev}">${SEV[sev].label}</span>
-        ${i.uncertain ? '<span class="tag-uncertain">inferida de texto</span>' : ""}
-        ${porClase ? '<span class="tag-clase">regla de clase</span>' : ""}
+        ${i.uncertain ? `<span class="tag-uncertain">${t("tag_inferida")}</span>` : ""}
+        ${porClase ? `<span class="tag-clase">${t("tag_clase")}</span>` : ""}
       </div>
       ${i.description
-        ? `<p class="evidence"${i.source === "openfda" ? ' lang="en"' : ""}>${
-             escapeHtml(i.description)}</p>${
-             i.source === "openfda"
-               ? '<p class="evidence-note">Texto original del prospecto, en inglés.</p>' : ""}`
+        ? `<p class="evidence"${idiomaTexto ? ` lang="${idiomaTexto}"` : ""}>${
+             escapeHtml(i.description)}</p>${idiomaTexto ? notaFuenteIdioma(idiomaTexto) : ""}`
         : `<p class="evidence sin-texto">${sev === "unknown"
-             ? "Interacción registrada sin gravedad asignada: revisar el prospecto."
-             : "La fuente registra el par y su gravedad, pero no aporta descripción del mecanismo."}</p>`}
+             ? t("evidence_sin_gravedad")
+             : t("evidence_sin_descripcion")}</p>`}
       ${i.management
-        ? `<p class="manejo"><strong>Qué hacer:</strong> ${escapeHtml(i.management)}</p>`
+        ? `<p class="manejo"${idiomaTexto ? ` lang="${idiomaTexto}"` : ""}><strong>${t("manejo_label")}</strong> ${escapeHtml(i.management)}</p>`
         : ""}
       <p class="meta">${FUENTE[i.source] || i.source}${
         // Un hallazgo armado con dos fuentes no se presenta como si fuera de una.
         i.severity_source
-          ? ` · gravedad según ${FUENTE[i.severity_source] || i.severity_source}`
+          ? ` ${t("gravedad_segun", { fuente: FUENTE[i.severity_source] || i.severity_source })}`
           : ""}</p>
     </article>`;
 }
@@ -900,32 +936,39 @@ function cardInteraccion(i) {
 function cardDuplicidad(d, suprimida) {
   const sev = suprimida ? "minor" : sevDuplicidad(d);
   const substancias = (d.substances || []).map(mostrar).join(", ");
+  // `class_desc` es el grupo terapéutico de la AEMPS, en castellano: no se
+  // traduce, va con `lang="es"` y, si la interfaz está en inglés, el aviso.
+  const claseTexto = d.class_desc
+    ? `<span lang="es">${escapeHtml(d.class_desc)}</span>` : escapeHtml(d.class_id);
   const titulo = d.layer === "substance"
-    ? "Misma sustancia en dos productos"
-    : `Duplicidad de clase: ${escapeHtml(d.class_desc || d.class_id)}`;
+    ? t("dup_titulo_sustancia")
+    : `${t("dup_titulo_clase")} ${claseTexto}`;
   const detalle = d.layer === "substance"
-    ? `${escapeHtml(substancias)} aparece en ${escapeHtml(String(d.count))} productos distintos.`
-    : `${escapeHtml(String(d.count))} productos de la misma clase (${escapeHtml(substancias)})${
-       d.cupo == null ? "" : `; el máximo sin alerta es ${escapeHtml(String(d.cupo))}`}.`;
+    ? t("dup_detalle_sustancia", { sust: escapeHtml(substancias), n: escapeHtml(String(d.count)) })
+    : t("dup_detalle_clase", {
+        n: escapeHtml(String(d.count)), sust: escapeHtml(substancias),
+        cupo: d.cupo == null ? "." : `${t("dup_cupo", { cupo: escapeHtml(String(d.cupo)) })}.`,
+      });
   // Cuando la misma combinación cae en más de una clase, el médico tiene que
   // saber que no es sólo esta: si sólo mostramos una, parece más acotado de
   // lo que es.
   const otras = d.layer === "class" && (d.other_classes || []).length
-    ? `<br>También en: ${d.other_classes
-        .map((c) => escapeHtml(c.class_desc || c.class_id)).join(", ")}`
+    ? `<br>${t("dup_tambien_en")} ${d.other_classes
+        .map((c) => `<span lang="es">${escapeHtml(c.class_desc || c.class_id)}</span>`).join(", ")}`
     : "";
   return `
     <article class="finding ${sev}">
       <div class="finding-head">
         <span class="pair">${titulo}</span>
-        <span class="badge ${sev}">${suprimida ? "No alertada" : "Duplicidad"}</span>
+        <span class="badge ${sev}">${suprimida ? t("dup_badge_no_alertada") : t("dup_badge_duplicidad")}</span>
       </div>
       <p class="evidence">${detalle}</p>
-      ${suprimida ? `<p class="manejo"><strong>Por qué no se alertó:</strong>
-          ${escapeHtml(d.motivo || "")}${d.referencia ? ` (${escapeHtml(d.referencia)})` : ""}
-          ${d.validado ? "" : " — excepción pendiente de validación farmacéutica."}</p>` : ""}
-      <p class="meta">${d.layer === "substance" ? "Regla propia de Consilio"
-        : `${FUENTE.aemps} — grupo ${escapeHtml(d.class_id)}`}${otras}</p>
+      ${d.class_desc && LANG === "en" ? notaFuenteIdioma("es") : ""}
+      ${suprimida ? `<p class="manejo"><strong>${t("dup_motivo_label")}</strong>
+          <span lang="es">${escapeHtml(d.motivo || "")}</span>${d.referencia ? ` (${escapeHtml(d.referencia)})` : ""}
+          ${d.validado ? "" : ` ${t("dup_pendiente_validacion")}`}</p>` : ""}
+      <p class="meta">${d.layer === "substance" ? FUENTE.consilio
+        : `${FUENTE.aemps} — ${t("dup_grupo")} ${escapeHtml(d.class_id)}`}${otras}</p>
     </article>`;
 }
 
@@ -934,9 +977,9 @@ function cardPaciente(c, sev) {
     <article class="finding ${sev}">
       <div class="finding-head">
         <span class="pair">${escapeHtml(mostrar(c.drug))}</span>
-        <span class="badge ${sev}">${sev === "major" ? "Contraindicado" : "Precaución"}</span>
+        <span class="badge ${sev}">${sev === "major" ? t("badge_contraindicado") : t("badge_precaucion")}</span>
       </div>
-      <p class="evidence">${escapeHtml(condEs(c.condition))}</p>
+      <p class="evidence">${escapeHtml(condLabel(c.condition))}</p>
       <p class="meta">${FUENTE[c.source] || c.source}</p>
     </article>`;
 }
@@ -954,14 +997,13 @@ function cardGeriatrica(g) {
       <div class="finding-head">
         <span class="pair">${escapeHtml(mostrar(g.drug))}</span>
         <span class="badge ${cond ? "moderate" : "major"}">${
-          cond ? "Verificar — mayor de 65" : "Evitar — mayor de 65"}</span>
+          cond ? t("badge_verificar_65") : t("badge_evitar_65")}</span>
       </div>
       ${g.situacion
-        ? `<p class="evidence">${cond ? "Aplica si: " : ""}${escapeHtml(g.situacion)}</p>`
+        ? `<p class="evidence">${cond ? `${t("geriatrica_aplica_si")} ` : ""}${escapeHtml(g.situacion)}</p>`
         : ""}
-      <p class="manejo"><strong>Qué hacer:</strong> ${escapeHtml(g.recomendacion)}</p>
-      <p class="meta">${FUENTE[g.source] || g.source} — criterios de prescripción
-        en el anciano</p>
+      <p class="manejo"><strong>${t("manejo_label")}</strong> ${escapeHtml(g.recomendacion)}</p>
+      <p class="meta">${FUENTE[g.source] || g.source} ${t("geriatrica_meta")}</p>
     </article>`;
 }
 
@@ -970,11 +1012,11 @@ function cardAlergia(a) {
     <article class="finding major">
       <div class="finding-head">
         <span class="pair">${escapeHtml(mostrar(a.drug))}</span>
-        <span class="badge major">Alergia declarada</span>
+        <span class="badge major">${t("badge_alergia")}</span>
       </div>
-      <p class="evidence">El paciente declaró alergia a
-        <strong>${escapeHtml(a.declared_as)}</strong>, que es este mismo fármaco.</p>
-      <p class="meta">Perfil del paciente</p>
+      <p class="evidence">${t("alergia_evidencia_pre")}
+        <strong>${escapeHtml(a.declared_as)}</strong>, ${t("alergia_evidencia_post")}</p>
+      <p class="meta">${t("alergia_meta")}</p>
     </article>`;
 }
 
@@ -985,51 +1027,59 @@ $("btn-imprimir").addEventListener("click", () => window.print());
 $("btn-copiar").addEventListener("click", async () => {
   const { inter, contra } = ultimo;
   const L = [];
-  L.push("CONSILIO — consulta de seguridad en la prescripción");
-  L.push(new Date().toLocaleString("es-UY"));
+  L.push(t("copia_titulo"));
+  L.push(new Date().toLocaleString(t("locale")));
   L.push("");
-  L.push(`Medicamentos: ${selected.map((s) => s.name_es || s.name).join(", ") || "—"}`);
+  L.push(t("copia_medicamentos", {
+    lista: selected.map(nombreFarmaco).join(", ") || t("copia_sin_meds"),
+  }));
   const p = perfil();
   const datos = [
-    p.sexo && `sexo ${p.sexo}`, p.edad !== null && `${p.edad} años`,
-    p.embarazo && (p.semanas_gestacion ? `embarazo semana ${p.semanas_gestacion}` : "embarazo"),
-    p.lactancia && "lactancia",
-    p.funcion_renal && `función renal ${p.funcion_renal}`,
-    p.funcion_hepatica && `función hepática ${p.funcion_hepatica}`,
-    p.alergias.length && `alergias: ${p.alergias.join(", ")}`,
-    patologias.length && `patologías: ${patologias.map((x) => `${x.code} ${x.name}`).join("; ")}`,
+    p.sexo && t("copia_sexo", { sexo: p.sexo }),
+    p.edad !== null && t("copia_anios", { edad: p.edad }),
+    p.embarazo && (p.semanas_gestacion
+      ? t("copia_embarazo_semana", { n: p.semanas_gestacion }) : t("copia_embarazo")),
+    p.lactancia && t("copia_lactancia"),
+    p.funcion_renal && t("copia_renal", { v: p.funcion_renal }),
+    p.funcion_hepatica && t("copia_hepatica", { v: p.funcion_hepatica }),
+    p.alergias.length && t("copia_alergias", { lista: p.alergias.join(", ") }),
+    patologias.length && t("copia_patologias", {
+      lista: patologias.map((x) => `${x.code} ${condLabel(x.name)}`).join("; "),
+    }),
   ].filter(Boolean);
-  L.push(`Paciente: ${datos.join(" · ") || "sin datos"}`);
+  L.push(t("copia_paciente", { datos: datos.join(" · ") || t("copia_sin_datos") }));
   L.push("");
 
   (inter?.interactions || []).forEach((i) => {
     L.push(`[${(SEV[i.severity] || SEV.unknown).label.toUpperCase()}] ${mostrar(i.drug_a)} + ${mostrar(i.drug_b)}`);
     if (i.description) L.push(`  ${i.description}`);
-    if (i.management) L.push(`  Qué hacer: ${i.management}`);
-    L.push(`  Fuente: ${FUENTE[i.source] || i.source}`);
+    if (i.management) L.push(`  ${t("copia_qhacer", { texto: i.management })}`);
+    L.push(`  ${t("copia_fuente", { fuente: FUENTE[i.source] || i.source })}`);
   });
   (inter?.duplicities || []).forEach((d) => {
-    L.push(`[DUPLICIDAD] ${d.layer === "substance" ? "misma sustancia" : d.class_desc}: ` +
-           (d.substances || []).map(mostrar).join(", "));
+    L.push(t("copia_dup", {
+      que: d.layer === "substance" ? t("copia_dup_sustancia") : d.class_desc,
+      sust: (d.substances || []).map(mostrar).join(", "),
+    }));
   });
   (contra?.contraindications || []).forEach((c) =>
-    L.push(`[CONTRAINDICADO] ${mostrar(c.drug)} — ${condEs(c.condition)}`));
+    L.push(t("copia_contraindicado", { drug: mostrar(c.drug), cond: condLabel(c.condition) })));
   (contra?.precautions || []).forEach((c) =>
-    L.push(`[PRECAUCIÓN] ${mostrar(c.drug)} — ${condEs(c.condition)}`));
+    L.push(t("copia_precaucion", { drug: mostrar(c.drug), cond: condLabel(c.condition) })));
   (contra?.geriatric || []).forEach((g) => {
-    L.push(`[${g.condicionada ? "VERIFICAR" : "EVITAR"} >65] ${mostrar(g.drug)}` +
+    L.push(`[${g.condicionada ? t("copia_verificar") : t("copia_evitar")} >65] ${mostrar(g.drug)}` +
            (g.situacion ? ` — ${g.situacion}` : ""));
-    L.push(`  Qué hacer: ${g.recomendacion}`);
+    L.push(`  ${t("copia_qhacer", { texto: g.recomendacion })}`);
   });
   L.push("");
-  L.push("Información generada automáticamente a partir de fuentes públicas.");
-  L.push("No sustituye el criterio clínico.");
+  L.push(t("disclaimer_1"));
+  L.push(t("disclaimer_2"));
 
   try {
     await navigator.clipboard.writeText(L.join("\n"));
-    toast("Resumen copiado al portapapeles.");
+    toast(t("toast_copiado"));
   } catch {
-    toast("El navegador no permitió copiar. Usá Imprimir.");
+    toast(t("toast_no_copiado"));
   }
 });
 
@@ -1037,14 +1087,14 @@ $("btn-copiar").addEventListener("click", async () => {
 
 function handleHttpError(r) {
   if (r.status === 503) {
-    toast("El servicio está mal configurado: falta la API key del servidor.", 8000);
+    toast(t("toast_falta_key"), 8000);
   } else if (r.status === 401) {
-    const k = prompt("Este servicio requiere API key:");
-    if (k) { localStorage.setItem("consilio_api_key", k); toast("Guardada. Probá de nuevo."); }
+    const k = prompt(t("prompt_api_key"));
+    if (k) { localStorage.setItem("consilio_api_key", k); toast(t("toast_key_guardada")); }
   } else if (r.status === 429) {
-    toast("Demasiadas consultas seguidas. Esperá unos segundos.");
+    toast(t("toast_rate_limit"));
   } else {
-    toast(`Error del servicio (${r.status}).`);
+    toast(t("toast_error_http", { status: r.status }));
   }
   return null;
 }
@@ -1052,5 +1102,20 @@ function handleHttpError(r) {
 const escapeHtml = (s) => String(s ?? "").replace(/[&<>"']/g,
   (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const escapeAttr = escapeHtml;
+
+/* ---------------- idioma ----------------
+   `setLang()` (en i18n.js) ya tradujo el HTML estático y actualizó `LANG`
+   antes de llamar acá. Lo que falta es todo lo que esta app arma en JS:
+   píldoras de fármaco/patología (dependen de `LANG` en `mostrar`/`condLabel`)
+   y, si ya hay una consulta hecha, los filtros y las tarjetas de resultado. */
+function onLangChange() {
+  actualizarTextoSemanas();
+  meds.render(); alerg.render(); patol.render();
+  syncButtons();
+  if (ultimo.inter || ultimo.contra) {
+    construirFiltros(ultimo.inter, ultimo.contra);
+    render();
+  }
+}
 
 syncButtons();
