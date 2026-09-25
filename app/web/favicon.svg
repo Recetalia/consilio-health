@@ -1,11 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <!-- Colores de Medicina Inteligente (sitio madre): anillos en azul profundo #14549f y
+       lente en el rosa de acento #b0697f, la misma pareja que usa su logo. En las versiones
+       sobre navy la lente va en rosa claro #e3b9c4 para que se lea. -->
   <!-- Versión para 16px: fondo macizo y trazo más grueso, porque a ese tamaño
        dos anillos finos sobre blanco se leen como una mancha. -->
   <rect width="48" height="48" rx="10" fill="#14213a"/>
   <defs>
     <clipPath id="f"><circle cx="19" cy="24" r="11"/></clipPath>
   </defs>
-  <circle cx="29" cy="24" r="11" fill="#1f6fd0" clip-path="url(#f)"/>
+  <circle cx="29" cy="24" r="11" fill="#e3b9c4" clip-path="url(#f)"/>
   <g fill="none" stroke="#ffffff" stroke-width="3">
     <circle cx="19" cy="24" r="11"/>
     <circle cx="29" cy="24" r="11"/>

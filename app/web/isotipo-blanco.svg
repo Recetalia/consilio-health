@@ -1,10 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Consilio">
-  <!-- Versión para fondo navy: trazos blancos y lente en el azul de acción de
-       la marca, que sobre el navy de la cabecera sigue leyéndose. -->
+  <!-- Colores de Medicina Inteligente (sitio madre): anillos en azul profundo #14549f y
+       lente en el rosa de acento #b0697f, la misma pareja que usa su logo. En las versiones
+       sobre navy la lente va en rosa claro #e3b9c4 para que se lea. -->
+  <!-- Versión para fondo navy: trazos blancos y lente en rosa claro, que
+       sobre el navy de la cabecera sigue leyéndose. -->
   <defs>
     <clipPath id="lente-b"><circle cx="18.5" cy="24" r="12"/></clipPath>
   </defs>
-  <circle cx="29.5" cy="24" r="12" fill="#1f6fd0" clip-path="url(#lente-b)"/>
+  <circle cx="29.5" cy="24" r="12" fill="#e3b9c4" clip-path="url(#lente-b)"/>
   <g fill="none" stroke="#ffffff" stroke-width="2.8">
     <circle cx="18.5" cy="24" r="12"/>
     <circle cx="29.5" cy="24" r="12"/>

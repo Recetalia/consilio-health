@@ -1,12 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 48" role="img"
      aria-label="Consilio — Seguridad en la prescripción">
+  <!-- Colores de Medicina Inteligente (sitio madre): anillos en azul profundo #14549f y
+       lente en el rosa de acento #b0697f, la misma pareja que usa su logo. En las versiones
+       sobre navy la lente va en rosa claro #e3b9c4 para que se lea. -->
   <defs>
     <clipPath id="lente-l"><circle cx="18.5" cy="24" r="12"/></clipPath>
   </defs>
 
   <!-- isotipo -->
-  <circle cx="29.5" cy="24" r="12" fill="#1f6fd0" clip-path="url(#lente-l)"/>
-  <g fill="none" stroke="#14213a" stroke-width="2.6">
+  <circle cx="29.5" cy="24" r="12" fill="#b0697f" clip-path="url(#lente-l)"/>
+  <g fill="none" stroke="#14549f" stroke-width="2.6">
     <circle cx="18.5" cy="24" r="12"/>
     <circle cx="29.5" cy="24" r="12"/>
   </g>
