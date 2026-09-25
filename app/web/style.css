@@ -499,7 +499,7 @@ details.suprimidas {
 details.suprimidas summary {
   cursor: pointer; padding: 10px 0; font-size: 14px; color: var(--text-soft);
 }
-details.suprimidas[open] summary { border-bottom: 1px solid #e6edf0; margin-bottom: 8px; }
+details.suprimidas[open] summary { border-bottom: 1px solid var(--border-soft); margin-bottom: 8px; }
 details.suprimidas .finding:last-child { margin-bottom: 10px; }
 
 /* ---------------- pie ---------------- */
