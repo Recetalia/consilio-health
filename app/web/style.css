@@ -385,6 +385,12 @@ input::placeholder { color: #b6c0cc; }
 .topbar .btn-ghost {
   background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.4); color: var(--text-on-navy);
 }
+/* "Transparencia" se distingue del resto: rosa de Medicina Inteligente. El #b0697f
+   exacto con texto blanco da 4,06:1 (no pasa AA a 13px); #a15c72 es el mismo rosa
+   un punto más profundo y da 4,9:1. */
+.topbar .btn-rosa { background: #a15c72; border-color: #a15c72; color: #fff; font-weight: 600; }
+.topbar .btn-rosa:hover { background: #94526a; border-color: #94526a; }
+.topbar .btn-rosa[aria-expanded="true"] { background: #94526a; border-color: #e3b9c4; color: #fff; }
 .topbar .btn-ghost:hover { background: rgba(255,255,255,.26); }
 .topbar .btn-ghost[aria-expanded="true"] {
   background: #fff; border-color: #fff; color: var(--azul-profundo);
