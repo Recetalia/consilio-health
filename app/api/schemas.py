@@ -145,6 +145,11 @@ class ContraindicationsRequest(BaseModel):
 
 
 class ContraindicationsResponse(BaseModel):
+    """Cada hallazgo trae `drug` (canónico, en inglés) y `drug_input`: el nombre
+    tal como llegó en `drugs`, para que el llamador lo vuelva a su producto.
+    `drug_input` es null en lo que no es de un fármaco (alergia o CIE-10 sin
+    resolver). Si dos nombres de entrada son el mismo fármaco, el hallazgo sale
+    una vez por cada uno."""
     contraindications: list[dict] = Field(default_factory=list)
     precautions: list[dict] = Field(default_factory=list)
     allergies: list[dict] = Field(default_factory=list)

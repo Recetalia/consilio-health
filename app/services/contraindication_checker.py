@@ -61,19 +61,31 @@ async def check(drug_names: list[str], profile: PatientProfile) -> dict[str, Any
         did = await db.drug_id_by_name(name)
         if did is None:
             out["not_evaluated"].append(
-                {"drug": name, "reason": "el fármaco no está en la base"})
+                {"drug": name, "drug_input": name,
+                 "reason": "el fármaco no está en la base"})
         else:
             drug_ids[name] = did
 
     if not drug_ids:
         return out
 
+    # `drug` sale como el canónico en inglés; `drug_input` es el nombre tal
+    # como llegó, para que el llamador vuelva a SU producto sin adivinar la
+    # traducción. Dos nombres de entrada pueden ser el mismo fármaco
+    # ("aspirina" y "aspirin"): el hallazgo sale una vez por cada uno.
+    names_by_id: dict[int, list[str]] = {}
+    for name, did in drug_ids.items():
+        names_by_id.setdefault(did, []).append(name)
+
     # --- 1) alergias declaradas, sin pasar por MeSH ---
     out["allergies"] = await _match_allergies(drug_ids, profile)
 
     # --- 2) alertas geriátricas, que dependen de la edad y no de MeSH ---
     if profile.edad is not None and profile.edad >= EDAD_ANCIANO:
-        out["geriatric"] = await db.population_alerts_for(list(drug_ids.values()))
+        for row in await db.population_alerts_for(list(drug_ids.values())):
+            did = row.pop("drug_id", None)
+            for name in names_by_id.get(did, [None]):
+                out["geriatric"].append({**row, "drug_input": name})
 
     # --- 3) estados y patologías ---
     codes = profile.mesh_codes()
@@ -95,24 +107,25 @@ async def check(drug_names: list[str], profile: PatientProfile) -> dict[str, Any
             # No se omite en silencio: el médico tiene que saber que ese
             # diagnóstico no se pudo tener en cuenta.
             out["not_evaluated"].append(
-                {"drug": None, "icd10": c,
+                {"drug": None, "drug_input": None, "icd10": c,
                  "reason": "sin equivalencia conocida para ese código CIE-10"})
         condition_ids = list(dict.fromkeys(condition_ids))
     if not condition_ids:
         return out
 
-    by_id = {v: k for k, v in drug_ids.items()}
     for row in await db.alerts_for(list(drug_ids.values()), condition_ids):
-        entry = {
-            "drug": row.get("drug"),
-            "condition": row.get("condition"),
-            "condition_code": row.get("code"),
-            "code_system": row.get("code_system"),
-            "relation": row.get("rela"),
-            "source": row.get("source"),
-        }
         bucket = "contraindications" if row.get("kind") == "contraindication" else "precautions"
-        out[bucket].append(entry)
+        for name in names_by_id.get(row.get("drug_id"), [None]):
+            out[bucket].append({
+                "drug": row.get("drug"),
+                "drug_input": name,
+                "condition": row.get("condition"),
+                "condition_code": row.get("code"),
+                "code_system": row.get("code_system"),
+                "relation": row.get("rela"),
+                "detail": row.get("detail"),
+                "source": row.get("source"),
+            })
 
     logger.debug("Alertas fármaco-paciente: %d contraindicaciones, %d precauciones, "
                  "%d alergias sobre %d fármacos",
@@ -148,6 +161,7 @@ async def _match_allergies(
         if did in allergic_to:
             out.append({
                 "drug": name,
+                "drug_input": name,
                 "declared_as": allergic_to[did],
                 "match": "exact",
                 "severity": "contraindication",
@@ -158,6 +172,7 @@ async def _match_allergies(
     for u in unknown:
         out.append({
             "drug": None,
+            "drug_input": None,
             "declared_as": u,
             "match": "unresolved",
             "severity": "unknown",

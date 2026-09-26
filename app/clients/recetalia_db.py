@@ -576,7 +576,7 @@ class RecetaliaDatabase:
         conn = await self._c()
         ph = ",".join("?" * len(drug_ids))
         async with conn.execute(
-            f"""select d.canonical as drug, p.situacion, p.recomendacion,
+            f"""select d.canonical as drug, p.drug_id, p.situacion, p.recomendacion,
                        p.condicionada, p.source, p.note
                 from drug_population_alert p
                 join drug d on d.drug_id = p.drug_id
@@ -623,7 +623,7 @@ class RecetaliaDatabase:
         dph = ",".join("?" * len(drug_ids))
         cph = ",".join("?" * len(condition_ids))
         async with conn.execute(
-            f"""select d.canonical as drug, c.code_system, c.code, c.name as condition,
+            f"""select d.canonical as drug, al.drug_id, c.code_system, c.code, c.name as condition,
                        al.kind, al.rela, al.detail, al.source
                 from drug_condition_alert al
                 join drug d on d.drug_id = al.drug_id
