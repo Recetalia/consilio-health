@@ -214,8 +214,8 @@ img, svg { display: block; }
 .capa-n { font: 700 12.5px/1.2 Manrope, sans-serif; letter-spacing: .1em; text-transform: uppercase;
   color: var(--azul-profundo); margin-bottom: 8px; }
 .capas .card { display: flex; flex-direction: column; }
-.ejemplo { margin-top: auto !important; padding-top: 14px; display: flex; flex-wrap: wrap; gap: 8px;
-  align-items: center; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--text-strong);
+.ejemplo { margin-top: auto !important; padding-top: 14px; display: flex; flex-direction: column; gap: 8px;
+  align-items: flex-start; font-size: 14px; font-weight: 700; color: var(--text-strong);
   border-top: 1px solid var(--border-soft); }
 .nota-guia { margin-top: 20px; display: grid; gap: 18px; background: var(--card); border-radius: var(--radius-lg);
   border: 1px solid var(--border); padding: 20px 22px; }

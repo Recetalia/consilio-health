@@ -81,3 +81,9 @@ def test_tokens_de_la_landing_iguales_a_los_de_la_app():
     assert landing_vars
     distintos = {k: (v, app_vars.get(k)) for k, v in landing_vars.items() if app_vars.get(k) != v}
     assert not distintos, f"tokens desincronizados (landing, app): {distintos}"
+
+
+def test_contacto_va_a_medicina_inteligente():
+    html = (ROOT / "app/landing/index.html").read_text()
+    mailtos = re.findall(r'href="mailto:([^"?]+)', html)
+    assert mailtos and set(mailtos) == {"hello@medicinainteligente.ai"}, mailtos
