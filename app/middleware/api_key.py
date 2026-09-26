@@ -31,10 +31,11 @@ logger = logging.getLogger(__name__)
 # pública "Los datos": sólo conteos agregados y fechas de actualización, nada
 # que responda a una consulta clínica.
 PUBLIC_PATHS = {"/health", "/health/data", "/data/summary",
-                "/openapi.json", "/docs", "/redoc", "/"}
-# Los estáticos de la interfaz no llevan key: son HTML, CSS y JS, no datos. La
-# key la exigen igual los endpoints que la interfaz consume.
-PUBLIC_PREFIXES = ("/ui/",)
+                "/openapi.json", "/docs", "/redoc", "/", "/landing"}
+# Los estáticos de la interfaz y de la landing no llevan key: son HTML, CSS y
+# JS, no datos. La key la exigen igual los endpoints que la interfaz consume.
+# `/landing` sin barra también es público: Starlette lo redirige a `/landing/`.
+PUBLIC_PREFIXES = ("/ui/", "/landing/")
 
 _warned = False
 
