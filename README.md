@@ -26,12 +26,13 @@ asociada en el propio DNMA** y son inevaluables por construcción.
 
 Tres mecanismos de detección, y cada uno encuentra lo que los otros no:
 
-1. **Base curada** — DDInter 2.0, 160.235 pares con severidad estructurada.
-2. **Prospectos de la FDA** — 3.629 pares que la base curada no tiene, con la
-   frase textual del prospecto como evidencia. Salen de 1.248 prospectos
-   incorporados.
-3. **Expansión por clase** — 804 pares que **ningún sistema por nombre puede
-   encontrar**. Un prospecto que advierte sobre "inhibidores de la MAO" nunca
+1. **Base curada** — DDInter 2.0, 234.981 pares con severidad estructurada
+   (las 14 categorías ATC; hasta 2026-09-25 se cargaban 8 y eran 160.235).
+2. **Prospectos de la FDA** — 3.629 pares, 1.388 de ellos que la base curada no
+   tiene, con la frase textual del prospecto como evidencia. Salen de 1.248
+   prospectos incorporados.
+3. **Expansión por clase** — 804 pares, 436 que la base curada no tiene y que
+   **ningún sistema por nombre puede encontrar**. Un prospecto que advierte sobre "inhibidores de la MAO" nunca
    nombra a la fenelzina; Consilio entiende la clase y la expande.
 
 Ese tercero encontró *fenelzina + fluoxetina* (síndrome serotoninérgico) y
