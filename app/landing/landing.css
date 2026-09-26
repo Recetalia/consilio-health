@@ -245,6 +245,13 @@ tbody th { color: var(--text-strong); font-weight: 700; }
   .comparativa td:last-child { background: none; }
   .comparativa td:last-child::before { content: "Consilio: "; font-weight: 700; color: var(--azul-profundo); }
 }
+@media (max-width: 699px) {
+  .fuentes thead { display: none; }
+  .fuentes tr { display: block; padding: 10px 0; border-top: 1px solid var(--border-soft); }
+  .fuentes th, .fuentes td { display: block; border: 0; padding: 2px 16px; }
+  .fuentes td:last-child { font-size: 14px; }
+  .fuentes td:last-child::before { content: "Actualizada: "; font-weight: 500; color: var(--text-soft); }
+}
 .destacados { margin-top: 20px; }
 
 /* datos */
