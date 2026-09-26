@@ -85,6 +85,12 @@ app.include_router(data_router)
 _WEB = Path(__file__).parent / "web"
 app.mount("/ui", StaticFiles(directory=_WEB), name="ui")
 
+# Landing pública de marketing. En consilio.medicinainteligente.ai el nginx
+# sirve esto en `/` (ver deploy/46-consilio.conf); la app completa vive en
+# app.consilio.medicinainteligente.ai (deploy/47-consilio-app.conf).
+_LANDING = Path(__file__).parent / "landing"
+app.mount("/landing", StaticFiles(directory=_LANDING, html=True), name="landing")
+
 
 @app.get("/", include_in_schema=False)
 async def index():

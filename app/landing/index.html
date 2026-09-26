@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Consilio — Seguridad en la prescripción | Medicina Inteligente</title>
+<meta name="description" content="Consilio revisa cada receta en el momento en que se escribe: interacciones entre medicamentos, duplicidad terapéutica y contraindicaciones por patología, con la gravedad más alta que encuentra y diciendo de dónde salió cada aviso.">
+<!-- La landing es material de marketing y se indexa. La app y la API no:
+     la base de interacciones es CC BY-NC-SA (ver deploy/46-consilio.conf). -->
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://consilio.medicinainteligente.ai/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Consilio — La segunda opinión que siempre está">
+<meta property="og:description" content="Interacciones, duplicidades y alertas contra el paciente en el momento de prescribir, con la fuente de cada aviso a la vista.">
+<meta property="og:url" content="https://consilio.medicinainteligente.ai/">
+<meta property="og:locale" content="es_UY">
+<meta name="theme-color" content="#14213a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<!-- Rutas absolutas: esta página se sirve en `/` (nginx la proxea desde
+     /landing/) y en /landing/. Con rutas relativas, desde `/` los recursos
+     resolverían a la raíz y no existirían.
+     ?v= en todo: Cloudflare cachea .js/.css/.svg 4 h y el HTML no. Subir la
+     versión en cada deploy que cambie la landing. -->
+<link rel="stylesheet" href="/landing/landing.css?v=2026-09-26c">
+<link rel="icon" type="image/svg+xml" href="/ui/favicon.svg?v=2026-09-26c">
+<script src="/landing/landing.js?v=2026-09-26c" defer></script>
+</head>
+<body>
+
+<a class="skip" href="#contenido">Saltar al contenido</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#inicio" aria-label="Consilio, inicio">
+      <img src="/ui/isotipo-blanco.svg?v=2026-09-26c" alt="" width="34" height="34">
+      <span>Consilio</span>
+    </a>
+    <nav class="nav" aria-label="Secciones">
+      <a href="#que-hace">Qué hace</a>
+      <a href="#duplicidad">Duplicidad</a>
+      <a href="#diferencias">Diferencias</a>
+      <a href="#datos">Los datos</a>
+      <a href="#integracion">Integración</a>
+    </nav>
+    <a class="btn btn-sm btn-claro" href="https://app.consilio.medicinainteligente.ai/">Abrir Consilio</a>
+  </div>
+</header>
+
+<main id="contenido">
+
+<!-- ============================================================ HERO -->
+<section class="hero" id="inicio">
+  <div class="wrap hero-in">
+    <div class="hero-txt">
+      <span class="mi-logo mi-logo--claro" aria-label="Medicina Inteligente"><b>Medicina</b><i>Inteligente</i></span>
+      <p class="eyebrow eyebrow--claro">Seguridad en la prescripción</p>
+      <h1>La segunda opinión que siempre está.</h1>
+      <p class="lead">Consilio cruza los medicamentos de la receta —y el perfil del paciente— contra
+        fuentes oficiales <strong>en el momento en que se indican</strong>: interacciones, duplicidades
+        y contraindicaciones, con la gravedad más alta que encuentra y diciendo de dónde salió cada aviso.</p>
+      <div class="ctas">
+        <a class="btn btn-primario" href="https://app.consilio.medicinainteligente.ai/">Abrir Consilio
+          <svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18"><path d="M5 10h10m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn btn-contorno" href="mailto:hello@medicinainteligente.ai?subject=Consilio%20%E2%80%94%20Solicitar%20demo">Solicitar una demo</a>
+      </div>
+      <p class="hero-nota">Sin instalar nada: la interfaz trae ejemplos listos para probar.</p>
+    </div>
+
+    <!-- Tarjetas de ejemplo: pares verificados que la app devuelve como graves. -->
+    <div class="hero-demo" aria-label="Ejemplo de resultado de Consilio">
+      <div class="demo-card">
+        <div class="demo-head">
+          <span class="par">Warfarina + Ibuprofeno</span>
+          <span class="sev sev-major">Grave</span>
+        </div>
+        <p>Aumento del riesgo de hemorragias, especialmente gastrointestinales.</p>
+        <p class="que-hacer"><strong>Qué hacer:</strong> valorar beneficio/riesgo, añadir gastroprotector y
+          controlar signos de hemorragia.</p>
+        <p class="fuente">Fuente: AEMPS · mecanismo y manejo en castellano</p>
+      </div>
+      <div class="demo-card">
+        <div class="demo-head">
+          <span class="par">Sildenafilo + Nitroglicerina</span>
+          <span class="sev sev-major">Grave</span>
+        </div>
+        <p class="fuente">Fuente: DDInter · gravedad estructurada</p>
+      </div>
+      <div class="demo-card demo-card--dup">
+        <div class="demo-head">
+          <span class="par">Paracetamol + Paracetamol/codeína</span>
+          <span class="sev sev-dup">Duplicidad</span>
+        </div>
+        <p class="fuente">Misma sustancia en dos productos</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <dl class="cifras-hero">
+      <div><dt>pares de fármacos con interacción registrada</dt>
+        <dd data-k="interactions.distinct_pairs">237.160</dd></div>
+      <div><dt>alertas fármaco-patología</dt>
+        <dd data-k="condition_alerts.total">6.522</dd></div>
+      <div><dt>fármacos, <span data-pct="drugs.spanish_name_pct">67,6 %</span> con nombre en castellano</dt>
+        <dd data-k="drugs.total">1.971</dd></div>
+      <div><dt>clases de duplicidad terapéutica vigiladas</dt>
+        <dd data-k="duplicity.classes">76</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ============================================================ QUÉ HACE -->
+<section class="seccion" id="que-hace" aria-labelledby="t-que-hace">
+  <div class="wrap">
+    <p class="eyebrow">En el momento justo</p>
+    <h2 id="t-que-hace">Avisa cuando el médico todavía puede cambiar de idea.</h2>
+    <p class="intro">No al guardar, no en un reporte al día siguiente: en el instante en que se agrega un
+      medicamento. <strong>Y no bloquea.</strong> Avisa, muestra la evidencia y el médico decide.</p>
+
+    <div class="grid grid-2">
+      <article class="card">
+        <div class="card-ico" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="3"><circle cx="18.5" cy="24" r="12"/><circle cx="29.5" cy="24" r="12"/></g></svg>
+        </div>
+        <h3>Interacciones entre medicamentos</h3>
+        <p>Revisa todas las combinaciones de la receta. Cada hallazgo trae su gravedad, la fuente que lo
+          respalda y, cuando la fuente lo tiene, el mecanismo y qué hacer.</p>
+        <p class="mini">Tramadol + Fluoxetina · Amiodarona + Digoxina · Sildenafilo + Nitroglicerina: <strong>graves</strong>.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7.5" r="3.5"/><path d="M5 20c.8-3.8 3.6-6 7-6s6.2 2.2 7 6"/></g></svg>
+        </div>
+        <h3>Contraindicaciones contra el paciente</h3>
+        <p>Con lo que se sabe de la persona que tiene delante, indica qué medicamento no le conviene:</p>
+        <ul class="chips" aria-label="Datos del paciente que se evalúan">
+          <li>Embarazo, por semana</li><li>Lactancia</li><li>Función renal</li><li>Función hepática</li>
+          <li>Alergias</li><li>Patologías por CIE-10</li><li>Edad avanzada</li>
+        </ul>
+        <p class="mini"><span data-k="condition_alerts.contraindications">5.112</span> contraindicaciones y
+          <span data-k="condition_alerts.precautions">1.410</span> precauciones.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h10M4 19h6"/><path d="M15 16l2.5 2.5L22 14"/></g></svg>
+        </div>
+        <h3>El diagnóstico como está escrito</h3>
+        <p>Se carga el código CIE-10 de la historia clínica, con su subcódigo, o el nombre en castellano.
+          Consilio entiende la jerarquía: <strong>N18.5</strong> (enfermedad renal crónica, estadio 5) recibe
+          las advertencias de la insuficiencia renal aunque la base las tenga en el código padre.</p>
+        <p class="mini"><span data-k="conditions.icd10">552</span> códigos CIE-10 consultables.</p>
+      </article>
+
+      <article class="card">
+        <div class="card-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></g></svg>
+        </div>
+        <h3>Geriatría: “verificar si…”</h3>
+        <p><span data-k="geriatric_criteria">166</span> criterios de prescripción en el adulto mayor, de la AEMPS.
+          Cuando dependen de un dato que la receta no trae —una comorbilidad, un valor de laboratorio— se
+          muestran como <em>“verificar si…”</em>, no como un hecho.</p>
+        <p class="mini">Un sistema que avisa de todo enseña a ignorarlo.</p>
+      </article>
+    </div>
+
+    <div class="aviso-honesto">
+      <span class="sev sev-unknown">No evaluable</span>
+      <p><strong>Dice lo que no pudo evaluar.</strong> Un medicamento sin información aparece como
+        <em>no evaluable</em>, nunca como seguro. Y si una consulta falla, el resultado se marca como
+        incompleto: tranquilizar sin haber evaluado nada es la peor forma de fallar de una herramienta clínica.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ DUPLICIDAD -->
+<section class="seccion seccion--alt" id="duplicidad" aria-labelledby="t-dup">
+  <div class="wrap">
+    <p class="eyebrow">Duplicidad terapéutica</p>
+    <h2 id="t-dup">Detecta el mismo tratamiento recetado dos veces.</h2>
+    <p class="intro">Paracetamol solo y un antigripal que también lo trae. Dos benzodiacepinas de marcas
+      distintas. Consilio busca la duplicidad en <strong>tres capas</strong>, y cada una declara por qué
+      alertó, o por qué no.</p>
+
+    <ol class="grid grid-3 capas">
+      <li class="card">
+        <p class="capa-n">Capa 1</p>
+        <h3>Misma sustancia</h3>
+        <p>El mismo principio activo en dos productos, aunque uno sea un combinado.</p>
+        <p class="ejemplo"><span>Paracetamol + paracetamol/codeína</span> <span class="sev sev-dup">Alerta</span></p>
+      </li>
+      <li class="card">
+        <p class="capa-n">Capa 2</p>
+        <h3>Misma clase</h3>
+        <p>Clases terapéuticas de la AEMPS con cupo, por ATC de 4.º nivel. Los combinados se descartan a propósito.</p>
+        <p class="ejemplo"><span>Diazepam + lorazepam · N05BA</span> <span class="sev sev-dup">Alerta</span></p>
+      </li>
+      <li class="card">
+        <p class="capa-n">Capa 3</p>
+        <h3>Excepciones curadas</h3>
+        <p>Las asociaciones que son tratamiento correcto se muestran como <em>no alertadas</em>, con su motivo.</p>
+        <p class="ejemplo"><span>Hidrocortisona + fludrocortisona</span> <span class="sev sev-ok">No alertada · Addison</span></p>
+      </li>
+    </ol>
+
+    <div class="nota-guia">
+      <p><strong>No alerta todo lo que “se parece”.</strong> Una regla ingenua por grupo ATC haría saltar la
+        triple terapia antihipertensiva estándar. Consilio no alerta IECA + antagonista del calcio + tiazida,
+        ni ARA II + tiazida: son asociaciones de guía, no duplicidades.</p>
+      <dl class="mini-cifras">
+        <div><dt>clases vigiladas</dt><dd data-k="duplicity.classes">76</dd></div>
+        <div><dt>fármacos asignados a una clase</dt><dd data-k="duplicity.class_memberships">662</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ DIFERENCIAS -->
+<section class="seccion" id="diferencias" aria-labelledby="t-dif">
+  <div class="wrap">
+    <p class="eyebrow">Lo que nos diferencia</p>
+    <h2 id="t-dif">Diferencias que se comprueban en cinco minutos.</h2>
+
+    <div class="tabla-wrap">
+      <table class="comparativa">
+        <caption class="sr-only">Comparación entre el enfoque habitual y Consilio</caption>
+        <thead>
+          <tr><th scope="col">Tema</th><th scope="col">Lo habitual</th><th scope="col">Consilio</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Origen del aviso</th>
+            <td>Todas las alertas se ven iguales.</td>
+            <td><strong>Cada hallazgo declara su fuente</strong> y si la gravedad vino estructurada o se dedujo del texto de un prospecto.</td></tr>
+          <tr><th scope="row">Fuentes en desacuerdo</th>
+            <td>Se elige una fuente y se muestra lo que dice.</td>
+            <td><strong>Se queda con la gravedad más alta</strong> y dice quién la dijo.</td></tr>
+          <tr><th scope="row">Supresiones</th>
+            <td>Lo que no se alerta desaparece.</td>
+            <td><strong>Se muestra como “no alertada”</strong>, con el motivo y la referencia.</td></tr>
+          <tr><th scope="row">Insuficiencia hepática</th>
+            <td>Se registra en el perfil, a veces sin generar alertas.</td>
+            <td><strong>Genera alertas</strong> contra los medicamentos de la receta.</td></tr>
+          <tr><th scope="row">Cobertura</th>
+            <td>No se publica cuántas interacciones hay.</td>
+            <td><strong>Cifras en vivo</strong>, fuente por fuente, con su fecha de actualización.</td></tr>
+          <tr><th scope="row">Modelo</th>
+            <td>Base alquilada por usuario, atada a la renovación.</td>
+            <td><strong>Motor propio.</strong> El criterio que carga el equipo clínico queda incorporado.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid grid-2 destacados">
+      <article class="card card--acento">
+        <p class="capa-n">Cobertura completa DDInter</p>
+        <h3>Las 14 categorías ATC</h3>
+        <p>Cardiovascular, sistema nervioso y antiinfecciosos incluidos: DDInter aporta
+          <strong data-k="interactions.by_source.ddinter">234.981</strong> interacciones.</p>
+      </article>
+      <article class="card card--acento">
+        <p class="capa-n">Castellano de fuente oficial</p>
+        <h3>Habla como escribe el médico</h3>
+        <p><strong data-k="drugs.with_spanish_name">1.333</strong> de <span data-k="drugs.total">1.971</span> fármacos
+          tienen nombre en castellano de la AEMPS y del vademécum uruguayo, sin traducción automática.
+          <em>amlodipino</em> encuentra lo mismo que <em>amlodipine</em>.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ DATOS -->
+<section class="seccion seccion--alt" id="datos" aria-labelledby="t-datos">
+  <div class="wrap">
+    <p class="eyebrow">Transparencia</p>
+    <h2 id="t-datos">Publicamos cuánto cubrimos, y cuándo se actualizó.</h2>
+    <p class="intro">Estas cifras no son de un folleto: se leen del propio sistema cada vez que se abre esta página.
+      <span id="estado-cifras" class="estado-cifras" role="status">Cifras de respaldo al 26/09/2026.</span></p>
+
+    <div class="grid datos-grid">
+      <article class="card datos-principal">
+        <p class="big"><span data-k="interactions.distinct_pairs">237.160</span></p>
+        <p class="big-lbl">pares de fármacos con interacción registrada ·
+          <span data-k="interactions.total">241.235</span> registros de
+          <span data-count="interactions.by_source">3</span> fuentes</p>
+        <div class="barra" role="img" aria-label="Distribución por gravedad" id="barra-gravedad">
+          <i class="b-major" data-bar="interactions.by_severity.major" data-of="interactions.total" style="width:16.7%"></i><i class="b-moderate" data-bar="interactions.by_severity.moderate" data-of="interactions.total" style="width:60.7%"></i><i class="b-minor" data-bar="interactions.by_severity.minor" data-of="interactions.total" style="width:4%"></i><i class="b-unknown" data-bar="interactions.by_severity.unknown" data-of="interactions.total" style="width:18.6%"></i>
+        </div>
+        <ul class="leyenda">
+          <li class="l-major">Grave <strong data-k="interactions.by_severity.major">40.292</strong></li>
+          <li class="l-moderate">Moderada <strong data-k="interactions.by_severity.moderate">146.404</strong></li>
+          <li class="l-minor">Leve <strong data-k="interactions.by_severity.minor">9.736</strong></li>
+          <li class="l-unknown">Revisar <strong data-k="interactions.by_severity.unknown">44.803</strong></li>
+        </ul>
+        <p class="mini">“Revisar”: la fuente documenta la interacción pero no le asigna gravedad. Se muestra
+          igual, en violeta, para que no pase desapercibida.</p>
+      </article>
+
+      <article class="card">
+        <h3>Por fuente</h3>
+        <ul class="por-fuente">
+          <li><span>DDInter, base clínica estructurada</span><strong data-k="interactions.by_source.ddinter">234.981</strong></li>
+          <li><span>Prospectos oficiales de EE. UU. (openFDA)</span><strong data-k="interactions.by_source.openfda">4.433</strong></li>
+          <li><span>AEMPS, con mecanismo y manejo en castellano</span><strong data-k="interactions.by_source.aemps">1.821</strong></li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>Contra el paciente</h3>
+        <ul class="por-fuente">
+          <li><span>Alertas fármaco-patología</span><strong data-k="condition_alerts.total">6.522</strong></li>
+          <li><span>Criterios en el anciano (≥ 65 años)</span><strong data-k="geriatric_criteria">166</strong></li>
+          <li><span>Sustancias del DNMA (Uruguay) vinculadas</span><strong><span data-k="dnma.mapped">733</span> de <span data-k="dnma.substances">1.390</span></strong></li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="tabla-wrap">
+      <table class="fuentes">
+        <caption>Fuentes oficiales y última actualización</caption>
+        <thead><tr><th scope="col">Fuente</th><th scope="col">Qué aporta</th><th scope="col">Actualizada</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">DDInter</th><td>Interacciones fármaco-fármaco con gravedad estructurada, de una base curada.</td><td data-date="sources.ddinter.updated_at">25/09/2026</td></tr>
+          <tr><th scope="row">AEMPS (España)</th><td>Interacciones con mecanismo y manejo escritos, clases de duplicidad, criterios en el anciano y nombres en castellano.</td><td data-date="sources.aemps.updated_at">25/09/2026</td></tr>
+          <tr><th scope="row">openFDA (EE. UU.)</th><td>Interacciones del texto del prospecto oficial, sólo donde no hay una fuente mejor.</td><td data-date="sources.openfda.updated_at">17/09/2026</td></tr>
+          <tr><th scope="row">MED-RT (NLM)</th><td>Contraindicaciones y precauciones de cada fármaco frente a patologías.</td><td data-date="sources.medrt.updated_at">16/09/2026</td></tr>
+          <tr><th scope="row">RxNorm (NLM)</th><td>El identificador que une a las fuentes entre sí.</td><td data-date="sources.rxnorm.updated_at">25/09/2026</td></tr>
+          <tr><th scope="row">DNMA (MSP, Uruguay)</th><td>Las sustancias del registro uruguayo y su grafía local.</td><td data-date="sources.dnma.updated_at">16/09/2026</td></tr>
+          <tr><th scope="row">Puente CIE-10</th><td>Traduce los códigos CIE-10 del médico a las patologías de MED-RT.</td><td data-date="sources.icd10_bridge.updated_at">23/09/2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ INTEGRACIÓN -->
+<section class="seccion" id="integracion" aria-labelledby="t-int">
+  <div class="wrap">
+    <p class="eyebrow">Cómo se integra</p>
+    <h2 id="t-int">Un servicio, no una pantalla más.</h2>
+    <div class="grid grid-3">
+      <article class="card">
+        <h3>API</h3>
+        <p>Una sola integración y lo consumen el recetario electrónico, la historia clínica o cualquier otro
+          producto. <a href="/docs">Documentación de la API</a> · <a href="mailto:hello@medicinainteligente.ai?subject=Consilio%20%E2%80%94%20Integraci%C3%B3n%20API">Consultar por la integración</a>.</p>
+      </article>
+      <article class="card">
+        <h3>Interfaz propia</h3>
+        <p>Para usarlo directo, sin integrar nada: buscador con autocompletado, perfil del paciente, filtros
+          por gravedad y fuente, y resumen para imprimir. Castellano e inglés.</p>
+      </article>
+      <article class="card">
+        <h3>Privacidad por diseño</h3>
+        <p>No guarda recetas ni datos de pacientes: evalúa y responde. La base de conocimiento es de sólo lectura.</p>
+      </article>
+    </div>
+
+    <div class="limites">
+      <h3>Qué no evalúa todavía</h3>
+      <p>Lo decimos antes de que lo pregunten:</p>
+      <ul>
+        <li><strong>Dosis</strong>: sobredosis, infradosis y duración.</li>
+        <li><strong>Incompatibilidad fisicoquímica</strong> entre preparados.</li>
+        <li><strong>Reactividad cruzada en alergias</strong>: hoy se detecta el fármaco exacto declarado.</li>
+        <li><strong>Pediatría.</strong></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ CTA FINAL -->
+<section class="cta-final" aria-labelledby="t-cta">
+  <div class="wrap cta-in">
+    <img src="/ui/isotipo-blanco.svg?v=2026-09-26c" alt="" width="56" height="56">
+    <h2 id="t-cta">Pruébelo con sus propios casos.</h2>
+    <p>Cargue una receta real —sin datos del paciente— y vea qué encuentra y de dónde sale cada aviso.</p>
+    <div class="ctas">
+      <a class="btn btn-primario" href="https://app.consilio.medicinainteligente.ai/">Abrir Consilio</a>
+      <a class="btn btn-contorno" href="mailto:hello@medicinainteligente.ai?subject=Consilio%20%E2%80%94%20Consulta">hello@medicinainteligente.ai</a>
+    </div>
+  </div>
+</section>
+
+<p class="wrap advertencia"><strong>Advertencia.</strong> Consilio genera información automáticamente a partir de
+  fuentes públicas. No sustituye el criterio clínico. Que no se encuentre una interacción documentada no significa
+  que no exista. Ante cualquier duda, verificar con el prospecto oficial.</p>
+
+</main>
+
+<footer class="pie">
+  <div class="wrap pie-in">
+    <div class="pie-marca">
+      <span class="mi-logo" aria-label="Medicina Inteligente"><b>Medicina</b><i>Inteligente</i></span>
+      <span class="pie-consilio"><img src="/ui/isotipo.svg?v=2026-09-26c" alt="" width="22" height="22"> Consilio</span>
+    </div>
+    <nav class="pie-links" aria-label="Enlaces">
+      <a href="https://app.consilio.medicinainteligente.ai/">Abrir Consilio</a>
+      <a href="/docs">API</a>
+      <a href="mailto:hello@medicinainteligente.ai?subject=Consilio%20%E2%80%94%20Consulta">Contacto</a>
+    </nav>
+    <p class="iwtg">Powered by <a href="https://iwtg.com">iwtg.com</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
