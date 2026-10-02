@@ -55,7 +55,7 @@
   function cargar() {
     var ctl = "AbortController" in window ? new AbortController() : null;
     var t = ctl && setTimeout(function () { ctl.abort(); }, 8000);
-    fetch("/data/summary", { headers: { Accept: "application/json" }, signal: ctl && ctl.signal })
+    fetch("data/summary", { headers: { Accept: "application/json" }, signal: ctl && ctl.signal })
       .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .then(pintar)
       .catch(function () {
