@@ -89,6 +89,17 @@ app.mount("/ui", StaticFiles(directory=_WEB), name="ui")
 # sirve esto en `/` (ver deploy/46-consilio.conf); la app completa vive en
 # app.consilio.medicinainteligente.ai (deploy/47-consilio-app.conf).
 _LANDING = Path(__file__).parent / "landing"
+
+
+# La landing pide sus cifras con ruta RELATIVA (`data/summary`) para poder montarse
+# bajo cualquier prefijo: medicinainteligente.ai/consilio/ (el borde mapea
+# /consilio/<x> → /landing/<x>) o consilio.medicinainteligente.ai/. Registrada antes
+# del mount de /landing para que el StaticFiles no la tape.
+@app.get("/landing/data/summary", include_in_schema=False)
+async def landing_data_summary(request: Request):
+    from app.api import data as data_api
+    return await data_api.data_summary(request)
+
 app.mount("/landing", StaticFiles(directory=_LANDING, html=True), name="landing")
 
 
