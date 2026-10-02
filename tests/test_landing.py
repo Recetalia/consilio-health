@@ -29,7 +29,9 @@ def test_landing_publica_sin_api_key(client):
     assert r.status_code == 200
     assert "text/html" in r.headers["content-type"]
     assert "Abrir Consilio" in r.text
-    assert "https://app.consilio.medicinainteligente.ai/" in r.text
+    # Los botones llevan a PREPRODUCCIÓN (decisión de Pablo 2026-10-02): PROD no es demo pública.
+    assert "https://consiliopre.medicinainteligente.ai/" in r.text
+    assert "app.consilio.medicinainteligente.ai" not in r.text
 
 
 def test_landing_sin_barra_redirige(client):
