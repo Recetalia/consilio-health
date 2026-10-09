@@ -1,0 +1,2 @@
+{"name_es":"Amoxicilina","name":"Amoxicillin","rxcui":"723"}
+{"name_es":"Tamoxifeno","name":"Tamoxifen","rxcui":"10324"}

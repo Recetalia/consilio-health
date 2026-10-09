@@ -1,0 +1,9 @@
+{
+  "layer": "class",
+  "class_id": "A02BC",
+  "class_desc": "Inhibidores de la bomba de protones",
+  "products": [
+    "omeprazol",
+    "pantoprazol"
+  ]
+}
