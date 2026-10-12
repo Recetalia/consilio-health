@@ -1257,7 +1257,7 @@ function cardAlergia(a) {
         <span class="badge major">${t("badge_alergia")}</span>
       </div>
       <p class="evidence">${t("alergia_evidencia_pre")}
-        <strong>${escapeHtml(a.declared_as)}</strong>, ${t("alergia_evidencia_post")}</p>
+        <strong>${escapeHtml(mostrar(a.declared_as))}</strong>, ${t("alergia_evidencia_post")}</p>
       <p class="meta">${t("alergia_meta")}</p>
     </article>`;
 }

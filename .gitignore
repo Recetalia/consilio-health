@@ -29,6 +29,7 @@ docs/*
 !docs/
 !docs/openapi.json
 !docs/*.md
+!docs/demos/
 .idea
 .rtk/
 

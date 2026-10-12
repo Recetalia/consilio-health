@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Terminal</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #eef0f5; font-family: Manrope, system-ui, sans-serif; }
+  .ventana { position: absolute; left: 60px; right: 60px; top: 46px; bottom: 150px; background: #0f1729;
+    border-radius: 14px; box-shadow: 0 24px 60px rgba(20,33,58,.35); overflow: hidden; display: flex; flex-direction: column; }
+  .barra { height: 40px; background: #1b2640; display: flex; align-items: center; padding: 0 16px; gap: 8px; flex: none; }
+  .barra i { width: 13px; height: 13px; border-radius: 50%; display: inline-block; }
+  .barra span { margin-left: 14px; color: #9fa9c4; font: 500 15px Manrope, system-ui; }
+  #term { flex: 1; overflow: hidden; padding: 20px 26px 30px; font: 17px/1.5 ui-monospace, Menlo, monospace;
+    color: #dfe4f0; white-space: pre-wrap; word-break: break-all; }
+  .c { color: #8b95b0; }            /* comentario */
+  .p { color: #e7a9bf; }            /* prompt */
+  .k { color: #9cc4ff; }            /* clave json */
+  .s { color: #b5e3b0; }            /* string */
+  .n { color: #f6d58b; }            /* número / null */
+  .caret { display: inline-block; width: 9px; height: 19px; background: #e7a9bf; vertical-align: -3px; animation: b 1s steps(1) infinite; }
+  @keyframes b { 50% { opacity: 0; } }
+</style>
+</head>
+<body>
+<div class="ventana">
+  <div class="barra"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>
+    <span>terminal</span></div>
+  <div id="term"></div>
+</div>
+<script>
+  const term = document.getElementById('term');
+  const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  function color(linea) {
+    return esc(linea)
+      .replace(/(&quot;|")([^"]*?)"(\s*:)/g, '<span class="k">"$2"</span>$3')
+      .replace(/:\s*"([^"]*)"/g, ': <span class="s">"$1"</span>')
+      .replace(/^(\s*)"([^"]*)"(,?)$/g, '$1<span class="s">"$2"</span>$3')
+      .replace(/:\s*(-?\d+(\.\d+)?|null|true|false)(,?)$/g, ': <span class="n">$1</span>$3');
+  }
+  let caret = null;
+  function sinCaret() { if (caret) { caret.remove(); caret = null; } }
+  function abajo() { term.scrollTop = term.scrollHeight; }
+  function nuevaLinea(html) { sinCaret(); const d = document.createElement('div'); d.innerHTML = html || '&nbsp;'; term.appendChild(d); abajo(); return d; }
+  window.__comentario = (t) => { nuevaLinea('<span class="c">' + esc(t) + '</span>'); };
+  window.__tipear = (cmd, ms = 28) => new Promise((res) => {
+    const lineas = cmd.split('\n'); let li = 0, ci = 0;
+    let d = nuevaLinea('<span class="p">$ </span><span class="t"></span>');
+    let t = d.querySelector('.t');
+    caret = document.createElement('span'); caret.className = 'caret'; d.appendChild(caret);
+    const paso = () => {
+      if (ci < lineas[li].length) { t.textContent += lineas[li][ci++]; abajo(); return setTimeout(paso, ms); }
+      if (++li < lineas.length) {
+        ci = 0; const c = caret; d = nuevaLinea('<span class="p">  </span><span class="t"></span>'); t = d.querySelector('.t');
+        caret = c; d.appendChild(caret); return setTimeout(paso, ms * 4);
+      }
+      res();
+    };
+    setTimeout(paso, 300);
+  });
+  window.__salida = (texto, ms = 45) => new Promise((res) => {
+    sinCaret(); const lineas = texto.replace(/\n$/, '').split('\n'); let i = 0;
+    const paso = () => { if (i >= lineas.length) return res(); nuevaLinea(color(lineas[i++])); setTimeout(paso, ms); };
+    paso();
+  });
+  window.__blanco = () => nuevaLinea('');
+  window.__limpiar = () => { term.innerHTML = ''; };
+</script>
+</body>
+</html>

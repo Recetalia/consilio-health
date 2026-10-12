@@ -1,0 +1,6 @@
+{"par":"warfarina + ibuprofeno","severity":"major","source":"aemps"}
+{"par":"warfarina + simvastatina","severity":"minor","source":"ddinter"}
+{"par":"warfarina + claritromicina","severity":"major","source":"ddinter"}
+{"par":"ibuprofeno + simvastatina","severity":"unknown","source":"ddinter"}
+{"par":"ibuprofeno + claritromicina","severity":"unknown","source":"ddinter"}
+{"par":"simvastatina + claritromicina","severity":"major","source":"aemps"}

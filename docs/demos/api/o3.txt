@@ -1,0 +1,11 @@
+{
+  "contraindicado": [
+    "metformina — Renal Insufficiency (medrt)"
+  ],
+  "alergia": [
+    "amoxicilina"
+  ],
+  "anciano": [
+    "Diazepam"
+  ]
+}
