@@ -24,10 +24,12 @@ def test_nombres_desde_filas_toma_codigos_y_el_rango_de_los_capitulos():
     nombres = nombres_desde_filas([
         ("Código", "Descripción"),  # el encabezado no tiene forma de código: queda como fila más, no molesta
         ("Cap.06", "ENFERMEDADES DEL SISTEMA NERVIOSO (G00-G99)"),
+        ("E00-E07", "TRASTORNOS DE GLÁNDULA TIROIDES (E00-E07)"),
         ("E27.9", "Trastorno de glándula suprarrenal, no especificado"),
         ("M10.311", "Gota debida a insuficiencia renal, hombro derecho"),
         (None, None),
     ])
+    assert nombres["E00-E07"] == "Trastornos de glándula tiroides"
     assert nombres["G00-G99"] == "Enfermedades del sistema nervioso"
     assert nombres["E27.9"].startswith("Trastorno de glándula")
     assert nombres["M10.311"].endswith("hombro derecho")

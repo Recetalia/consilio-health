@@ -35,7 +35,9 @@ cómo se tipee) en `condition` (filas `icd10%`) y en `icd10_descendant`. No toca
 muestra.
 
 Los anclajes de tipo rango que son un capítulo entero (`G00-G99`) toman el
-título del capítulo (`ENFERMEDADES DEL SISTEMA NERVIOSO (G00-G99)`).
+título del capítulo (`ENFERMEDADES DEL SISTEMA NERVIOSO (G00-G99)`). Capítulos y
+bloques se pasan a minúsculas con inicial mayúscula y sin el rango repetido
+(`Enfermedades del sistema nervioso`), porque el código ya va al lado.
 
 ## Orden
 
@@ -61,7 +63,7 @@ DEFAULT_DB = "data/recetalia_interactions.db"
 SHEET = "ES2026 Completa + Marcadores"
 FUENTE = "CIE-10-ES Diagnósticos 6ª ed. 2026 (Ministerio de Sanidad de España)"
 
-_RANGO_EN_TITULO = re.compile(r"\(([A-Z][0-9]{2}-[A-Z][0-9]{2})\)\s*$")
+_RANGO_EN_TITULO = re.compile(r"\(([A-Z][0-9]{2}(?:-[A-Z][0-9]{2})?)\)\s*$")
 
 
 def normalizar(texto: str) -> str:
@@ -90,7 +92,8 @@ def nombres_desde_filas(filas) -> dict[str, str]:
             if m:
                 nombres.setdefault(m.group(1), titulo_capitulo(descripcion))
             continue
-        nombres[codigo] = descripcion
+        # Los bloques (`E00-E07`) vienen en mayúsculas y repiten el rango: mismo formato que los capítulos.
+        nombres[codigo] = titulo_capitulo(descripcion) if "-" in codigo else descripcion
     return nombres
 
 
