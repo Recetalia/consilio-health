@@ -60,6 +60,8 @@ data/aemps/DICCIONARIO_LABORATORIOS.xml
 data/icd10/*.txt
 data/icd10/*.pdf
 data/icd10/*.zip
+# CIE-10-ES (Ministerio de Sanidad): fuente de scripts/load_cie10es.py, se baja de la URL de su docstring
+data/cie10es/*.xlsx
 
 # Artefactos de despliegue que llevan secretos o binarios
 deploy/.env
