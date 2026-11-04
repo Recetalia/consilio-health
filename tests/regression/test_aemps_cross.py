@@ -217,8 +217,12 @@ async def test_la_busqueda_de_patologias_solo_ofrece_lo_que_evalua(db):
 async def test_la_busqueda_de_patologias_acepta_codigo_y_nombre(db):
     por_codigo = await db.search_conditions("K70")
     por_nombre = await db.search_conditions("liver")
+    por_nombre_es = await db.search_conditions("higado")   # sin tilde: igual encuentra "hígado"
     assert any("K7" in r["code"] for r in por_codigo)
-    assert any("liver" in r["name"].lower() for r in por_nombre)
+    # El nombre que se muestra es el de la CIE-10-ES cuando existe (scripts/load_cie10es.py), así que la
+    # búsqueda en inglés se verifica por lo que encuentra, no por el texto: el mismo bloque de hígado.
+    assert any(r["code"].startswith("K7") for r in por_nombre)
+    assert any(r["code"].startswith("K7") for r in por_nombre_es)
 
 
 async def test_el_buscador_devuelve_el_nombre_en_castellano(db):
