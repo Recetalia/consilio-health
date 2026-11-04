@@ -91,6 +91,14 @@ def normalize(name: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 
+def norm_texto(texto: str) -> str:
+    """Minúsculas, sin tildes, espacios colapsados: la misma regla que `scripts/load_cie10es.normalizar`
+    usa para escribir `name_es_norm`. Si divergen, la búsqueda en castellano deja de encontrar."""
+    sin_marcas = "".join(c for c in unicodedata.normalize("NFD", texto or "")
+                         if unicodedata.category(c) != "Mn")
+    return re.sub(r"\s+", " ", sin_marcas.lower()).strip()
+
+
 def _token_corto(s: str) -> bool:
     """¿Alguno de los tokens normalizados tiene <=2 caracteres?
 
@@ -403,6 +411,17 @@ class RecetaliaDatabase:
         return [{"drug_id": did, "name": canonical, "rxcui": rxcui, "name_es": _titulo(name_es)}
                 for did, (_, canonical, rxcui, name_es) in ordenados]
 
+    async def _tiene_cie10es(self, conn: aiosqlite.Connection) -> bool:
+        """¿La base ya pasó por `scripts/load_cie10es.py`? (columna `name_es` en condition e icd10_descendant)."""
+        if getattr(self, "_cie10es", None) is None:
+            try:
+                cols_c = {r[1] async for r in await conn.execute("pragma table_info(condition)")}
+                cols_d = {r[1] async for r in await conn.execute("pragma table_info(icd10_descendant)")}
+                self._cie10es = "name_es_norm" in cols_c and "name_es_norm" in cols_d
+            except aiosqlite.OperationalError:
+                self._cie10es = False
+        return self._cie10es
+
     async def search_conditions(self, query: str, limit: int = 10) -> list[dict[str, Any]]:
         """Busca patologías por código CIE-10 o por nombre, para el autocompletado.
 
@@ -433,32 +452,39 @@ class RecetaliaDatabase:
         code_q = q.upper().replace(" ", "")
         prelimit = max(limit * 20, 200)
 
+        # Nombre en castellano (CIE-10-ES, `scripts/load_cie10es.py`) si la base lo tiene; si no, el de
+        # ICD-10-CM. Se busca por código, por el nombre en inglés y por el castellano sin tildes.
+        es = await self._tiene_cie10es(conn)
+        nombre = "coalesce({t}.name_es, {t}.name)" if es else "{t}.name"
+        filtro_es = " or {t}.name_es_norm like ? escape '\\'" if es else ""
+        norm_q = f"%{_like(norm_texto(q))}%"
+
         async with conn.execute(
-            """select c.condition_id, c.code, c.name, c.code as anchor_code,
+            f"""select c.condition_id, c.code, {nombre.format(t='c')} as name, c.code as anchor_code,
                       (select count(*) from condition_xref x
                         join drug_condition_alert a on a.condition_id = x.to_id
                        where x.from_id = c.condition_id) as alertas
                from condition c
                where c.code_system like 'icd10%'
-                 and (c.code like ? escape '\\' or c.name like ? escape '\\')
+                 and (c.code like ? escape '\\' or c.name like ? escape '\\'{filtro_es.format(t='c')})
                limit ?""",
-            (f"{_like(code_q)}%", f"%{_like(q)}%", prelimit),
+            (f"{_like(code_q)}%", f"%{_like(q)}%", *([norm_q] if es else []), prelimit),
         ) as cur:
             resultados = [dict(r) for r in await cur.fetchall()]
 
         try:
             async with conn.execute(
-                """select coalesce(anc.condition_id, 0) as condition_id,
-                          d.code, d.name, d.anchor_code,
+                f"""select coalesce(anc.condition_id, 0) as condition_id,
+                          d.code, {nombre.format(t='d')} as name, d.anchor_code,
                           coalesce((select count(*) from condition_xref x
                                      join drug_condition_alert a on a.condition_id = x.to_id
                                     where x.from_id = anc.condition_id), 0) as alertas
                      from icd10_descendant d
                      left join condition anc
                        on anc.code_system = 'icd10cm' and anc.code = d.anchor_code
-                    where d.code like ? escape '\\' or d.name like ? escape '\\'
+                    where d.code like ? escape '\\' or d.name like ? escape '\\'{filtro_es.format(t='d')}
                     limit ?""",
-                (f"{_like(code_q)}%", f"%{_like(q)}%", prelimit),
+                (f"{_like(code_q)}%", f"%{_like(q)}%", *([norm_q] if es else []), prelimit),
             ) as cur:
                 resultados += [dict(r) for r in await cur.fetchall()]
         except aiosqlite.OperationalError:

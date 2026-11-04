@@ -31,6 +31,11 @@ gris). Decisión: **sólo fuentes oficiales**, nada de traducción automática.
   fuente oficial es **DeCS** (BIREME/OPS/OMS): gratis pero exige licencia por formulario
   (<https://decs.bvsalud.org/en/for-developers/>). La copia en UMLS (MSHSPA) es nivel 3: no sirve
   para producción. → bloqueado por un trámite de Pablo.
+- **Códigos CIE-10 del autocompletado (2026-11-04): en castellano** con la **CIE-10-ES** oficial del
+  Ministerio de Sanidad de España (traducción de ICD-10-CM, la misma clasificación que usa Consilio):
+  552/552 anclajes y 3.210/3.231 subcódigos; los 21 sin traducción (altas CMS FY2026) quedan en inglés.
+  `scripts/load_cie10es.py`. Esto es el nombre del CÓDIGO CIE-10; las patologías MeSH de arriba
+  (las que nombran las alertas) siguen esperando DeCS.
 
 ## Diseño
 
