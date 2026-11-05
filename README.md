@@ -89,6 +89,7 @@ python -m scripts.fetch_mesh_tree                         # número de árbol Me
 python -m scripts.build_condition_xref                    # puente CIE-10 ↔ MeSH
 python -m scripts.load_icd10_descendientes                # subcódigos CIE-10 (N18.5) de cada anclaje
 uv run --with openpyxl python -m scripts.load_cie10es     # nombres CIE-10 en castellano (CIE-10-ES); DESPUÉS del anterior
+python -m scripts.fetch_aemps_monografias                 # fichas técnicas AEMPS por composición (GET /monografia)
 
 PYTHONPATH=scripts python scripts/cross_aemps_interactions.py   # interacciones AEMPS (mecanismo y manejo)
 PYTHONPATH=scripts python scripts/cross_aemps_geriatria.py      # alertas geriátricas AEMPS
@@ -154,6 +155,7 @@ Los datos son otra cosa, y cada fuente tiene su régimen:
 | **openFDA** | CC0 1.0 | sí, sin restricción |
 | **RxNorm / RxClass / MED-RT** (NLM) | sin licencia requerida | sí |
 | **DDInter 2.0** | **CC BY-NC-SA 4.0** | **no** |
+| **AEMPS — CIMA, fichas técnicas** (monografías de `GET /monografia`, `scripts/fetch_aemps_monografias.py`) | datos abiertos de la AEMPS (sede.aemps.gob.es/datos-abiertos): reutilizables citando la fuente; el aviso legal no permite transformar los contenidos → se muestran textuales, saneados de formato, con atribución y nº de registro | sí, con atribución (confirmación formal pendiente con smhaem@aemps.es) |
 | **CIE-10-ES Diagnósticos 6ª ed. 2026** (Ministerio de Sanidad de España), nombres en castellano de los códigos CIE-10 | aviso legal de sanidad.gob.es: reutilizable citando la fuente y la fecha de última actualización, sin desnaturalizar el contenido (verificado 2026-11-04) | sí |
 
 ⚠️ **DDInter es NonCommercial.** Aporta el 98 % de los pares, y su cláusula
