@@ -26,6 +26,7 @@ from app.api.data import router as data_router
 from app.api.drugs import router as drugs_router
 from app.api.health import router as health_router
 from app.api.interactions import router as interactions_router
+from app.api.monografia import router as monografia_router
 from app.clients import recetalia_db
 from app.middleware.api_key import APIKeyMiddleware
 from app.middleware.audit_log import AuditLogMiddleware
@@ -77,6 +78,7 @@ app.add_middleware(AuditLogMiddleware)
 app.include_router(health_router)
 app.include_router(interactions_router)
 app.include_router(drugs_router)
+app.include_router(monografia_router)
 app.include_router(contraindications_router)
 app.include_router(data_router)
 

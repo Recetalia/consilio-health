@@ -497,6 +497,33 @@ class RecetaliaDatabase:
         ))
         return resultados[:limit]
 
+    async def monografia(self, nombres: list[str]) -> dict[str, Any] | None:
+        """Ficha técnica AEMPS de una composición (`scripts/fetch_aemps_monografias.py`).
+
+        `None` si la base no tiene las tablas (todavía no corrió el ETL). Si las tiene, siempre un dict:
+        `estado` dice si hay ficha (`ok`), si la composición no tiene referencia en CIMA, o si no se conoce.
+        """
+        from app.services.monografia import clave_composicion  # evita el import circular
+
+        clave = clave_composicion(nombres)
+        conn = await self._c()
+        try:
+            async with conn.execute(
+                """select composicion, principios_activos, atc_codigo, atc_nombre, atc_grupo, nregistro,
+                          nombre_ref, url_ficha, fecha_ficha, estado
+                     from monografia where composicion = ?""", (clave,)) as cur:
+                fila = await cur.fetchone()
+        except aiosqlite.OperationalError:
+            return None
+        if fila is None:
+            return {"composicion": clave, "estado": "desconocida"}
+        out = dict(fila)
+        async with conn.execute(
+            "select seccion, titulo, html from monografia_seccion where composicion = ? order by orden",
+            (clave,)) as cur:
+            out["secciones"] = [dict(r) for r in await cur.fetchall()]
+        return out
+
     async def drug_id_by_dnma(self, sustancia_id: str) -> int | None:
         conn = await self._c()
         async with conn.execute(
